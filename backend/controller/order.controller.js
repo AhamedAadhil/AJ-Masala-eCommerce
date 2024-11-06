@@ -1,4 +1,4 @@
-import { applyCouponToOrder } from "../util/applyCouponToOrder.js";
+import { applyCouponToOrder } from "../utils/applyCouponToOrder.js";
 
 export const placeOrder = async (req, res) => {
   try {

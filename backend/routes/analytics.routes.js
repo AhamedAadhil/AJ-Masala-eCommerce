@@ -1,5 +1,7 @@
 import express from "express";
+
 import { adminRoute, protectRoute } from "../middleware/auth.middleware.js";
+import { analytics } from "../controller/analytics.controller.js";
 
 const router = express.Router();
 
