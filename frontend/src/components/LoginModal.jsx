@@ -1,10 +1,32 @@
 /* eslint-disable react/prop-types */
 
+import { motion } from "framer-motion";
+import { Lock, Mail, Loader, LogIn } from "lucide-react";
+import { useState } from "react";
+
+import { useUserStore } from "../stores/useUserStore";
 const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
   if (!isOpen) return null; // Only render if the modal is open
 
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const { login, loading } = useUserStore();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login(formData);
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
       <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-lg relative">
         <h2 className="text-2xl font-bold mb-4 text-center">
           Welcome to AJ Masala!
@@ -26,28 +48,59 @@ const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
         <p className="text-center text-gray-500 mb-4">or with email</p>
 
         {/* login Form */}
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm mb-1">Email</label>
-            <input
-              type="email"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              placeholder="Email"
-            />
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <Mail className="w-5 h-5" />
+              </span>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                className="w-full pl-10 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                placeholder="your@example.com"
+              />
+            </div>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm mb-1">Password</label>
-            <input
-              type="password"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              placeholder="Password"
-            />
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <Lock className="w-5 h-5" />
+              </span>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                className="w-full pl-10 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                placeholder="********"
+              />
+            </div>
           </div>
           <button
             type="submit"
             className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
           >
-            Login
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <Loader
+                  className="mr-2 h-5 w-5 animate-spin"
+                  aria-hidden="true"
+                />
+                Loading...
+              </div>
+            ) : (
+              <div className="flex items-center justify-center">
+                <LogIn className="mr-2 h-5 w-5" aria-hidden="true" />
+                Login
+              </div>
+            )}
           </button>
         </form>
 
@@ -75,7 +128,7 @@ const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
           &times;
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

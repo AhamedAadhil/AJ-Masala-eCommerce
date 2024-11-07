@@ -1,10 +1,20 @@
 import { useState } from "react";
-import { Search, Heart, ShoppingCart, Menu } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Search, Lock, ShoppingCart, Menu, UserPlus } from "lucide-react";
 
 import RegisterModal from "./RegisterModal";
 import LoginModal from "./LoginModal";
+import { useUserStore } from "../stores/useUserStore";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { user } = useUserStore();
+
+  const isAdmin = user?.role === "admin";
+  // const isAdmin = true;
+  const cartItemCount = 3; // Replace with actual cart item count from state or props
+
   const [isOpen, setIsOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -12,11 +22,11 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
   const openRegisterModal = () => {
     setRegisterModalOpen(true);
-    setLoginModalOpen(false); // Ensure login modal is closed when register opens
+    setLoginModalOpen(false);
   };
   const openLoginModal = () => {
     setLoginModalOpen(true);
-    setRegisterModalOpen(false); // Ensure register modal is closed when login opens
+    setRegisterModalOpen(false);
   };
   const closeRegisterModal = () => setRegisterModalOpen(false);
   const closeLoginModal = () => setLoginModalOpen(false);
@@ -25,7 +35,12 @@ const Navbar = () => {
     <nav className="bg-yellow-500 shadow-md">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         {/* Logo */}
-        <div className="text-2xl font-bold text-black">AJ MASALA</div>
+        <div
+          onClick={() => navigate("/")}
+          className="text-2xl font-bold text-black cursor-pointer"
+        >
+          AJ MASALA
+        </div>
 
         {/* Search Bar */}
         <div className="hidden md:flex flex-1 mx-4">
@@ -41,33 +56,67 @@ const Navbar = () => {
 
         {/* Navbar Links */}
         <div className="hidden md:flex items-center space-x-6">
-          <a href="#home" className="text-black hover:text-gray-800">
+          <Link to="/" className="text-black hover:text-gray-800">
             Home
-          </a>
-          <a href="#top-selling" className="text-black hover:text-gray-800">
+          </Link>
+          <Link to="/top-selling" className="text-black hover:text-gray-800">
             Top Selling
-          </a>
-          <a href="#all-products" className="text-black hover:text-gray-800">
+          </Link>
+          <Link to="/all-products" className="text-black hover:text-gray-800">
             All Products
-          </a>
-          <a href="#contact" className="text-black hover:text-gray-800">
+          </Link>
+          <Link to="/contact" className="text-black hover:text-gray-800">
             Contact us
-          </a>
+          </Link>
         </div>
 
         {/* Icons for both mobile and desktop */}
-        <div className="flex items-center space-x-4 ml-3">
-          {/* Heart and Cart icons for both mobile and desktop */}
-          <Heart className="text-red-500 text-xl cursor-pointer" />
-          <ShoppingCart className="text-black text-xl cursor-pointer" />
+        <div className="flex items-center space-x-4 ml-3 relative">
+          {isAdmin && (
+            <>
+              {/* Heart Icon */}
+              <button
+                onClick={() => navigate("/admin")}
+                className="flex items-center bg-orange-500 text-white mx-2 px-2 py-1 rounded hover:bg-green-500 cursor-pointer"
+              >
+                <Lock size={18} className="inline-block mr-1" />{" "}
+                <span className="hidden sm:inline">Dashboard</span>
+              </button>
+            </>
+          )}
 
-          {/* Login Button for desktop and mobile */}
-          <button
-            onClick={openLoginModal}
-            className="bg-green-500 text-white mx-2 px-3 py-1 rounded hover:bg-green-600"
-          >
-            Login
-          </button>
+          {/* Cart Icon with Badge */}
+          {cartItemCount > 0 && user && (
+            <div className="relative">
+              <ShoppingCart
+                onClick={() => navigate("/cart")}
+                className="text-black text-xl cursor-pointer"
+              />
+
+              <span className="absolute -top-2 -left-1 bg-red-500 text-white rounded-full text-xs px-1.5 py-0.5">
+                {cartItemCount}
+              </span>
+            </div>
+          )}
+
+          {/* Login/Profile Icon */}
+          {user ? (
+            <img
+              src="https://img.icons8.com/color/48/000000/user.png"
+              height={30}
+              width={30}
+              alt="Profile"
+              onClick={() => navigate("/profile")}
+              className="text-black text-xl cursor-pointer"
+            />
+          ) : (
+            <button
+              onClick={openLoginModal}
+              className="flex items-center gap-2 bg-green-500 text-white mx-2 px-2 py-1 rounded hover:bg-green-600"
+            >
+              <UserPlus size={18} /> Login
+            </button>
+          )}
         </div>
 
         {/* Mobile Menu Icon */}
@@ -80,30 +129,27 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-yellow-500">
           <div className="p-4 border-t border-gray-300">
-            <a
-              href="#home"
-              className="block py-2 text-black hover:text-gray-800"
-            >
+            <Link to="/" className="block py-2 text-black hover:text-gray-800">
               Home
-            </a>
-            <a
-              href="#top-selling"
+            </Link>
+            <Link
+              to="/top-selling"
               className="block py-2 text-black hover:text-gray-800"
             >
               Top Selling
-            </a>
-            <a
-              href="#all-products"
+            </Link>
+            <Link
+              to="/all-products"
               className="block py-2 text-black hover:text-gray-800"
             >
               All Products
-            </a>
-            <a
-              href="#contact"
+            </Link>
+            <Link
+              to="/contact"
               className="block py-2 text-black hover:text-gray-800"
             >
               Contact us
-            </a>
+            </Link>
           </div>
         </div>
       )}
