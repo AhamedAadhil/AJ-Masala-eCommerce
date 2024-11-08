@@ -1,7 +1,6 @@
-import React from "react";
 import TrendingProducts from "../components/TrendingProducts";
-import BannerCarousel from '../components/BannerCarousel';
-import AllProducts from '../components/AllProducts';
+import BannerCarousel from "../components/BannerCarousel";
+import AllProducts from "../components/AllProducts";
 
 const sampleProducts = [
   {
@@ -10,7 +9,8 @@ const sampleProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 3,
@@ -18,7 +18,8 @@ const sampleProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 4,
@@ -26,7 +27,8 @@ const sampleProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 4,
@@ -34,8 +36,9 @@ const sampleProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
-  }
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+  },
 ];
 
 const allProducts = [
@@ -46,7 +49,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 2,
@@ -54,7 +58,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 3,
@@ -62,7 +67,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 4,
@@ -70,7 +76,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 1,
@@ -78,7 +85,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 2,
@@ -86,7 +94,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 3,
@@ -94,7 +103,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 4,
@@ -102,7 +112,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 1,
@@ -110,7 +121,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 2,
@@ -118,7 +130,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 3,
@@ -126,7 +139,8 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
     id: 4,
@@ -134,20 +148,21 @@ const allProducts = [
     price: "550",
     originalPrice: "750",
     rating: 4,
-    imageUrl: "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233"
-  }
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+  },
 ];
 
 const HomePage = () => {
   return (
     <div className="lg:place-items-center">
-    <div className="lg:w-1/2 justify-items-center ">
-      <BannerCarousel />
-      <div className="mx-0 max-w-full">
-        <TrendingProducts products={sampleProducts} />
-        <AllProducts products={allProducts} />
+      <div className="lg:w-1/2 justify-items-center ">
+        <BannerCarousel />
+        <div className="mx-0 max-w-full">
+          <TrendingProducts products={sampleProducts} />
+          <AllProducts products={allProducts} />
+        </div>
       </div>
-    </div>
     </div>
   );
 };

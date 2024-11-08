@@ -11,6 +11,7 @@ import { useUserStore } from "./stores/useUserStore";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CreateProduct from "./pages/admin/CreateProduct";
 import AdminLayout from "./components/admin/AdminLayout";
+import ProductsList from "./pages/admin/ProductsList";
 
 function App() {
   const { checkAuth, checkingAuth, user } = useUserStore();
@@ -31,6 +32,7 @@ function App() {
         {user?.role === "admin" ? (
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
+            <Route path="products" element={<ProductsList />} />
             <Route path="create-product" element={<CreateProduct />} />
           </Route>
         ) : (

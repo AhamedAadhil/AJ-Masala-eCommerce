@@ -53,6 +53,13 @@ export const applyCoupon = async (req, res) => {
         .status(400)
         .json({ message: "Coupon expired", success: false });
     }
+    // Check if the user has already used this coupon
+    if (coupon.userId.includes(user._id)) {
+      return res
+        .status(400)
+        .json({ message: "Coupon already used by this user", success: false });
+    }
+
     coupon.userId.push(user._id);
     await coupon.save();
     return res.status(200).json({ message: "Coupon Applied", success: true });

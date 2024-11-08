@@ -86,7 +86,7 @@ const Navbar = () => {
           )}
 
           {/* Cart Icon with Badge */}
-          {cartItemCount > 0 && user && (
+          {cartItemCount > 0 && user && user.role === "customer" && (
             <div className="relative">
               <ShoppingCart
                 onClick={() => navigate("/cart")}

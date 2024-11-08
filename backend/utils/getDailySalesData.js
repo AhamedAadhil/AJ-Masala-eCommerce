@@ -14,7 +14,7 @@ export const getDailySalesData = async (startDate, endDate) => {
       {
         $group: {
           _id: { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
-          sales: { sum: 1 },
+          sales: { $sum: 1 },
           revenue: { $sum: "$totalAmount" },
         },
       },
@@ -27,7 +27,7 @@ export const getDailySalesData = async (startDate, endDate) => {
       const foundData = dailySales.find((item) => item._id === date);
       return {
         date,
-        sales: foundData?.sale || 0,
+        sales: foundData?.sales || 0,
         revenue: foundData?.revenue || 0,
       };
     });

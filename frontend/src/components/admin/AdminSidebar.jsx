@@ -34,7 +34,7 @@ function Sidebar() {
           className="cursor-pointer"
         />
         <SidebarItem
-          onClick={() => navigate("/admin/create-product")}
+          onClick={() => navigate("/admin/products")}
           icon={<Package />}
           label="Products"
           isOpen={isOpen}

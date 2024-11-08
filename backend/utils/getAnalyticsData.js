@@ -3,27 +3,33 @@ import User from "../model/user.model.js";
 import { Order } from "../model/order.model.js";
 
 export const getAnalyticsData = async () => {
-  const totalUsers = await User.countDocuments();
-  const totalProducts = await Product.countDocuments();
-  const salesData = await Order.aggregate([
-    {
-      $group: {
-        _id: null,
-        totalSales: { $sum: 1 },
-        totalRevenue: { $sum: "$totalAmount" },
+  try {
+    const totalUsers = await User.countDocuments();
+    const totalProducts = await Product.countDocuments();
+    const salesData = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalSales: { $sum: 1 },
+          totalRevenue: { $sum: "$totalAmount" },
+        },
       },
-    },
-  ]);
+    ]);
 
-  const { totalSales, totalRevenue } = salesData[0] || {
-    totalSales: 0,
-    totalRevenue: 0,
-  };
+    // Log salesData to ensure it's retrieved correctly
+    console.log("Sales Data:", salesData);
 
-  return {
-    users: totalUsers,
-    products: totalProducts,
-    totalSales,
-    totalRevenue,
-  };
+    // Fallback if salesData array is empty
+    const { totalSales = 0, totalRevenue = 0 } = salesData[0] || {};
+
+    return {
+      users: totalUsers,
+      products: totalProducts,
+      totalSales,
+      totalRevenue,
+    };
+  } catch (error) {
+    console.error("Error in getAnalyticsData:", error);
+    throw new Error("Failed to fetch analytics data");
+  }
 };

@@ -13,6 +13,7 @@ export const analytics = async (req, res) => {
     const dailySalesData = await getDailySalesData(startDate, endDate);
     return res.status(200).json({ analyticsData, dailySalesData });
   } catch (error) {
+    console.error("Error in analytics controller:", error);
     return res.status(500).json({ message: error.message, success: false });
   }
 };

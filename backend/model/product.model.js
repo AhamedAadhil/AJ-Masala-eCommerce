@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema(
         required: [true, "Image is required"],
       },
     ],
-    stock: { type: Number },
+    stock: { type: Number, default: 0 },
     category: { type: String, required: true },
     isFeatured: {
       type: Boolean,
@@ -33,6 +33,10 @@ const productSchema = new mongoose.Schema(
     },
     rating: {
       type: Number,
+    },
+    visibility: {
+      type: Boolean,
+      default: true,
     },
   },
   { timestamps: true }

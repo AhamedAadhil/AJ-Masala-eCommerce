@@ -93,6 +93,26 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
+export const toggleVisibility = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: "Product not found", success: false });
+    }
+    product.isVisible = !product.isVisible; // toggle visibility
+    await product.save();
+    return res
+      .status(200)
+      .json({ product, message: "Product visibility toggled", success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
 export const getRecommendedProducts = async (req, res) => {
   try {
     const products = await Product.aggregate([
@@ -153,6 +173,8 @@ export const updateProduct = async (req, res) => {
         .status(404)
         .json({ message: "Product not  exist", succss: false });
     }
+
+    // Handle image upload if provided
     let newImageUrls = [];
     if (images && images.length > 0) {
       for (const image of images) {
@@ -163,6 +185,7 @@ export const updateProduct = async (req, res) => {
       }
     }
 
+    // update product details
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
       {
@@ -172,22 +195,27 @@ export const updateProduct = async (req, res) => {
         category: category || product.category,
         isFeatured: isFeatured ?? product.isFeatured,
         tags: tags || product.tags,
-        $push: { images: { $each: newImageUrls } }, // Append new images to existing ones
+        ...(newImageUrls.length > 0 && {
+          $push: { images: { $each: newImageUrls } },
+        }), // Append new images to existing ones
         ps: ps || product.ps, // Update price/size array only if provided
       },
       { new: true } // Return the updated product document
     );
-    // check if feature has changed
+
+    // check if feature has changed and update cache if necessary
     if (req.body.isFeatured !== undefined) {
       const featuredProducts = await Product.find({ isFeatured: true }).lean(); //find featured products
-      if (!featuredProducts) {
-        return res
-          .status(404)
-          .json({ message: "No featured products found", success: false });
-      }
       try {
-        //   store in redis for cache
-        await redis.set("featured_products", JSON.stringify(featuredProducts));
+        if (featuredProducts.length > 0) {
+          // Only cache if there are featured products
+          await redis.set(
+            "featured_products",
+            JSON.stringify(featuredProducts)
+          );
+        } else {
+          console.warn("No featured products to cache.");
+        }
       } catch (cacheError) {
         console.error("Error updating cache:", cacheError);
         return res
@@ -195,6 +223,12 @@ export const updateProduct = async (req, res) => {
           .json({ message: cacheError.message, success: false });
       }
     }
+    // Send response with updated product
+    return res.json({
+      message: "Product updated successfully",
+      success: true,
+      product: updatedProduct,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }
