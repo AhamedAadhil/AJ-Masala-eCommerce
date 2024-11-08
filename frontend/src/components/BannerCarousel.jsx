@@ -3,9 +3,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const BannerCarousel = () => {
   return (
-    <div className="relative w-full">
+    <div className="relative w-11/12">
       <div className="overflow-hidden">
-        <img src="https://img.freepik.com/premium-vector/modern-sale-banner-website-slider-template-design_54925-46.jpg" alt="Banner" className="w-full object-cover" style={{ height: '400px' }} />
+        <img src="https://img.freepik.com/premium-vector/modern-sale-banner-website-slider-template-design_54925-46.jpg" alt="Banner" className="w-auto lg:object-fill sm:object-contain" style={{ height: '400px', width:'1500px' }} />
       </div>
       <div className="absolute top-1/2 left-4 transform -translate-y-1/2">
         <button className="p-2 bg-black bg-opacity-50 text-white rounded-full">
