@@ -31,7 +31,7 @@ const ProductsList = () => {
 
   // Filter products based on search term
   const filteredProducts = products?.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    product?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -147,7 +147,12 @@ const ProductsList = () => {
                       //   onClick={() => updateProduct(product._id, {})}
                       className="text-yellow-400 hover:text-yellow-300"
                     >
-                      <Edit className="h-5 w-5" />
+                      <Edit
+                        onClick={() =>
+                          navigate(`/admin/update-product/${product._id}`)
+                        }
+                        className="h-5 w-5"
+                      />
                     </button>
                     {/* <button
                       disabled={loading || product.isUpdating}

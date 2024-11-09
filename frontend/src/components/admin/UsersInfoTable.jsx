@@ -1,13 +1,8 @@
-function UsersInfoTable() {
-  const users = [
-    { no: 1, name: "Asaan Ameen", orders: 9, purchase: "22000 LKR" },
-    { no: 2, name: "Ahamed Aathil", orders: 8, purchase: "19000 LKR" },
-    // Add dummy data
-  ];
-
+/* eslint-disable react/prop-types */
+function UsersInfoTable({ data }) {
   return (
     <div className="bg-gray-700 text-white p-4 rounded-lg">
-      <h3 className="text-lg mb-4">Users Info</h3>
+      <h3 className="text-lg mb-4">Top Users</h3>
       <table className="w-full text-left">
         <thead>
           <tr>
@@ -18,7 +13,7 @@ function UsersInfoTable() {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
+          {data?.map((user, index) => (
             <tr key={index}>
               <td>{user.no}</td>
               <td>{user.name}</td>

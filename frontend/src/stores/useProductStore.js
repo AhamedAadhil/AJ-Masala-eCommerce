@@ -4,6 +4,7 @@ import axios from "../lib/axios";
 
 export const useProductStore = create((set) => ({
   products: [],
+  product: null,
   loading: false,
   error: null,
   setProducts: (products) => set({ products }),
@@ -20,6 +21,24 @@ export const useProductStore = create((set) => ({
     } catch (error) {
       toast.error(error.response.data.message);
       set({ loading: false });
+    }
+  },
+
+  getSingleProduct: async (productId) => {
+    set({ loading: true });
+    try {
+      const res = await axios.get(`/products/${productId}`);
+      if (res && res.data) {
+        set({ product: res.data.product, loading: false });
+      } else {
+        set({ product: null, loading: false });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: `Failed fetch Product: ${error.response.data.message}`,
+      });
+      toast.error(error.response.data.message || "Failed to fetch product");
     }
   },
 
@@ -58,6 +77,7 @@ export const useProductStore = create((set) => ({
     }
   },
   updateProduct: async (productId, data = {}, fetchAllProducts) => {
+    set({ loading: true });
     set((state) => ({
       products: state.products.map((product) =>
         product._id === productId ? { ...product, isUpdating: true } : product
@@ -65,6 +85,7 @@ export const useProductStore = create((set) => ({
     }));
 
     try {
+      set({ loading: true });
       const res = await axios.patch(`/products/${productId}`, data);
       if (res.data && res.data.product) {
         set((state) => ({
@@ -77,12 +98,14 @@ export const useProductStore = create((set) => ({
 
         // After updating the product, fetch all products again to ensure we have the latest data
         await fetchAllProducts();
-
+        set({ loading: false });
         toast.success("Product updated successfully");
       } else {
+        set({ loading: false });
         throw new Error("Product data is missing in the response.");
       }
     } catch (error) {
+      set({ loading: false });
       console.error("Error updating product:", error); // Log error
 
       set((state) => ({

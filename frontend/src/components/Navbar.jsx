@@ -44,7 +44,11 @@ const Navbar = () => {
 
         {/* Search Bar */}
         <div className="hidden md:flex flex-1 mx-4">
-          <div className="relative w-full">
+          <div
+            className={`relative w-full ${
+              user?.role === "admin" ? "hidden" : ""
+            }`}
+          >
             <input
               type="text"
               placeholder="Type to search products"
