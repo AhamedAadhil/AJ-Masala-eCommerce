@@ -3,6 +3,9 @@
 * {
   font-family: outfit;
 }
+::-webkit-scrollbar{
+  @apply hidden;
+}
 
 @tailwind base;
 @tailwind components;

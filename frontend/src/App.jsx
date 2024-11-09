@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import CreateProduct from "./pages/admin/CreateProduct";
 import AdminLayout from "./components/admin/AdminLayout";
 import ProductsList from "./pages/admin/ProductsList";
+import SingleProduct from "./components/SingleProduct";
 
 function App() {
   const { checkAuth, checkingAuth, user } = useUserStore();
@@ -27,6 +28,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/SingleProduct" element={<SingleProduct />} />
 
         {/* Admin Routes */}
         {user?.role === "admin" ? (
