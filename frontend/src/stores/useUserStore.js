@@ -3,6 +3,7 @@ import axios from "../lib/axios";
 import { toast } from "react-hot-toast";
 
 export const useUserStore = create((set, get) => ({
+  users: [],
   user: null,
   loading: false,
   checkingAuth: true,
@@ -42,7 +43,6 @@ export const useUserStore = create((set, get) => ({
       );
     }
   },
-
   checkAuth: async () => {
     set({ checkingAuth: true });
     try {
@@ -67,7 +67,20 @@ export const useUserStore = create((set, get) => ({
       );
     }
   },
-
+  getAllUsers: async () => {
+    set({ loading: true });
+    try {
+      const res = await axios.get("/user/all");
+      if (res && res.data.users) {
+        set({ users: res.data.users, loading: false });
+      } else {
+        throw new Error("Users data is missing in the response.");
+      }
+    } catch (error) {
+      set({ loading: false, users: [] });
+      console.log(error.response.data.message);
+    }
+  },
   refreshToken: async () => {
     if (get().checkAuth) return;
 

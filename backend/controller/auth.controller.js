@@ -64,6 +64,12 @@ export const login = async (req, res) => {
         .status(400)
         .json({ message: "Invalid credentials", succss: false });
     }
+    if (user.status !== "active") {
+      return res.status(400).json({
+        message: "Your account is hold, please contact admin",
+        success: false,
+      });
+    }
     const { accessToken, refreshToken } = generateTokens(
       user._id,
       user.role,
@@ -71,7 +77,8 @@ export const login = async (req, res) => {
     );
     await storeRefreshToken(user._id, refreshToken);
     setCookies(res, accessToken, refreshToken);
-
+    user.lastLogin = new Date();
+    await user.save();
     res.status(200).json({
       user: {
         _id: user._id,

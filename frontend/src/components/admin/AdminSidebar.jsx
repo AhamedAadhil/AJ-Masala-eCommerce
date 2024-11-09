@@ -40,7 +40,12 @@ function Sidebar() {
           isOpen={isOpen}
           className="cursor-pointer"
         />
-        <SidebarItem icon={<User />} label="Users" isOpen={isOpen} />
+        <SidebarItem
+          onClick={() => navigate("/admin/users")}
+          icon={<User />}
+          label="Users"
+          isOpen={isOpen}
+        />
         <SidebarItem icon={<Images />} label="Carousel" isOpen={isOpen} />
         <SidebarItem icon={<Settings />} label="Account" isOpen={isOpen} />
       </div>

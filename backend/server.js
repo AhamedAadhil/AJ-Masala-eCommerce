@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
 import productRotes from "./routes/product.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
 import couponRoutes from "./routes/coupon.routes.js";
@@ -26,6 +27,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/products", productRotes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/coupon", couponRoutes);

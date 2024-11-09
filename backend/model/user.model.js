@@ -59,7 +59,7 @@ const userSchema = new mongoose.Schema(
       default: "active",
     },
     lastLogin: {
-      type: String,
+      type: Date,
       default: Date.now,
     },
   },
