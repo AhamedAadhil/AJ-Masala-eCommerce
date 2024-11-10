@@ -4,15 +4,19 @@ import {
   Package,
   User,
   Images,
-  Settings,
   ChevronLeft,
   ChevronRight,
   Home,
+  LogOut,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import { useUserStore } from "../../stores/useUserStore";
+
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
+
+  const { logout } = useUserStore();
 
   const navigate = useNavigate();
 
@@ -52,15 +56,23 @@ function Sidebar() {
           label="Carousel"
           isOpen={isOpen}
         />
-        <SidebarItem icon={<Settings />} label="Account" isOpen={isOpen} />
+        <br />
+
+        <SidebarItem
+          onClick={() => logout(navigate)}
+          icon={<LogOut />}
+          label="Logout"
+          isOpen={isOpen}
+          className=" text-red-500"
+        />
       </div>
     </div>
   );
 }
 
-const SidebarItem = ({ icon, label, isOpen, onClick }) => (
+const SidebarItem = ({ icon, label, isOpen, onClick, className }) => (
   <div
-    className="p-4 hover:bg-gray-700 flex items-center cursor-pointer"
+    className={`p-4 hover:bg-gray-700 flex items-center cursor-pointer ${className}`}
     onClick={onClick}
   >
     {icon}

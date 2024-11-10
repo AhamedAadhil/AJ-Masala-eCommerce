@@ -1,28 +1,62 @@
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Loader } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const CarouselList = () => {
-  const carousels = [
-    {
-      title: "50% Mega Sale",
-      description:
-        "This carousel will appear in the Home page and we can post offers and ads and job updates in this.",
-      fromDate: "25/11/2024",
-      toDate: "28/11/2024",
-      img: "https://via.placeholder.com/150", // Placeholder for the image URL
-    },
-    // Add more carousel items here as needed
-  ];
+import AddCarouselModal from "../../components/admin/AddCarouselModal";
+import { useCarouselStore } from "../../stores/useCarouselStore";
+
+const CarouselManagement = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
+  const {
+    createCarousel,
+    createLoading,
+    getCarousels,
+    deleteCarousel,
+    carousels,
+    loading,
+  } = useCarouselStore();
+
+  const handleCreateCarousel = (newCarousel) => {
+    const { image, url } = newCarousel;
+    createCarousel({ image, url });
+    // Add code to handle the new carousel data, such as sending it to your backend server
+  };
+
+  useEffect(() => {
+    getCarousels();
+  }, [getCarousels]);
 
   return (
-    <div className="p-6 bg-gray-800 min-h-screen">
+    <div className="p-6 bg-gray-800 min-h-screen rounded-lg">
       {/* Carousel Management Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-white">
           Carousel Management
         </h2>
-        <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
-          <Plus className="mr-2" /> Add Carousel
+        <button
+          onClick={handleShowModal}
+          className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg"
+          disabled={createLoading}
+        >
+          {createLoading ? (
+            <div className="flex">
+              <Loader className="mr-2 animate-spin" /> Creating
+            </div>
+          ) : (
+            <div className="flex">
+              <Plus className="mr-2" /> Add Carousel
+            </div>
+          )}
         </button>
+        <AddCarouselModal
+          show={showModal}
+          handleClose={handleCloseModal}
+          handleCreate={handleCreateCarousel}
+        />
       </div>
 
       {/* Carousel Cards */}
@@ -32,28 +66,26 @@ const CarouselList = () => {
             key={index}
             className="bg-gray-700 text-white rounded-lg shadow-md overflow-hidden"
           >
-            <img
-              src={carousel.img}
-              alt={carousel.title}
-              className="w-full h-32 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-bold">{carousel.title}</h3>
-              <p className="text-sm mt-2 text-gray-300">
-                {carousel.description}
-              </p>
-              <div className="mt-3 text-sm text-gray-400">
-                <p>From: {carousel.fromDate}</p>
-                <p>To: {carousel.toDate}</p>
-              </div>
-              <div className="flex justify-end mt-4 space-x-2">
-                <button className="text-blue-400 hover:text-blue-500">
-                  <Edit className="w-5 h-5" />
-                </button>
-                <button className="text-red-400 hover:text-red-500">
-                  <Trash2 className="w-5 h-5" />
-                </button>
-              </div>
+            <Link to={carousel.url} target="_blank" rel="noopener noreferrer">
+              <img
+                src={carousel.image}
+                alt={`Carousel ${index + 1}`}
+                className="w-full h-32 object-cover"
+              />
+            </Link>
+            <div className="p-4 flex justify-between space-x-2">
+              <span className="truncate">{carousel.url}</span>
+              <button className="text-red-400 hover:text-red-500">
+                <div className="flex">
+                  <Loader
+                    className={`mr-2 animate-spin ${!loading ? "hidden" : ""}`}
+                  />
+                  <Trash2
+                    onClick={() => deleteCarousel(carousel._id)}
+                    className="w-5 h-5"
+                  />
+                </div>
+              </button>
             </div>
           </div>
         ))}
@@ -62,4 +94,4 @@ const CarouselList = () => {
   );
 };
 
-export default CarouselList;
+export default CarouselManagement;

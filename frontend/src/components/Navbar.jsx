@@ -78,7 +78,7 @@ const Navbar = () => {
         <div className="flex items-center space-x-4 ml-3 relative">
           {isAdmin && (
             <>
-              {/* Heart Icon */}
+              {/* Dashboard Icon */}
               <button
                 onClick={() => navigate("/admin")}
                 className="flex items-center bg-orange-500 text-white mx-2 px-2 py-1 rounded hover:bg-green-500 cursor-pointer"
@@ -104,7 +104,7 @@ const Navbar = () => {
           )}
 
           {/* Login/Profile Icon */}
-          {user ? (
+          {user && user.role === "customer" ? (
             <img
               src="https://img.icons8.com/color/48/000000/user.png"
               height={30}
@@ -113,7 +113,7 @@ const Navbar = () => {
               onClick={() => navigate("/profile")}
               className="text-black text-xl cursor-pointer"
             />
-          ) : (
+          ) : user && user.role !== "customer" ? null : (
             <button
               onClick={openLoginModal}
               className="flex items-center gap-2 bg-green-500 text-white mx-2 px-2 py-1 rounded hover:bg-green-600"
