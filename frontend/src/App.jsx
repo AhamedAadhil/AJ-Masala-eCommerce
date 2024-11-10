@@ -15,6 +15,7 @@ import ProductsList from "./pages/admin/ProductsList";
 import SingleProduct from "./components/SingleProduct";
 import UpdateProduct from "./pages/admin/UpdateProduct";
 import Users from "./pages/admin/Users";
+import CarouselList from "./pages/admin/CarouselList";
 
 function App() {
   const { checkAuth, checkingAuth, user } = useUserStore();
@@ -40,6 +41,7 @@ function App() {
             <Route path="create-product" element={<CreateProduct />} />
             <Route path="update-product/:id" element={<UpdateProduct />} />
             <Route path="users" element={<Users />} />
+            <Route path="carousels" element={<CarouselList />} />
           </Route>
         ) : (
           <Route path="/admin/*" element={<Navigate to="/" replace />} />

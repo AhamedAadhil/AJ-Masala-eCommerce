@@ -1,4 +1,4 @@
-import { Trash, Star, Edit, PlusCircle, Search } from "lucide-react";
+import { Star, Edit, PlusCircle, Search } from "lucide-react";
 import { useCallback, useState } from "react";
 import debounce from "lodash/debounce";
 import { useNavigate } from "react-router-dom";
@@ -7,18 +7,9 @@ import { useProductStore } from "../../stores/useProductStore";
 
 const ProductsList = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  //   const [updateData, setUpdateData] = useState({
-  //     name: "",
-  //     description: "",
-  //     category: "",
-  //     tags: "",
-  //     images: [],
-  //     ps: [{ price: "", size: "" }],
-  //     stock: 0,
-  //   });
 
   const navigate = useNavigate();
-  const { products, updateProduct, deleteProduct, loading, fetchAllProducts } =
+  const { products, updateProduct, loading, fetchAllProducts } =
     useProductStore();
 
   // Debounced version of handleUpdate to limit toggle requests
@@ -144,7 +135,6 @@ const ProductsList = () => {
                   <div className="flex items-center justify-center gap-2">
                     <button
                       disabled={loading || product.isUpdating}
-                      //   onClick={() => updateProduct(product._id, {})}
                       className="text-yellow-400 hover:text-yellow-300"
                     >
                       <Edit
@@ -154,13 +144,6 @@ const ProductsList = () => {
                         className="h-5 w-5"
                       />
                     </button>
-                    {/* <button
-                      disabled={loading || product.isUpdating}
-                      onClick={() => deleteProduct(product._id)}
-                      className="text-red-400 hover:text-red-300"
-                    >
-                      <Trash className="h-5 w-5" />
-                    </button> */}
                   </div>
                 </td>
               </tr>

@@ -46,7 +46,12 @@ function Sidebar() {
           label="Users"
           isOpen={isOpen}
         />
-        <SidebarItem icon={<Images />} label="Carousel" isOpen={isOpen} />
+        <SidebarItem
+          onClick={() => navigate("/admin/carousels")}
+          icon={<Images />}
+          label="Carousel"
+          isOpen={isOpen}
+        />
         <SidebarItem icon={<Settings />} label="Account" isOpen={isOpen} />
       </div>
     </div>

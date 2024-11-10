@@ -26,14 +26,14 @@ export const getUser = async (req, res) => {
 
 export const toggleUserStatus = async (req, res) => {
   try {
-    const { userId } = req.body;
-    const user = await User.findById(userId).select("-password");
+    const { id } = req.params;
+    const user = await User.findById(id).select("status");
     if (!user) {
       return res
         .status(404)
         .json({ message: "User not found", success: false });
     }
-    user.status = !user.status;
+    user.status = user.status === "active" ? "hold" : "active";
     await user.save();
     return res.status(200).json({ user, succes: true });
   } catch (error) {

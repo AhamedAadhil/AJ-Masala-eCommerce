@@ -81,6 +81,29 @@ export const useUserStore = create((set, get) => ({
       console.log(error.response.data.message);
     }
   },
+  toggleUserStatus: async (userId) => {
+    try {
+      const res = await axios.patch(`/user/${userId}`);
+      if (res && res.data.user) {
+        const updatedUser = res.data.user;
+        // Update the user in the users array with the toggled status
+        set((state) => ({
+          users: state.users.map((user) =>
+            user._id === userId ? { ...user, status: updatedUser.status } : user
+          ),
+          loading: false,
+        }));
+        toast.success("User status toggled successfully");
+      } else {
+        toast.error("Failed to toggle user status");
+        set({ loading: false });
+      }
+    } catch (error) {
+      set({ loading: false });
+      toast.error("Error toggling user status");
+      console.log(error.response.data.message);
+    }
+  },
   refreshToken: async () => {
     if (get().checkAuth) return;
 
