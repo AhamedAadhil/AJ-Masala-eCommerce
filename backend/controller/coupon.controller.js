@@ -46,6 +46,7 @@ export const createCoupon = async (req, res) => {
 export const applyCoupon = async (req, res) => {
   try {
     const { code } = req.params;
+    const { totalAmount } = req.body;
     const user = req.user;
     const coupon = await Coupon.findOne({ code });
     if (!coupon) {
@@ -69,10 +70,18 @@ export const applyCoupon = async (req, res) => {
         .status(400)
         .json({ message: "Coupon already used by this user", success: false });
     }
-
-    coupon.userId.push(user._id);
-    await coupon.save();
-    return res.status(200).json({ message: "Coupon Applied", success: true });
+    totalAmount -= code.discountAmount;
+    if (totalAmount < 0) {
+      return res.status(400).json({
+        message: "Total amount after discount is invalid",
+        success: false,
+      });
+    }
+    // coupon.userId.push(user._id);
+    // await coupon.save();
+    return res
+      .status(200)
+      .json({ totalAmount, message: "Coupon Applied", success: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }
