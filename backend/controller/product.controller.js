@@ -150,7 +150,7 @@ export const getProductsByCategory = async (req, res) => {
 export const getSingleProduct = async (req, res) => {
   const { id } = req.params;
   try {
-    const product = await product.findById(id);
+    const product = await Product.findById(id);
     if (!product) {
       return res
         .status(404)
@@ -164,8 +164,17 @@ export const getSingleProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, description, ps, images, stock, category, isFeatured, tags } =
-    req.body;
+  const {
+    name,
+    description,
+    ps,
+    stock,
+    category,
+    isFeatured,
+    tags,
+    deletedImages,
+    newImages,
+  } = req.body;
   try {
     const product = await Product.findById(id);
     if (!product) {
@@ -174,10 +183,27 @@ export const updateProduct = async (req, res) => {
         .json({ message: "Product not  exist", succss: false });
     }
 
+    // Handle image deletion from Cloudinary
+    if (deletedImages && deletedImages.length > 0) {
+      for (const image of deletedImages) {
+        const publicId = image.split("/").pop().split(".")[0]; // Get the image ID from Cloudinary URL
+        try {
+          await cloudinary.uploader.destroy(`products/${publicId}`);
+          console.log("Image deleted from Cloudinary");
+          // Now, remove the image from the product's image list in the database
+          product.images = product.images.filter((img) => img !== image);
+        } catch (error) {
+          return res
+            .status(500)
+            .json({ message: error.message, success: false });
+        }
+      }
+    }
+
     // Handle image upload if provided
     let newImageUrls = [];
-    if (images && images.length > 0) {
-      for (const image of images) {
+    if (newImages && newImages.length > 0) {
+      for (const image of newImages) {
         const cloudinaryResponse = await cloudinary.uploader.upload(image, {
           folder: "products",
         });
@@ -185,23 +211,22 @@ export const updateProduct = async (req, res) => {
       }
     }
 
-    // update product details
-    const updatedProduct = await Product.findByIdAndUpdate(
-      id,
-      {
-        name: name || product.name,
-        description: description || product.description,
-        stock: stock ?? product.stock,
-        category: category || product.category,
-        isFeatured: isFeatured ?? product.isFeatured,
-        tags: tags || product.tags,
-        ...(newImageUrls.length > 0 && {
-          $push: { images: { $each: newImageUrls } },
-        }), // Append new images to existing ones
-        ps: ps || product.ps, // Update price/size array only if provided
-      },
-      { new: true } // Return the updated product document
-    );
+    // Update the product details in the database
+    product.name = name || product.name;
+    product.description = description || product.description;
+    product.stock = stock ?? product.stock;
+    product.category = category || product.category;
+    product.isFeatured = isFeatured ?? product.isFeatured;
+    product.tags = tags || product.tags;
+    product.ps = ps || product.ps; // Update price/size array only if provided
+
+    // Push new images to the existing image list if any
+    if (newImageUrls.length > 0) {
+      product.images.push(...newImageUrls); // Add new images
+    }
+
+    // Save the updated product in the database
+    const updatedProduct = await product.save();
 
     // check if feature has changed and update cache if necessary
     if (req.body.isFeatured !== undefined) {

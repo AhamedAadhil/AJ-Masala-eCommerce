@@ -17,6 +17,8 @@ function DashboardContent() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [dailySalesData, setDailySalesData] = useState([]);
+  const [stockData, setStockData] = useState([]);
+  const [topUsersData, setTopUsersData] = useState([]);
 
   useEffect(() => {
     const fetchAnalyticsData = async () => {
@@ -24,7 +26,10 @@ function DashboardContent() {
         const response = await axios.get("/analytics");
         setAnalyticsData(response.data.analyticsData);
         setDailySalesData(response.data.dailySalesData);
+        setStockData(response.data.stockData);
+        setTopUsersData(response.data.topUsersData);
         setIsLoading(false);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching analytics data:", error);
         setIsLoading(false);
@@ -51,23 +56,23 @@ function DashboardContent() {
           icon="user"
         />
         <InfoCard
-          title="Total Sales"
-          value={analyticsData?.totalSales?.toLocaleString() || 0}
+          title="Total Revenue"
+          value={`LKR. ${analyticsData?.totalRevenue?.toLocaleString() || 0}`}
           icon="dollar-sign"
         />
         <InfoCard
           title="Orders"
-          value={analyticsData?.totalRevenue?.toLocaleString() || 0}
+          value={analyticsData?.totalSales?.toLocaleString() || 0}
           icon="shopping-cart"
         />
       </div>
       <div className="grid grid-cols-2 gap-4 mt-4">
-        <SalesChart />
-        <OrderChart />
+        <SalesChart data={dailySalesData} />
+        <OrderChart data={dailySalesData} />
       </div>
       <div className="grid grid-cols-2 gap-4 mt-4">
-        <UsersInfoTable />
-        <ProductsInfoTable />
+        <UsersInfoTable data={topUsersData} />
+        <ProductsInfoTable data={stockData} />
       </div>
     </div>
   );

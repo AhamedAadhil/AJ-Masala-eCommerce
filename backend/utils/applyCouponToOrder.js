@@ -1,18 +1,32 @@
-import { Coupon } from "../model/coupon.model.js";
+import { Coupon } from "../model/coupon.model";
 
-export const applyCouponToOrder = async (userId, code) => {
-  const coupon = await Coupon.findOne({ code });
+export const applyCouponToOrder = async (couponCode, totalAmount, user) => {
+  const coupon = await Coupon.findOne({ code: couponCode });
   if (!coupon) {
-    throw new Error("Coupon does not exist");
+    throw new Error("Invalid coupon code");
   }
   if (!coupon.isActive) {
-    throw new Error("Coupon is no longer valid");
+    throw new Error("Coupon is inactive");
   }
   if (coupon.expirationDate < new Date()) {
-    throw new Error("Coupon has expired");
+    throw new Error("Coupon expired");
   }
-  // Add the user to the coupon's usage record
-  coupon.userId.push(userId);
+  if (coupon.userId.includes(user._id)) {
+    throw new Error("Coupon already used by this user");
+  }
+
+  // Apply the discount
+  const discountAmount = coupon.discountAmount;
+  const finalAmount = totalAmount - discountAmount;
+
+  // Ensure the final amount is not negative
+  if (finalAmount < 0) {
+    throw new Error("Total amount after discount is invalid");
+  }
+
+  // Mark the coupon as used by this user
+  coupon.userId.push(user._id);
   await coupon.save();
-  return coupon; // return coupon details if needed for discount calculation
+
+  return { finalAmount, discountAmount };
 };

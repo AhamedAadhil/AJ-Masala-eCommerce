@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Box, Plus, Upload, Loader } from "lucide-react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { quilModules } from "../../lib/QuilModules";
 
 import { useProductStore } from "../../stores/useProductStore";
 
@@ -16,11 +19,17 @@ const CreateProduct = () => {
 
   const { createProduct, loading } = useProductStore();
 
+  const fileInputRef = useRef(null); // Create a ref for the file input
+
   // Handle change in the main product fields
   const handleChange = (e) => {
     setProductData({ ...productData, [e.target.name]: e.target.value });
   };
 
+  // Handle description change from Quill editor
+  const handleDescriptionChange = (value) => {
+    setProductData({ ...productData, description: value });
+  };
   // Add a new price/size combo
   const addPriceSize = () => {
     setPriceSizeList([...priceSizeList, { price: "", size: "" }]);
@@ -73,7 +82,7 @@ const CreateProduct = () => {
       ...productData,
       ps: priceSizeList,
     };
-    console.log(updatedProductData, "final data to send");
+
     try {
       await createProduct(updatedProductData);
       setProductData({
@@ -84,6 +93,8 @@ const CreateProduct = () => {
         images: [],
         ps: [{ price: "", size: "" }],
       });
+      setPriceSizeList([{ price: "", size: "" }]); // Reset priceSizeList
+      if (fileInputRef.current) fileInputRef.current.value = ""; // Clear the file input
     } catch (error) {
       console.error("Error creating product:", error.message);
     }
@@ -106,18 +117,28 @@ const CreateProduct = () => {
             placeholder="Enter product name"
             className="w-full p-2 rounded bg-gray-700 text-white"
             onChange={handleChange}
+            value={productData.name}
             required
           />
         </div>
 
         <div className="mb-4">
           <label className="block text-white">Product Description</label>
-          <textarea
+          {/* <textarea
             name="description"
             placeholder="Tell more about your product"
             className="w-full p-2 rounded bg-gray-700 text-white"
             onChange={handleChange}
+            value={productData.description}
             required
+          /> */}
+          <ReactQuill
+            theme="snow"
+            placeholder="Tell more about your product"
+            className="text-white"
+            value={productData.description}
+            onChange={handleDescriptionChange}
+            modules={quilModules}
           />
         </div>
 
@@ -161,7 +182,7 @@ const CreateProduct = () => {
             onClick={addPriceSize}
             className="flex items-center text-green-500 mt-2"
           >
-            <Plus className="mr-1" /> Add +
+            <Plus className="mr-1" size={15} /> Add
           </button>
         </div>
 
@@ -191,6 +212,7 @@ const CreateProduct = () => {
             placeholder="Enter any tags related to this product"
             className="w-full p-2 rounded bg-gray-700 text-white"
             onChange={handleChange}
+            value={productData.tags}
             required
           />
         </div>
@@ -208,6 +230,7 @@ const CreateProduct = () => {
               onChange={handleFileChange}
               required
               disabled={loading}
+              ref={fileInputRef}
             />
           </div>
         </div>

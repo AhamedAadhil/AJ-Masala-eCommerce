@@ -8,7 +8,7 @@ export const generateTokens = (userId, role, status) => {
     { userId, role, status },
     process.env.JWT_SECRET_KEY,
     {
-      expiresIn: "15m",
+      expiresIn: "7d",
     }
   );
   const refreshToken = jwt.sign(

@@ -1,8 +1,12 @@
+import { Order } from "../model/order.model.js";
 import { applyCouponToOrder } from "../utils/applyCouponToOrder.js";
+import { calculateOrderTotal } from "../utils/calculateOrderTotal.js";
+import { generateOrderID } from "../utils/generateOrderID.js";
 
-export const placeOrder = async (req, res) => {
+export const createOrder = async (req, res) => {
   try {
-    const { products, couponCode } = req.body;
+    const user = req.user;
+    const { products, couponCode, paymentMethod, finalAmount } = req.body;
 
     // check if the product arrray contain atleast one product
     if (!Array.isArray(products) || products.length === 0) {
@@ -10,31 +14,41 @@ export const placeOrder = async (req, res) => {
         .status(400)
         .json({ message: "Please select at least one product." });
     }
-    let totalAmount = 0;
-    const lineItems = products.map((product) => {
-      totalAmount += product.price * product.qunatity;
 
-      return {
-        price_data: {
-          currency: "lkr",
-          product_data: {
-            name: product.name,
-            image: [product.images[0]],
-          },
-          unit_amount: product.price * product.qunatity,
-        },
-      };
+    //Step 1: generate  order id
+    const orderId = generateOrderID(paymentMethod);
+
+    // Step 4: Create new order
+    const newOrder = new Order({
+      orderId,
+      user: mongoose.Types.ObjectId(user._id),
+      products: products.map((item) => ({
+        product: mongoose.Types.ObjectId(item.product),
+        quantity: item.quantity,
+        price: item.price,
+        size: item.size,
+      })),
+      totalAmount: finalAmount,
+      paymentMethod,
+      status: "placed",
+      isPaid: paymentMethod === "online", // Assuming online orders are paid instantly
+      couponCode,
     });
 
-    let coupon = null;
-    if (couponCode) {
-      coupon = await applyCouponToOrder(req.user._id, couponCode);
-      if (coupon) {
-        totalAmount -= coupon.discountAmount;
-      }
-    }
+    // Save the order to the database
+    await newOrder.save();
+
+    // save the order into user 's orderHistory
+    await user.updateOne({ $push: { orderHistory: newOrder._id } });
+
+    return res.status(201).json({
+      message: "Order created successfully",
+      orderId: newOrder.orderId,
+      success: true,
+    });
   } catch (error) {
-    return res.status(500).json({ messge: error.message, success: false });
+    console.error("Error creating order:", error.message);
+    return res.status(500).json({ message: error.message, success: false });
   }
 };
 

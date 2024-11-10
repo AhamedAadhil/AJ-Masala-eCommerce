@@ -13,6 +13,10 @@ import CreateProduct from "./pages/admin/CreateProduct";
 import AdminLayout from "./components/admin/AdminLayout";
 import ProductsList from "./pages/admin/ProductsList";
 import SingleProduct from "./components/SingleProduct";
+import UpdateProduct from "./pages/admin/UpdateProduct";
+import Users from "./pages/admin/Users";
+import CarouselList from "./pages/admin/CarouselList";
+import CouponList from "./pages/admin/CouponList";
 
 function App() {
   const { checkAuth, checkingAuth, user } = useUserStore();
@@ -36,6 +40,10 @@ function App() {
             <Route index element={<AdminDashboard />} />
             <Route path="products" element={<ProductsList />} />
             <Route path="create-product" element={<CreateProduct />} />
+            <Route path="update-product/:id" element={<UpdateProduct />} />
+            <Route path="users" element={<Users />} />
+            <Route path="carousels" element={<CarouselList />} />
+            <Route path="coupons" element={<CouponList />} />
           </Route>
         ) : (
           <Route path="/admin/*" element={<Navigate to="/" replace />} />

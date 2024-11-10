@@ -5,8 +5,6 @@ import { useState } from "react";
 import { useUserStore } from "../stores/useUserStore";
 
 const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
-  if (!isOpen) return null; // Don't render modal if it's not open
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,8 +16,10 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signup(formData);
+    signup(formData, onClose);
   };
+
+  if (!isOpen) return null; // Don't render modal if it's not open
 
   return (
     <motion.div
