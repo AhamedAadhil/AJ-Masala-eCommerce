@@ -1,7 +1,7 @@
 import { Coupon } from "../model/coupon.model.js";
 export const getAllCoupons = async (req, res) => {
   try {
-    const coupons = await Coupon.find().populate("user");
+    const coupons = await Coupon.find().populate("userId", "email");
     return res.status(200).json({ coupons, success: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
@@ -11,7 +11,7 @@ export const getAllCoupons = async (req, res) => {
 export const getCoupon = async (req, res) => {
   try {
     const { code } = req.params;
-    const coupon = await Coupon.findOne({ code }).populate("user");
+    const coupon = await Coupon.findOne({ code }).populate("userId", "email");
     if (!coupon) {
       return res
         .status(404)
@@ -25,8 +25,18 @@ export const getCoupon = async (req, res) => {
 
 export const createCoupon = async (req, res) => {
   try {
-    const { code, discount, expirationDate } = req.body;
-    const coupon = await Coupon.create({ code, discount, expirationDate });
+    const { code, discountAmount, expirationDate } = req.body;
+    const couponExist = await Coupon.findOne({ code });
+    if (couponExist) {
+      return res
+        .status(400)
+        .json({ message: "Coupon Code already exists", success: false });
+    }
+    const coupon = await Coupon.create({
+      code,
+      discountAmount,
+      expirationDate,
+    });
     return res.status(201).json({ coupon, success: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
@@ -63,6 +73,23 @@ export const applyCoupon = async (req, res) => {
     coupon.userId.push(user._id);
     await coupon.save();
     return res.status(200).json({ message: "Coupon Applied", success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+export const toggleCoponActive = async (req, res) => {
+  try {
+    const { code } = req.params;
+    const coupon = await Coupon.findOne({ code });
+    if (!coupon) {
+      return res
+        .status(404)
+        .json({ message: "Coupon not exists", success: false });
+    }
+    coupon.isActive = !coupon.isActive; // toggle the active status
+    await coupon.save();
+    return res.status(200).json({ success: false, coupon });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

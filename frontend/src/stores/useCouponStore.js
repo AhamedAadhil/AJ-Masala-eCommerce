@@ -11,7 +11,7 @@ export const useCouponStore = create((set) => ({
   getAllCoupons: async () => {
     set({ loading: true });
     try {
-      const res = await axios.get("/coupons");
+      const res = await axios.get("/coupon");
       if (res && res.data) {
         set({ coupons: res.data.coupons, loading: false });
       } else {
@@ -45,7 +45,15 @@ export const useCouponStore = create((set) => ({
   createCoupon: async (couponData) => {
     set({ loading: true });
     try {
-      const res = await axios.post("/coupon", couponData);
+      const { discountAmount, code, expirationDate } = couponData;
+
+      console.log(couponData);
+
+      const res = await axios.post("/coupon", {
+        discountAmount,
+        code,
+        expirationDate,
+      });
       if (res && res.data.coupon) {
         set((prevData) => ({
           loading: false,
@@ -66,7 +74,7 @@ export const useCouponStore = create((set) => ({
   applyCoupon: async (code) => {
     set({ loading: true });
     try {
-      const res = await axios.post(`/coupon/apply/${code}`);
+      const res = await axios.patch(`/coupon/apply/${code}`);
       if (res && res.data) {
         set({ loading: false });
       }
@@ -74,6 +82,36 @@ export const useCouponStore = create((set) => ({
     } catch (error) {
       set({ loading: false });
       toast.error(error.response.data.message || "Failed to apply coupon.");
+    }
+  },
+
+  toggleCouponActive: async (code) => {
+    set({ loading: true });
+    try {
+      const res = await axios.patch(`/coupon/toggle/${code}`);
+      if (res && res.data) {
+        set((prevData) => {
+          // Update the coupons array with the toggled coupon status
+          const updatedCoupons = prevData.coupons.map((coupon) => {
+            if (coupon.code === code) {
+              return { ...coupon, isActive: !coupon.isActive }; // Toggle the isActive field
+            }
+            return coupon;
+          });
+          toast.success(`Coupon toggled successfully`);
+          // Return the updated state
+          return {
+            loading: false, // Indicate that the loading is finished
+            coupons: updatedCoupons, // Set the new coupons array
+          };
+        });
+      } else {
+        toast.error("Failed to coupon status");
+        set({ loading: false });
+      }
+    } catch (error) {
+      set({ loading: false });
+      toast.error(error.response.data.message || "Failed to toggle coupon.");
     }
   },
 }));

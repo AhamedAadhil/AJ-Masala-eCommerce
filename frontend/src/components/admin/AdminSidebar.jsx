@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Home,
   LogOut,
+  TicketCheck,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -53,7 +54,13 @@ function Sidebar() {
         <SidebarItem
           onClick={() => navigate("/admin/carousels")}
           icon={<Images />}
-          label="Carousel"
+          label="Carousels"
+          isOpen={isOpen}
+        />
+        <SidebarItem
+          onClick={() => navigate("/admin/coupons")}
+          icon={<TicketCheck />}
+          label="Coupons"
           isOpen={isOpen}
         />
         <br />

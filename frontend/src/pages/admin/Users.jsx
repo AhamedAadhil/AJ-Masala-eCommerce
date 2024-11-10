@@ -15,10 +15,10 @@ const Users = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const itemsPerPage = 5;
   const [orderBy, setOrderBy] = useState("lastLogin");
   const [expandedUserId, setExpandedUserId] = useState(null);
 
+  const itemsPerPage = 5;
   const totalPages = Math.ceil(users.length / itemsPerPage);
 
   const filteredUsers = users?.filter((user) =>
