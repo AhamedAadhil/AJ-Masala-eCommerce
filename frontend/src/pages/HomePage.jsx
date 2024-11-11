@@ -5,6 +5,15 @@ import SingleProduct from "../components/SingleProduct";
 
 const sampleProducts = [
   {
+    id: 1,
+    name: "Garam Masala 100g",
+    price: "550",
+    originalPrice: "750",
+    rating: 4,
+    imageUrl:
+      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+  },
+  {
     id: 2,
     name: "Garam Masala 100g",
     price: "550",
@@ -15,15 +24,6 @@ const sampleProducts = [
   },
   {
     id: 3,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 4,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -44,7 +44,7 @@ const sampleProducts = [
 const allProducts = [
   // another array of product objects
   {
-    id: 1,
+    id: 5,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -53,7 +53,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 2,
+    id: 6,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -62,7 +62,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 3,
+    id: 7,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -71,7 +71,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 4,
+    id: 8,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -80,7 +80,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 1,
+    id: 9,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -89,7 +89,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 2,
+    id: 10,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -98,7 +98,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 3,
+    id: 11,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -107,7 +107,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 4,
+    id: 12,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -116,7 +116,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 1,
+    id: 13,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -125,7 +125,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 2,
+    id: 14,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -134,7 +134,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 3,
+    id: 15,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -143,7 +143,7 @@ const allProducts = [
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
   },
   {
-    id: 4,
+    id: 16,
     name: "Garam Masala 100g",
     price: "550",
     originalPrice: "750",
@@ -153,10 +153,7 @@ const allProducts = [
   },
 ];
 
-
-
 const HomePage = () => {
-  
   return (
     <div className="lg:place-items-center">
       <div className="md:w-full lg:w-3/5 justify-items-center ">
