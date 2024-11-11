@@ -2,23 +2,24 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 
-import HomePage from "./pages/HomePage";
+import { useUserStore } from "./stores/useUserStore";
 
 import Navbar from "./components/Navbar";
 import LoadingSpinner from "./components/LoadingSpinner";
+import AdminLayout from "./components/admin/AdminLayout";
 
-import { useUserStore } from "./stores/useUserStore";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CreateProduct from "./pages/admin/CreateProduct";
-import AdminLayout from "./components/admin/AdminLayout";
 import ProductsList from "./pages/admin/ProductsList";
-import SingleProduct from "./components/SingleProduct";
 import UpdateProduct from "./pages/admin/UpdateProduct";
 import Users from "./pages/admin/Users";
 import CarouselList from "./pages/admin/CarouselList";
 import CouponList from "./pages/admin/CouponList";
 import OrderList from "./pages/admin/OrderList";
 import UpdateOrder from "./pages/admin/UpdateOrder";
+
+import SingleProduct from "./pages/SingleProduct";
+import HomePage from "./pages/HomePage";
 
 function App() {
   const { checkAuth, checkingAuth, user } = useUserStore();

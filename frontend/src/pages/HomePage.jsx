@@ -1,14 +1,13 @@
 import TrendingProducts from "../components/TrendingProducts";
 import BannerCarousel from "../components/BannerCarousel";
 import AllProducts from "../components/AllProducts";
-import SingleProduct from "../components/SingleProduct";
 
 const sampleProducts = [
   {
     id: 1,
     name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
+    price: "1550",
+    originalPrice: "1750",
     rating: 4,
     imageUrl:
       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
