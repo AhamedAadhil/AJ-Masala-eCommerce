@@ -1,6 +1,4 @@
 import { Order } from "../model/order.model.js";
-import { applyCouponToOrder } from "../utils/applyCouponToOrder.js";
-import { calculateOrderTotal } from "../utils/calculateOrderTotal.js";
 import { generateOrderID } from "../utils/generateOrderID.js";
 
 export const createOrder = async (req, res) => {
@@ -8,11 +6,25 @@ export const createOrder = async (req, res) => {
     const user = req.user;
     const { products, couponCode, paymentMethod, finalAmount } = req.body;
 
+    // Ensure user is authenticated
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "User not authenticated", success: false });
+    }
+
     // check if the product arrray contain atleast one product
     if (!Array.isArray(products) || products.length === 0) {
       return res
         .status(400)
         .json({ message: "Please select at least one product." });
+    }
+
+    // Validate finalAmount
+    if (typeof finalAmount !== "number" || finalAmount <= 0) {
+      return res
+        .status(400)
+        .json({ message: "Invalid total amount", success: false });
     }
 
     //Step 1: generate  order id
@@ -68,6 +80,67 @@ export const checkOutSummary = async (req, res) => {
     });
 
     return res.status(200).json({ products, totalAmount, success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+export const getOrderAdmin = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await Order.findOne({ orderId })
+      .populate("products.product")
+      .populate("user");
+    if (!order) {
+      return res
+        .status(404)
+        .json({ message: "Order not found", success: false });
+    }
+    return res.status(200).json({ order, success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+export const getOrder = async (req, res) => {
+  try {
+    const user = req.user;
+    const { orderId } = req.params;
+    const order = await Order.findOne({ orderId })
+      .populate("products.product")
+      .populate("user");
+    if (order.user.toString() !== user._id) {
+      return res
+        .status(401)
+        .json({
+          message: "You are not authorized to view this order",
+          success: false,
+        });
+    }
+    if (!order) {
+      return res
+        .status(404)
+        .json({ message: "Order not found", success: false });
+    }
+    return res.status(200).json({ order, success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+export const updateOrder = async (req, res) => {
+  const { trackingId, trackingUrl, status } = req.body;
+  const { orderId } = req.params;
+  try {
+    const order = await Order.findOneAndUpdate(
+      { orderId },
+      { trackingId, trackingUrl, status },
+      { new: true }
+    );
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    return res.status(200).json({ order, success: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

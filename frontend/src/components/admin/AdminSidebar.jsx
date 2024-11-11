@@ -9,6 +9,7 @@ import {
   Home,
   LogOut,
   TicketCheck,
+  ShoppingCart,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -49,6 +50,12 @@ function Sidebar() {
           onClick={() => navigate("/admin/users")}
           icon={<User />}
           label="Users"
+          isOpen={isOpen}
+        />
+        <SidebarItem
+          onClick={() => navigate("/admin/orders")}
+          icon={<ShoppingCart />}
+          label="Orders"
           isOpen={isOpen}
         />
         <SidebarItem

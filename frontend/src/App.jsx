@@ -17,6 +17,8 @@ import UpdateProduct from "./pages/admin/UpdateProduct";
 import Users from "./pages/admin/Users";
 import CarouselList from "./pages/admin/CarouselList";
 import CouponList from "./pages/admin/CouponList";
+import OrderList from "./pages/admin/OrderList";
+import UpdateOrder from "./pages/admin/UpdateOrder";
 
 function App() {
   const { checkAuth, checkingAuth, user } = useUserStore();
@@ -44,6 +46,9 @@ function App() {
             <Route path="users" element={<Users />} />
             <Route path="carousels" element={<CarouselList />} />
             <Route path="coupons" element={<CouponList />} />
+            <Route path="orders" element={<OrderList />} />
+            {/* TODO: have to change the path dynamically */}
+            <Route path="update-order" element={<UpdateOrder />} />
           </Route>
         ) : (
           <Route path="/admin/*" element={<Navigate to="/" replace />} />

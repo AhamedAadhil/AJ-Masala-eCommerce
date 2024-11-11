@@ -1,4 +1,4 @@
-import { Coupon } from "../model/coupon.model";
+import { Coupon } from "../model/coupon.model.js";
 
 export const applyCouponToOrder = async (couponCode, totalAmount, user) => {
   const coupon = await Coupon.findOne({ code: couponCode });
