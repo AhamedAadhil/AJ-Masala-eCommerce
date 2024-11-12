@@ -1,27 +1,31 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useCarouselStore } from "../stores/useCarouselStore";
+
 const BannerCarousel = () => {
+  const { carousels, getCarousels } = useCarouselStore();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const navigate = useNavigate();
   // 1500x600 was exist
   // good solution 16:9 aspect ratio images
   // it will be 1800wx1000h px
-  // or 2880 x1620
-  const images = [
-    "https://via.placeholder.com/1800x1000/ff7f7f/333333?text=Sale+Banner+1",
-    "https://via.placeholder.com/1800x1000/4e73df/ffffff?text=Sale+Banner+2",
-    "https://via.placeholder.com/1800x1000/28a745/ffffff?text=Sale+Banner+3",
-    "https://via.placeholder.com/1800x1000/f39c12/ffffff?text=Sale+Banner+4",
-  ];
-
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   // Function to move to the next slide
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % carousels?.length);
   };
 
   // Function to move to a specific slide (via bullet)
   const goToSlide = (index) => {
     setCurrentIndex(index);
   };
+
+  // fetch carousels from  API
+  useEffect(() => {
+    getCarousels();
+  }, [getCarousels]);
 
   // Set up auto-sliding every 5 seconds
   useEffect(() => {
@@ -32,11 +36,14 @@ const BannerCarousel = () => {
   return (
     <div className="relative w-11/12">
       <div className="overflow-hidden">
-        <div className="relative w-full h-0 pb-[40%]">
-          {" "}
-          {/* This ensures a 16:9 aspect ratio */}
+        <div className="relative w-full h-0 pb-[55.6%]">
+          {/* This ensures a 18:10 or 9:5 aspect ratio */}
+          {/*pb-[33.3%] will be use for 3:1 aspect ratio*/}
           <img
-            src={images[currentIndex]}
+            onClick={() => {
+              navigate(carousels[currentIndex]?.url);
+            }}
+            src={carousels[currentIndex]?.image}
             alt="Banner"
             className="absolute top-0 left-0 w-full h-full object-cover"
           />
@@ -45,7 +52,7 @@ const BannerCarousel = () => {
 
       {/* Bullets */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {images.map((_, index) => (
+        {carousels.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}

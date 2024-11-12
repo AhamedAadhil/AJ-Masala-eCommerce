@@ -53,7 +53,10 @@ function AddCarouselModal({ show, handleClose, handleCreate }) {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Image
+              Upload Image{" "}
+              <span className="block text-yellow-700">
+                (Note: Image size should be Width:1800 x Heigth:1000)
+              </span>
             </label>
             <input
               type="file"
