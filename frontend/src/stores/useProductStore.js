@@ -77,45 +77,28 @@ export const useProductStore = create((set) => ({
     }
   },
   updateProduct: async (productId, data = {}, fetchAllProducts) => {
-    set({ loading: true });
-    set((state) => ({
-      products: state.products.map((product) =>
-        product._id === productId ? { ...product, isUpdating: true } : product
-      ),
-    }));
-
     try {
       set({ loading: true });
+
       const res = await axios.patch(`/products/${productId}`, data);
+
       if (res.data && res.data.product) {
         set((state) => ({
           products: state.products.map((product) =>
             product._id === productId
-              ? { ...product, ...res.data.product, isUpdating: false }
+              ? { ...product, ...res.data.product }
               : product
           ),
+          loading: false, // Turn off loading here after a successful update
         }));
 
-        // After updating the product, fetch all products again to ensure we have the latest data
         await fetchAllProducts();
-        set({ loading: false });
         toast.success("Product updated successfully");
       } else {
-        set({ loading: false });
         throw new Error("Product data is missing in the response.");
       }
     } catch (error) {
       set({ loading: false });
-      console.error("Error updating product:", error); // Log error
-
-      set((state) => ({
-        products: state.products.map((product) =>
-          product._id === productId
-            ? { ...product, isUpdating: false }
-            : product
-        ),
-      }));
-
       toast.error(error.response?.data?.message || "Failed to update product");
     }
   },

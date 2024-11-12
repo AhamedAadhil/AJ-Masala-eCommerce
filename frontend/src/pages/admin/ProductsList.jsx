@@ -1,5 +1,5 @@
 import { Star, Edit, PlusCircle, Search } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import debounce from "lodash/debounce";
 import { useNavigate } from "react-router-dom";
 
@@ -16,6 +16,7 @@ const ProductsList = () => {
   const handleUpdate = useCallback(
     debounce((productId, data) => {
       updateProduct(productId, data, fetchAllProducts);
+      setTimeout(fetchAllProducts, 500);
     }, 300), // 300ms delay
     []
   );
@@ -24,6 +25,10 @@ const ProductsList = () => {
   const filteredProducts = products?.filter((product) =>
     product?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  useEffect(() => {
+    fetchAllProducts();
+  }, [fetchAllProducts]);
 
   return (
     <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
@@ -110,8 +115,23 @@ const ProductsList = () => {
                   <div className="text-sm text-white">{product.category}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-white">
-                    {product?.stock || 0}
+                  <div className="flex gap-2 text-sm text-white">
+                    {product?.stock || 0}{" "}
+                    <span
+                      className={
+                        product.stock === 0
+                          ? "text-red-500" // Out of stock
+                          : product.stock > 0 && product.stock <= 10
+                          ? "text-yellow-500" // Low stock
+                          : "text-green-500" // In stock
+                      }
+                    >
+                      {product.stock === 0
+                        ? "(Out of stock)"
+                        : product.stock > 0 && product.stock <= 10
+                        ? "(Low stock)"
+                        : "(In stock)"}
+                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
