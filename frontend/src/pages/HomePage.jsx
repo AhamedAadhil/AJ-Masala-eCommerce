@@ -1,6 +1,7 @@
 import TrendingProducts from "../components/TrendingProducts";
 import BannerCarousel from "../components/BannerCarousel";
 import AllProducts from "../components/AllProducts";
+import Checkout from "./Checkout";
 
 const sampleProducts = [
   {
