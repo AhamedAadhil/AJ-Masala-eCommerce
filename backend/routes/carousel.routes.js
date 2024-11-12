@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 router.post("/", protectRoute, adminRoute, createCarousel);
-router.get("/", protectRoute, adminRoute, getAllCarousels);
+router.get("/", getAllCarousels);
 router.delete("/:id", protectRoute, adminRoute, deleteCarousel);
 
 export default router;
