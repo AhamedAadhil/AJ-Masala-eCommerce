@@ -36,10 +36,10 @@ const UpdateProduct = () => {
     if (id) {
       getSingleProduct(id);
     }
-  }, [getSingleProduct, id]);
+  }, [id, getSingleProduct]);
 
   useEffect(() => {
-    if (product) {
+    if (product && product._id) {
       setProductData({
         name: product.name || "",
         description: product.description || "",
@@ -52,8 +52,8 @@ const UpdateProduct = () => {
     }
   }, [product]);
 
-  console.log(`productData ${product?._id}`, product);
-  console.log(`deletedImages `, deletedImages);
+  console.log(`product `, product);
+  console.log(`product Data `, productData);
 
   const handleChange = (e) => {
     setProductData({ ...productData, [e.target.name]: e.target.value });
@@ -126,7 +126,7 @@ const UpdateProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    updateProduct(
+    await updateProduct(
       id,
       { ...productData, deletedImages, newImages },
       fetchAllProducts
@@ -135,7 +135,7 @@ const UpdateProduct = () => {
     // You would make an API call here to save the updated product data
   };
 
-  if (!product) {
+  if (loading && !product?._id) {
     return <div>Loading...</div>; // Show loading message while fetching product data
   }
 
