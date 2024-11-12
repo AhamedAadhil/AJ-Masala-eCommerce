@@ -87,7 +87,7 @@ export const login = async (req, res) => {
         role: user.role,
       },
       message: "Login success",
-      succss: true,
+      success: true,
     });
   } catch (error) {
     return res.status(500).json({

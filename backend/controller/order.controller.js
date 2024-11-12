@@ -4,7 +4,8 @@ import { generateOrderID } from "../utils/generateOrderID.js";
 export const createOrder = async (req, res) => {
   try {
     const user = req.user;
-    const { products, couponCode, paymentMethod, finalAmount } = req.body;
+    const { address, products, couponCode, paymentMethod, finalAmount } =
+      req.body;
 
     // Ensure user is authenticated
     if (!user) {
@@ -30,7 +31,19 @@ export const createOrder = async (req, res) => {
     //Step 1: generate  order id
     const orderId = generateOrderID(paymentMethod);
 
-    // Step 4: Create new order
+    // Step 2: Update the user's address directly and save it
+    if (address) {
+      user.address = {
+        no: address.no || user.address.no,
+        street: address.street || user.address.street,
+        city: address.city || user.address.city,
+        state: address.state || user.address.state,
+        zipcode: address.zipcode || user.address.zipcode,
+      };
+      await user.save(); // Save the updated user object
+    }
+
+    // Step 3: Create new order
     const newOrder = new Order({
       orderId,
       user: mongoose.Types.ObjectId(user._id),
@@ -110,12 +123,10 @@ export const getOrder = async (req, res) => {
       .populate("products.product")
       .populate("user");
     if (order.user.toString() !== user._id) {
-      return res
-        .status(401)
-        .json({
-          message: "You are not authorized to view this order",
-          success: false,
-        });
+      return res.status(401).json({
+        message: "You are not authorized to view this order",
+        success: false,
+      });
     }
     if (!order) {
       return res

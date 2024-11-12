@@ -36,9 +36,10 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        {/* TODO: have to change the path dynamically */}
         <Route path="/SingleProduct" element={<SingleProduct />} />
-        <Route path="/Checkout" element={<Checkout/>} />
-
+        {/* TODO: make it privateRote by check if user exist and user.role==="customer" */}
+        <Route path="/Checkout" element={<Checkout />} />
         {/* Admin Routes */}
         {user?.role === "admin" ? (
           <Route path="/admin" element={<AdminLayout />}>
