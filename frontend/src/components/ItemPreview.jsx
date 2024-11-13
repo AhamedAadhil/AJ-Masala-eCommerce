@@ -5,7 +5,7 @@ import { Star } from "lucide-react";
 const ItemPreview = ({ name, price, originalPrice, rating, imageUrl }) => {
   return (
     <motion.div
-      className="max-w-xs bg-white rounded overflow-hidden shadow-lg mx-2 my-4 cursor-pointer"
+      className="max-w-xs bg-white rounded-2xl overflow-hidden shadow-lg mx-2 my-4 cursor-pointer"
       whileHover={{
         scale: 1.05,
         boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.1)",

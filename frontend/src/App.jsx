@@ -23,6 +23,7 @@ import HomePage from "./pages/HomePage";
 import Checkout from "./pages/Checkout";
 import UserProfile from "./pages/UserProfile";
 import Footer from "./components/Footer";
+import AllProductsPage from "./pages/AllProductsPage";
 
 function App() {
   const { checkAuth, checkingAuth, user } = useUserStore();
@@ -44,6 +45,7 @@ function App() {
         <Route path="/Checkout" element={<Checkout />} />
         {/*TODO: make it privateRote by check if user exist and user.role==="customer"   */}
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/all" element={<AllProductsPage />} />
         {/* Admin Routes */}
         {user?.role === "admin" ? (
           <Route path="/admin" element={<AdminLayout />}>
