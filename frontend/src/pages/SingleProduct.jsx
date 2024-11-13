@@ -6,6 +6,7 @@ import {
   CreditCard,
   Landmark,
 } from "lucide-react";
+import ReviewCard from "../components/ReviewCard";
 
 const SingleProduct = () => {
   const [images, setImages] = useState({
@@ -70,6 +71,9 @@ const SingleProduct = () => {
             className="w-24 h-24 rounded-md cursor-pointer"
             onClick={() => setActiveImage(images.img4)}
           />
+        </div>
+        <div>
+          <ReviewCard/>
         </div>
       </div>
       {/* ABOUT */}

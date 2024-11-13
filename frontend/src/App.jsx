@@ -22,6 +22,7 @@ import SingleProduct from "./pages/SingleProduct";
 import HomePage from "./pages/HomePage";
 import Checkout from "./pages/Checkout";
 import UserProfile from "./pages/UserProfile";
+import Footer from "./components/Footer";
 
 function App() {
   const { checkAuth, checkingAuth, user } = useUserStore();
@@ -62,7 +63,9 @@ function App() {
         )}
       </Routes>
       <Toaster />
+      <Footer/>
     </div>
+    
   );
 }
 
