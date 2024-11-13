@@ -31,9 +31,12 @@ const productSchema = new mongoose.Schema(
     tags: {
       type: String,
     },
-    rating: {
-      type: Number,
-    },
+    rating: [
+      {
+        star: Number,
+        comment: String,
+      },
+    ],
     visibility: {
       type: Boolean,
       default: true,
