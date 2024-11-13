@@ -1,5 +1,14 @@
 import { ShoppingCart, CircleCheck, ListOrdered } from "lucide-react";
 import CheckoutItems from "../components/CheckoutItems";
+import PaymentSection from "../components/PaymentSection";
+
+const openModal = () => {
+  document.getElementById("my_modal_1").showModal();
+};
+
+const closeModal = () => {
+  document.getElementById("my_modal_1").close();
+};
 
 const Checkout = () => {
   return (
@@ -332,9 +341,16 @@ const Checkout = () => {
               <button
                 type="submit"
                 className="flex w-full items-center justify-center rounded-lg bg-blue-400 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+                onClick={openModal}
               >
                 Proceed to Payment
               </button>
+              
+              <dialog id="my_modal_1" className="modal rounded-2xl shadow-2xl">
+                <div className="modal-box">
+                  <PaymentSection closeModal={closeModal} />
+                </div>
+              </dialog>
             </div>
           </div>
         </div>

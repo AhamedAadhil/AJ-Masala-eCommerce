@@ -1,6 +1,7 @@
 import TrendingProducts from "../components/TrendingProducts";
 import BannerCarousel from "../components/BannerCarousel";
 import AllProducts from "../components/AllProducts";
+import PaymentSection from "../components/PaymentSection";
 
 const sampleProducts = [
   {
@@ -156,6 +157,7 @@ const HomePage = () => {
   return (
     <div className="lg:place-items-center">
       <div className="md:w-full lg:w-3/5 justify-items-center ">
+        <PaymentSection/>
         <BannerCarousel />
         <div className="mx-0 max-w-full">
           <TrendingProducts products={sampleProducts} />
