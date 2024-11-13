@@ -21,6 +21,7 @@ import UpdateOrder from "./pages/admin/UpdateOrder";
 import SingleProduct from "./pages/SingleProduct";
 import HomePage from "./pages/HomePage";
 import Checkout from "./pages/Checkout";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   const { checkAuth, checkingAuth, user } = useUserStore();
@@ -38,6 +39,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/SingleProduct" element={<SingleProduct />} />
         <Route path="/Checkout" element={<Checkout/>} />
+        <Route path="/profile" element={<UserProfile/>} />
 
         {/* Admin Routes */}
         {user?.role === "admin" ? (
