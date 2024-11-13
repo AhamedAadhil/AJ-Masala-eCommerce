@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path from "path";
 
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
@@ -17,6 +18,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5432;
+
+const __dirname = path.resolve();
 
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" })); //allow parse body of req
@@ -35,6 +38,14 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/coupon", couponRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/analytics", analyticsRoutes);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server is Up on http://localhost:${PORT}`);
