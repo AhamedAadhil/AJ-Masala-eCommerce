@@ -95,13 +95,16 @@ export const useProductStore = create((set) => ({
 
         await fetchAllProducts();
         toast.success("Product updated successfully");
-        navigate("/admin/products");
+        if (!Object.keys(data).includes("isFeatured")) {
+          navigate("/admin/products");
+        }
       } else {
         throw new Error("Product data is missing in the response.");
       }
     } catch (error) {
       set({ loading: false });
       toast.error(error.response?.data?.message || "Failed to update product");
+      console.log(error.response?.data?.message);
     }
   },
 }));
