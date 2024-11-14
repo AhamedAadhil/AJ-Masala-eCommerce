@@ -23,6 +23,8 @@ const UpdateProduct = () => {
 
   const categories = ["Spices", "Herbs", "Grains"];
 
+  const [productData, setProductData] = useState(null); // Set to null initially
+
   useEffect(() => {
     const fetchProductData = async () => {
       if (id) {
@@ -32,16 +34,16 @@ const UpdateProduct = () => {
     fetchProductData();
   }, [id, getSingleProduct]);
 
-  const [productData, setProductData] = useState({
-    id: "",
-    name: "",
-    description: "",
-    stock: 0,
-    category: "",
-    tags: "",
-    ps: [{ price: 0, size: "" }],
-    images: [],
-  });
+  // const [productData, setProductData] = useState({
+  //   id: "",
+  //   name: "",
+  //   description: "",
+  //   stock: 0,
+  //   category: "",
+  //   tags: "",
+  //   ps: [{ price: 0, size: "" }],
+  //   images: [],
+  // });
 
   useEffect(() => {
     // Set productData only when product data is fully fetched
@@ -58,6 +60,10 @@ const UpdateProduct = () => {
       });
     }
   }, [product]);
+
+  if (loading || !productData) {
+    return <div>Loading...</div>; // Show loading message while fetching product data
+  }
 
   console.log(`product `, product);
   console.log(`product Data `, productData);
@@ -140,12 +146,7 @@ const UpdateProduct = () => {
       navigate
     );
     console.log("Updated Product Data:", productData);
-    // You would make an API call here to save the updated product data
   };
-
-  if (loading && !product?._id) {
-    return <div>Loading...</div>; // Show loading message while fetching product data
-  }
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen flex justify-center items-center">
