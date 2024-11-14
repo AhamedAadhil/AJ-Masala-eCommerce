@@ -7,6 +7,9 @@ const BannerCarousel = () => {
   const { carousels, getCarousels } = useCarouselStore();
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [startTouch, setStartTouch] = useState(0);
+  const [endTouch, setEndTouch] = useState(0);
+
   const navigate = useNavigate();
   // 1500x600 was exist
   // good solution 16:9 aspect ratio images
@@ -15,6 +18,13 @@ const BannerCarousel = () => {
   // Function to move to the next slide
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % carousels?.length);
+  };
+
+  // Function to move to the previous slide
+  const prevSlide = () => {
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + carousels?.length) % carousels?.length
+    );
   };
 
   // Function to move to a specific slide (via bullet)
@@ -33,8 +43,33 @@ const BannerCarousel = () => {
     return () => clearInterval(intervalId); // Clean up the interval on unmount
   });
 
+  // Swipe event handlers
+  const handleTouchStart = (e) => {
+    setStartTouch(e.touches[0].clientX); // Get the starting position of touch
+  };
+
+  const handleTouchMove = (e) => {
+    setEndTouch(e.touches[0].clientX); // Get the current touch position
+  };
+
+  const handleTouchEnd = () => {
+    if (startTouch - endTouch > 100) {
+      // Swipe left, go to next slide
+      nextSlide();
+    } else if (endTouch - startTouch > 100) {
+      // Swipe right, go to previous slide
+      prevSlide();
+    }
+  };
+
   return (
-    <div className="relative w-11/12">
+    // w-11/12
+    <div
+      className="relative w-full"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="overflow-hidden">
         <div className="relative w-full h-0 pb-[55.6%]">
           {/* This ensures a 18:10 or 9:5 aspect ratio */}
@@ -45,7 +80,7 @@ const BannerCarousel = () => {
             }}
             src={carousels[currentIndex]?.image}
             alt="Banner"
-            className="absolute top-0 left-0 w-full h-full object-cover"
+            className="absolute top-0 left-0 w-full h-full object-cover object-center"
           />
         </div>
       </div>
