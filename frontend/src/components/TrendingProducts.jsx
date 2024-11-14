@@ -2,6 +2,13 @@
 import ItemPreview from "./ItemPreview";
 
 const TrendingProducts = ({ products }) => {
+  const generateOriginalPrice = (price) => {
+    // Generate a random factor between 1.1 and 1.5 (10% to 50% more expensive)
+    const randomFactor = 1 + Math.random() * 0.4; // 0.4 gives a 40% margin
+    const originalPrice = price * randomFactor;
+    // Round the originalPrice to the nearest integer (you can adjust to two decimals if needed)
+    return Math.round(originalPrice); // rounds to the nearest whole number
+  };
   return (
     <div className="bg-white p-4 shadow-lg mt-4">
       <h2 className="text-xl font-bold mb-3">TRENDING PRODUCTS</h2>
@@ -10,10 +17,10 @@ const TrendingProducts = ({ products }) => {
           <ItemPreview
             key={product.id}
             name={product.name}
-            price={product.price}
-            originalPrice={product.originalPrice}
-            rating={product.rating}
-            imageUrl={product.imageUrl}
+            price={product.ps[0].price}
+            originalPrice={generateOriginalPrice(product.ps[0].price)}
+            rating={product.overAllRating}
+            imageUrl={product.images[0]}
           />
         ))}
       </div>
