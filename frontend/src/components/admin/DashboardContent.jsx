@@ -29,7 +29,6 @@ function DashboardContent() {
         setStockData(response.data.stockData);
         setTopUsersData(response.data.topUsersData);
         setIsLoading(false);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching analytics data:", error);
         setIsLoading(false);

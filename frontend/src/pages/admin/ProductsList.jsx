@@ -25,8 +25,6 @@ const ProductsList = () => {
     fetchAllProducts();
   }, [fetchAllProducts]);
 
-  console.log("products", products);
-
   return (
     <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
       {/* Search bar and Create New Product button */}

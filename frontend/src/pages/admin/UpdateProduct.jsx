@@ -18,17 +18,6 @@ const UpdateProduct = () => {
     fetchAllProducts,
   } = useProductStore();
 
-  const [productData, setProductData] = useState({
-    id: "",
-    name: "",
-    description: "",
-    stock: "",
-    category: "",
-    tags: "",
-    ps: [{ price: "", size: "" }],
-    images: [],
-  });
-
   const [deletedImages, setDeletedImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
 
@@ -42,6 +31,17 @@ const UpdateProduct = () => {
     };
     fetchProductData();
   }, [id, getSingleProduct]);
+
+  const [productData, setProductData] = useState({
+    id: "",
+    name: "",
+    description: "",
+    stock: 0,
+    category: "",
+    tags: "",
+    ps: [{ price: 0, size: "" }],
+    images: [],
+  });
 
   useEffect(() => {
     // Set productData only when product data is fully fetched

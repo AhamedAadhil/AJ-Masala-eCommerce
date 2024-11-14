@@ -11,7 +11,6 @@ import {
 } from "recharts";
 
 function SalesChart({ data }) {
-  console.log(data);
   return (
     <div className="bg-gray-700 text-white p-4 rounded-lg">
       <h3 className="text-lg mb-4">Sales Overview</h3>
