@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Box, Plus, Trash, Upload, Loader } from "lucide-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -9,6 +9,7 @@ import { useProductStore } from "../../stores/useProductStore";
 
 const UpdateProduct = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const {
     product,
     loading,
@@ -18,6 +19,7 @@ const UpdateProduct = () => {
   } = useProductStore();
 
   const [productData, setProductData] = useState({
+    id: "",
     name: "",
     description: "",
     stock: "",
@@ -33,21 +35,26 @@ const UpdateProduct = () => {
   const categories = ["Spices", "Herbs", "Grains"];
 
   useEffect(() => {
-    if (id) {
-      getSingleProduct(id);
-    }
+    const fetchProductData = async () => {
+      if (id) {
+        await getSingleProduct(id);
+      }
+    };
+    fetchProductData();
   }, [id, getSingleProduct]);
 
   useEffect(() => {
+    // Set productData only when product data is fully fetched
     if (product && product._id) {
       setProductData({
-        name: product.name || "",
-        description: product.description || "",
+        id: product._id,
+        name: product.name,
+        description: product.description,
         stock: product.stock || 0,
-        category: product.category || "",
-        tags: product.tags || "",
-        ps: product.ps || [{ price: "", size: "" }],
-        images: product.images || [],
+        category: product.category,
+        tags: product.tags,
+        ps: product.ps,
+        images: product.images,
       });
     }
   }, [product]);
@@ -129,7 +136,8 @@ const UpdateProduct = () => {
     await updateProduct(
       id,
       { ...productData, deletedImages, newImages },
-      fetchAllProducts
+      fetchAllProducts,
+      navigate
     );
     console.log("Updated Product Data:", productData);
     // You would make an API call here to save the updated product data

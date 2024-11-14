@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Plus, Upload, Loader } from "lucide-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -7,6 +8,7 @@ import { quilModules } from "../../lib/QuilModules";
 import { useProductStore } from "../../stores/useProductStore";
 
 const CreateProduct = () => {
+  const navigate = useNavigate();
   const [priceSizeList, setPriceSizeList] = useState([{ price: "", size: "" }]);
   const [productData, setProductData] = useState({
     name: "",
@@ -84,7 +86,7 @@ const CreateProduct = () => {
     };
 
     try {
-      await createProduct(updatedProductData);
+      await createProduct(updatedProductData, navigate);
       setProductData({
         name: "",
         description: "",

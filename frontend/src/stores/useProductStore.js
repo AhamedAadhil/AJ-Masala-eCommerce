@@ -9,7 +9,7 @@ export const useProductStore = create((set) => ({
   error: null,
   setProducts: (products) => set({ products }),
 
-  createProduct: async (productData) => {
+  createProduct: async (productData, navigate) => {
     set({ loading: true });
     try {
       const res = await axios.post("/products", productData);
@@ -17,7 +17,8 @@ export const useProductStore = create((set) => ({
         products: [...prevState.products, res.data],
         loading: false,
       }));
-      return toast.success("Product added");
+      toast.success("Product added");
+      navigate("/admin/products");
     } catch (error) {
       toast.error(error.response.data.message);
       set({ loading: false });
@@ -36,9 +37,9 @@ export const useProductStore = create((set) => ({
     } catch (error) {
       set({
         loading: false,
-        error: `Failed fetch Product: ${error.response.data.message}`,
+        error: `Failed fetch Product: ${error.response?.data?.message}`,
       });
-      toast.error(error.response.data.message || "Failed to fetch product");
+      toast.error(error.response?.data?.message || "Failed to fetch product");
     }
   },
 
@@ -76,7 +77,7 @@ export const useProductStore = create((set) => ({
       toast.error(error.response.data.message || "Failed to delete product");
     }
   },
-  updateProduct: async (productId, data = {}, fetchAllProducts) => {
+  updateProduct: async (productId, data = {}, fetchAllProducts, navigate) => {
     try {
       set({ loading: true });
 
@@ -94,6 +95,7 @@ export const useProductStore = create((set) => ({
 
         await fetchAllProducts();
         toast.success("Product updated successfully");
+        navigate("/admin/products");
       } else {
         throw new Error("Product data is missing in the response.");
       }

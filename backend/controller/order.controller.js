@@ -1,4 +1,5 @@
 import { Order } from "../model/order.model.js";
+import { Product } from "../model/product.model.js";
 import { generateOrderID } from "../utils/generateOrderID.js";
 
 export const createOrder = async (req, res) => {
@@ -65,6 +66,15 @@ export const createOrder = async (req, res) => {
 
     // save the order into user 's orderHistory
     await user.updateOne({ $push: { orderHistory: newOrder._id } });
+
+    // step 5 reduce stock of each product in the order
+    for (const item of products) {
+      await Product.findByIdAndUpdate(
+        item.product,
+        { $inc: { stock: -item.quantity } },
+        { new: true }
+      );
+    }
 
     return res.status(201).json({
       message: "Order created successfully",

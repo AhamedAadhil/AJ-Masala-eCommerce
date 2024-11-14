@@ -1,6 +1,5 @@
 import { Star, Edit, PlusCircle, Search } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import debounce from "lodash/debounce";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useProductStore } from "../../stores/useProductStore";
@@ -12,14 +11,10 @@ const ProductsList = () => {
   const { products, updateProduct, loading, fetchAllProducts } =
     useProductStore();
 
-  // Debounced version of handleUpdate to limit toggle requests
-  const handleUpdate = useCallback(
-    debounce((productId, data) => {
-      updateProduct(productId, data, fetchAllProducts);
-      setTimeout(fetchAllProducts, 500);
-    }, 300), // 300ms delay
-    []
-  );
+  const handleUpdate = (productId, data) => {
+    updateProduct(productId, data, fetchAllProducts);
+    fetchAllProducts();
+  };
 
   // Filter products based on search term
   const filteredProducts = products?.filter((product) =>
@@ -29,6 +24,8 @@ const ProductsList = () => {
   useEffect(() => {
     fetchAllProducts();
   }, [fetchAllProducts]);
+
+  console.log("products", products);
 
   return (
     <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto">
