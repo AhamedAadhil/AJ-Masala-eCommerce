@@ -28,6 +28,9 @@ const UpdateProduct = () => {
   useEffect(() => {
     const fetchProductData = async () => {
       if (id) {
+        // Clear previous product data
+        setProductData(null);
+        // Fetch new product data
         await getSingleProduct(id);
       }
     };
