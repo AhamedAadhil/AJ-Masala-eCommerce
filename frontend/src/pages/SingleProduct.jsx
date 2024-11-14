@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   DollarSign,
   ShoppingCart,
@@ -8,16 +9,34 @@ import {
 } from "lucide-react";
 
 import { useProductStore } from "../stores/useProductStore";
+import { useCartStore } from "../stores/useCartStore";
+import { useUserStore } from "../stores/useUserStore";
 import ReviewCard from "../components/ReviewCard";
-import { useParams } from "react-router-dom";
+import LoginModal from "../components/LoginModal";
+import RegisterModal from "../components/RegisterModal";
 
 const SingleProduct = () => {
   const { id } = useParams();
   const { product, getSingleProduct } = useProductStore();
+  const { user } = useUserStore();
+  const { addToCart } = useCartStore();
 
   const [activeImg, setActiveImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedPrice, setSelectedPrice] = useState(null);
+
+  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const openRegisterModal = () => {
+    setRegisterModalOpen(true);
+    setLoginModalOpen(false);
+  };
+  const openLoginModal = () => {
+    setLoginModalOpen(true);
+    setRegisterModalOpen(false);
+  };
+  const closeRegisterModal = () => setRegisterModalOpen(false);
+  const closeLoginModal = () => setLoginModalOpen(false);
 
   useEffect(() => {
     getSingleProduct(id);
@@ -32,6 +51,15 @@ const SingleProduct = () => {
 
   const handleSizeChange = (price) => {
     setSelectedPrice(price);
+  };
+
+  // Handle add to cart action
+  const handleAddToCart = () => {
+    if (!user) {
+      setLoginModalOpen(true); // Open modal if no user is logged in
+    } else {
+      addToCart(product._id, quantity, selectedPrice);
+    }
   };
 
   return (
@@ -60,7 +88,9 @@ const SingleProduct = () => {
 
       <div className="flex flex-col gap-4 lg:w-2/4 md:w-full">
         <div>
-          <span className=" text-orange-400 font-semibold">AJ Masalsa</span>
+          <span className=" text-orange-400 font-semibold">
+            AJ Masalsa&apos;s
+          </span>
           <h1 className="text-3xl font-bold">{product?.name}</h1>
         </div>
         <h6 className="text-2xl font-semibold">
@@ -111,7 +141,10 @@ const SingleProduct = () => {
 
           {/* AddToCart and BuyNow Buttons */}
           <div className="flex space-x-3">
-            <button className="flex justify-center items-center bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition duration-300 text-sm lg:text-base whitespace-nowrap min-w-[110px]">
+            <button
+              onClick={handleAddToCart}
+              className="flex justify-center items-center bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition duration-300 text-sm lg:text-base whitespace-nowrap min-w-[110px]"
+            >
               <span>Add to Cart</span>
               <ShoppingCart className="ml-2" size={18} />
             </button>
@@ -167,6 +200,17 @@ const SingleProduct = () => {
       <div className="sm:hidden mt-4">
         <ReviewCard />
       </div>
+      {/* Register and Login Modals */}
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={closeRegisterModal}
+        onOpenLogin={openLoginModal}
+      />
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={closeLoginModal}
+        onOpenRegister={openRegisterModal}
+      />
     </div>
   );
 };

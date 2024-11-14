@@ -39,9 +39,10 @@ export const useUserStore = create((set, get) => ({
       onClose();
       return toast.success("Welcome Back");
     } catch (error) {
+      console.log(error?.response?.data?.message || error.message);
       set({ loading: false });
       return toast.error(
-        error.response.data.message || "An error occured, please try again"
+        error?.response?.data?.message || "An error occured, please try again"
       );
     }
   },
@@ -59,7 +60,6 @@ export const useUserStore = create((set, get) => ({
     try {
       set({ loading: true });
       const res = await axios.post("/auth/logout");
-      console.log(res);
       if (res && res.data.success) {
         set({ loading: false });
         set({ user: null });
@@ -69,7 +69,7 @@ export const useUserStore = create((set, get) => ({
         throw new Error(res.data.message || "An error occurred during logout");
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error.response.data.message);
       set({ loading: false });
       toast.error(error?.message || "An error occurred during logout");
     }
@@ -86,6 +86,20 @@ export const useUserStore = create((set, get) => ({
     } catch (error) {
       set({ loading: false, users: [] });
       console.log(error.response.data.message);
+    }
+  },
+  getUser: async (userId) => {
+    set({ loading: true });
+    try {
+      const currentUser = get().user;
+      if (currentUser && currentUser._id === userId) {
+        const res = await axios.get(`/user/${userId}`);
+        set({ user: res.data.user, loading: false });
+      }
+    } catch (error) {
+      set({ loading: false });
+      console.log(error.response?.data?.message || error.message);
+      toast.error("Failed to fetch user data");
     }
   },
   toggleUserStatus: async (userId) => {

@@ -9,7 +9,8 @@ export const addToCart = async (req, res) => {
       (item) => item.product.toString() === productId
     );
     if (existingItem) {
-      existingItem.quantity += quantity;
+      existingItem.quantity = quantity;
+      existingItem.unitPrice = unitPrice;
     } else {
       user.cartItems.push({
         product: productId,
@@ -20,10 +21,10 @@ export const addToCart = async (req, res) => {
     await user.save();
     // cache the data in redis
     await redis.set(`cart_items:${user._id}`, JSON.stringify(user.cartItems));
-    let cartTotal = 0;
-    const cartTotalPrice = user.cartItems.map((item) => {
-      cartTotal += item.quantity * item.unitPrice;
-    });
+    const cartTotalPrice = user.cartItems.reduce((total, item) => {
+      return total + item.quantity * item.unitPrice;
+    }, 0);
+
     return res.status(201).json({
       cartTotalPrice: cartTotalPrice,
       cartItems: user.cartItems,

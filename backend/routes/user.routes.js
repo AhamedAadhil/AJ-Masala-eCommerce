@@ -10,6 +10,6 @@ import {
 const router = express.Router();
 
 router.get("/all", protectRoute, adminRoute, getAllUsers);
-router.get("/:id", protectRoute, adminRoute, getUser);
+router.get("/:id", protectRoute, getUser);
 router.patch("/:id", protectRoute, adminRoute, toggleUserStatus);
 export default router;

@@ -42,8 +42,14 @@ function App() {
         <Route path="/product/:id" element={<SingleProduct />} />
         {/* TODO: make it privateRote by check if user exist and user.role==="customer" */}
         <Route path="/Checkout" element={<Checkout />} />
-        {/*TODO: make it privateRote by check if user exist and user.role==="customer"   */}
-        <Route path="/profile" element={<UserProfile />} />
+
+        {/* Customer Private Routes */}
+        {user?.role === "customer" ? (
+          <Route path="/profile/:id" element={<UserProfile />} />
+        ) : (
+          <Route path="*" element={<Navigate to="/" />} />
+        )}
+
         <Route path="/all" element={<AllProductsPage />} />
         {/* Admin Routes */}
         {user?.role === "admin" ? (

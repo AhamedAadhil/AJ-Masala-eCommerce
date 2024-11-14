@@ -12,8 +12,11 @@ const Navbar = () => {
   const { user } = useUserStore();
 
   const isAdmin = user?.role === "admin";
-  // const isAdmin = true;
-  const cartItemCount = 3; // Replace with actual cart item count from state or props
+
+  const cartItemCount = user?.cartItems?.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   const [isOpen, setIsOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
@@ -90,7 +93,7 @@ const Navbar = () => {
           )}
 
           {/* Cart Icon with Badge */}
-          {cartItemCount > 0 && user && user.role === "customer" && (
+          {user && user.role === "customer" && cartItemCount > 0 && (
             <div className="relative">
               <ShoppingCart
                 onClick={() => navigate("/cart")}
@@ -98,7 +101,7 @@ const Navbar = () => {
               />
 
               <span className="absolute -top-2 -left-1 bg-red-500 text-white rounded-full text-xs px-1.5 py-0.5">
-                {cartItemCount}
+                {cartItemCount ?? 0}
               </span>
             </div>
           )}
@@ -110,7 +113,7 @@ const Navbar = () => {
               height={30}
               width={30}
               alt="Profile"
-              onClick={() => navigate("/profile")}
+              onClick={() => navigate(`/profile/${user._id}`)}
               className="text-black text-xl cursor-pointer"
             />
           ) : user && user.role !== "customer" ? null : (
