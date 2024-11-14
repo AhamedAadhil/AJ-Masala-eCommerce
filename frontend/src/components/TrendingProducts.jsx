@@ -15,7 +15,8 @@ const TrendingProducts = ({ products }) => {
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         {products.map((product) => (
           <ItemPreview
-            key={product.id}
+            productId={product._id}
+            key={product._id}
             name={product.name}
             price={product.ps[0].price}
             originalPrice={generateOriginalPrice(product.ps[0].price)}

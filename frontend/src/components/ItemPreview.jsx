@@ -1,10 +1,22 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const ItemPreview = ({ name, price, originalPrice, rating, imageUrl }) => {
+const ItemPreview = ({
+  productId,
+  name,
+  price,
+  originalPrice,
+  rating,
+  imageUrl,
+}) => {
+  const navigate = useNavigate();
   return (
     <motion.div
+      onClick={() => {
+        navigate(`/product/${productId}`);
+      }}
       className="max-w-xs bg-white rounded-2xl overflow-hidden shadow-lg mx-2 my-4 cursor-pointer"
       whileHover={{
         scale: 1.05,

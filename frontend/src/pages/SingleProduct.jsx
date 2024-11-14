@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DollarSign,
   ShoppingCart,
@@ -6,75 +6,48 @@ import {
   CreditCard,
   Landmark,
 } from "lucide-react";
+
+import { useProductStore } from "../stores/useProductStore";
 import ReviewCard from "../components/ReviewCard";
+import { useParams } from "react-router-dom";
 
 const SingleProduct = () => {
-  const product = {
-    _id: "12345",
-    name: "Garam Masala",
-    price: 550,
-    ps: [
-      { price: 150, size: "75g" },
-      { price: 250, size: "100g" },
-      { price: 400, size: "250g" },
-      { price: 700, size: "500g" },
-    ],
-    images: [
-      "https://priyafoods.com/cdn/shop/files/GARAMMASALA_1.jpg?v=1705735292",
-      "https://www.ceepeespices.in/wp-content/uploads/2021/02/garam-masala-1kg-front.jpg",
-      "https://shop.mtrfoods.com/cdn/shop/products/FOP_caddd461-4eaf-410c-868a-2ae58106c94b_1200x1200.png?v=1668601521",
-      "https://www.dnvfoods.com/wp-content/uploads/2022/05/Garam-Masala-Powder-Front-.jpeg",
-    ],
-    stock: 15,
-    description: `
-    <h1>Description</h1>
-    <p>Fenugreek is an annual plant in the family Fabaceae, with leaves consisting of three small obovate to oblong leaflets...</p>
-    
-    <h1>Key Ingredients</h1>
-    <p>Fenugreek seeds, coriander seeds, cumin seeds, black pepper, cinnamon...</p>
-    
-    <h1>Why Choose AJ Masala</h1>
-    <p>Authentic flavors sourced from the best spice farms...</p>
-    
-    <h1>Details</h1>
-    <ul>
-      <li>Freshly ground spices</li>
-      <li>Rich aroma and flavor</li>
-      <li>Suitable for vegetarian and non-vegetarian dishes</li>
-    </ul>
-  `,
-    paymentOptions: [
-      { icon: CreditCard, label: "Pay online" },
-      { icon: DollarSign, label: "Cash on delivery" },
-      { icon: Landmark, label: "Bank deposit" },
-    ],
-    deliveryInfo: "We deliver island-wide in 3–5 working days.",
-  };
+  const { id } = useParams();
+  const { product, getSingleProduct } = useProductStore();
 
-  const [activeImg, setActiveImage] = useState(product.images[0]);
-
+  const [activeImg, setActiveImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [selectedPrice, setSelectedPrice] = useState(null);
 
-  const [selectedPrice, setSelectedPrice] = useState(product?.ps[0].price);
+  useEffect(() => {
+    getSingleProduct(id);
+  }, [getSingleProduct, id]);
+
+  useEffect(() => {
+    if (product) {
+      setActiveImage(product?.images[0]); // Set the initial active image
+      setSelectedPrice(product?.ps[0]?.price); // Set the initial price
+    }
+  }, [product]); // This will run when `product` is updated
 
   const handleSizeChange = (price) => {
     setSelectedPrice(price);
   };
 
   return (
-    <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-start p-10 bg-slate-50 rounded-2xl shadow-md lg:mx-60">
+    <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-start p-10 bg-slate-50 shadow-sm lg:mx-60 border-l-2 border-r-2 border-b-2 rounded-b-xl">
       <div className="flex flex-col gap-6 lg:w-2/4 content-center">
         <img
           src={activeImg}
-          alt={product.name}
+          alt={product?.name}
           className="w-full h-full aspect-square object-cover rounded-xl"
         />
-        <div className="flex flex-row justify-between overflow-scroll h-24">
-          {product.images.map((image, index) => (
+        <div className="flex gap-2 flex-row justify-between overflow-scroll h-24">
+          {product?.images?.map((image, index) => (
             <img
               key={index}
               src={image}
-              alt={product.name}
+              alt={product?.name}
               className="w-24 h-24 rounded-md cursor-pointer"
               onClick={() => setActiveImage(image)}
             />
@@ -88,17 +61,17 @@ const SingleProduct = () => {
       <div className="flex flex-col gap-4 lg:w-2/4 md:w-full">
         <div>
           <span className=" text-orange-400 font-semibold">AJ Masalsa</span>
-          <h1 className="text-3xl font-bold">{product.name}</h1>
+          <h1 className="text-3xl font-bold">{product?.name}</h1>
         </div>
         <h6 className="text-2xl font-semibold">
-          Rs. {selectedPrice.toFixed(2)}
+          Rs. {selectedPrice?.toFixed(2)}
         </h6>
 
         <div className="flex sm:w-full items-center py-2 overflow-x-scroll">
           <label className="cursor-pointer">
             <span className="px-3 py-1 text-sm font-medium mr-2">Size</span>
           </label>
-          {product.ps.map((option, index) => (
+          {product?.ps?.map((option, index) => (
             <label key={index} className="cursor-pointer">
               <input
                 type="radio"
@@ -151,7 +124,7 @@ const SingleProduct = () => {
 
         <div className="text-orange-700 font-bold">Description</div>
         <div
-          dangerouslySetInnerHTML={{ __html: product.description }}
+          dangerouslySetInnerHTML={{ __html: product?.description }}
           className="text-gray-700 text-justify"
         />
 

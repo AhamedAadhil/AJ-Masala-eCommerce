@@ -39,8 +39,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        {/* TODO: have to change the path dynamically */}
-        <Route path="/SingleProduct" element={<SingleProduct />} />
+        <Route path="/product/:id" element={<SingleProduct />} />
         {/* TODO: make it privateRote by check if user exist and user.role==="customer" */}
         <Route path="/Checkout" element={<Checkout />} />
         {/*TODO: make it privateRote by check if user exist and user.role==="customer"   */}
@@ -65,9 +64,8 @@ function App() {
         )}
       </Routes>
       <Toaster />
-      <Footer/>
+      <Footer />
     </div>
-    
   );
 }
 
