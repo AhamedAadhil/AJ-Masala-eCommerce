@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -7,6 +7,7 @@ import { useUserStore } from "./stores/useUserStore";
 import Navbar from "./components/Navbar";
 import LoadingSpinner from "./components/LoadingSpinner";
 import AdminLayout from "./components/admin/AdminLayout";
+import PrivateRoutes from "./components/PrivateRoutes";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CreateProduct from "./pages/admin/CreateProduct";
@@ -26,7 +27,7 @@ import Footer from "./components/Footer";
 import AllProductsPage from "./pages/AllProductsPage";
 
 function App() {
-  const { checkAuth, checkingAuth, user } = useUserStore();
+  const { checkAuth, checkingAuth } = useUserStore();
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
@@ -40,19 +41,16 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/product/:id" element={<SingleProduct />} />
-        {/* TODO: make it privateRote by check if user exist and user.role==="customer" */}
-        <Route path="/Checkout" element={<Checkout />} />
+        <Route path="/all" element={<AllProductsPage />} />
 
         {/* Customer Private Routes */}
-        {user?.role === "customer" ? (
+        <Route element={<PrivateRoutes allowedRole="customer" />}>
           <Route path="/profile/:id" element={<UserProfile />} />
-        ) : (
-          <Route path="*" element={<Navigate to="/" />} />
-        )}
+          <Route path="/checkout" element={<Checkout />} />
+        </Route>
 
-        <Route path="/all" element={<AllProductsPage />} />
         {/* Admin Routes */}
-        {user?.role === "admin" ? (
+        <Route path="/admin" element={<PrivateRoutes allowedRole="admin" />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="products" element={<ProductsList />} />
@@ -65,9 +63,7 @@ function App() {
             {/* TODO: have to change the path dynamically */}
             <Route path="update-order" element={<UpdateOrder />} />
           </Route>
-        ) : (
-          <Route path="/admin/*" element={<Navigate to="/" replace />} />
-        )}
+        </Route>
       </Routes>
       <Toaster />
       <Footer />
