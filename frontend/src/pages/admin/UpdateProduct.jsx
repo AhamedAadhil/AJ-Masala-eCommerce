@@ -4,7 +4,7 @@ import { Box, Plus, Trash, Upload, Loader } from "lucide-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-import { quilModules } from "../../lib/QuilModules";
+import { quilModules } from "../../lib/quilModules";
 import { useProductStore } from "../../stores/useProductStore";
 
 const UpdateProduct = () => {
