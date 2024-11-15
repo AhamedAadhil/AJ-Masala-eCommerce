@@ -25,6 +25,7 @@ import Checkout from "./pages/Checkout";
 import UserProfile from "./pages/UserProfile";
 import Footer from "./components/Footer";
 import AllProductsPage from "./pages/AllProductsPage";
+import CartPage from "./pages/CartPage";
 
 function App() {
   const { checkAuth, checkingAuth } = useUserStore();
@@ -47,6 +48,7 @@ function App() {
         <Route element={<PrivateRoutes allowedRole="customer" />}>
           <Route path="/profile/:id" element={<UserProfile />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/cart" element={<CartPage />} />
         </Route>
 
         {/* Admin Routes */}

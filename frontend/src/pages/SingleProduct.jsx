@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   DollarSign,
   ShoppingCart,
@@ -17,13 +17,14 @@ import RegisterModal from "../components/RegisterModal";
 
 const SingleProduct = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { product, getSingleProduct } = useProductStore();
   const { user } = useUserStore();
-  const { addToCart } = useCartStore();
+  const { addToCart, checkOut } = useCartStore();
 
   const [activeImg, setActiveImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [selectedPrice, setSelectedPrice] = useState(null);
+  const [selectedPrice, setSelectedPrice] = useState(1);
 
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -59,6 +60,24 @@ const SingleProduct = () => {
       setLoginModalOpen(true); // Open modal if no user is logged in
     } else {
       addToCart(product._id, quantity, selectedPrice);
+    }
+  };
+
+  const handleCheckoutSummary = () => {
+    if (!user) {
+      setLoginModalOpen(true); // Open modal if no user is logged in
+    } else {
+      const productsToCheckout = [
+        {
+          _id: product._id,
+          name: product.name,
+          image: product.images[0],
+          quantity: quantity,
+          unitPrice: selectedPrice,
+        },
+      ];
+      console.log("productsToCheckout from frontend", productsToCheckout);
+      checkOut(productsToCheckout, navigate);
     }
   };
 
@@ -148,7 +167,10 @@ const SingleProduct = () => {
               <span>Add to Cart</span>
               <ShoppingCart className="ml-2" size={18} />
             </button>
-            <button className="flex justify-center items-center bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition duration-300 text-sm lg:text-base whitespace-nowrap min-w-[110px]">
+            <button
+              onClick={handleCheckoutSummary}
+              className="flex justify-center items-center bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition duration-300 text-sm lg:text-base whitespace-nowrap min-w-[110px]"
+            >
               <span>Buy Now</span>
               <ShoppingBag className="ml-2" size={18} />
             </button>

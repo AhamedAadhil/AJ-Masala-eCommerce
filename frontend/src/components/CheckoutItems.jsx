@@ -1,5 +1,6 @@
-import React from 'react';
-import {Trash2} from 'lucide-react';
+/* eslint-disable react/prop-types */
+
+import { Trash2 } from "lucide-react";
 
 const CartItem = ({ product }) => {
   return (
@@ -16,8 +17,10 @@ const CartItem = ({ product }) => {
       {/* Product Details */}
       <div className="flex-1">
         <h3 className="text-lg font-medium text-gray-800">{product.name}</h3>
-        <p className="text-sm text-gray-600">1 x</p>
-        <p className="text-lg font-normal text-gray-800">Rs. {product.price}</p>
+        <p className="text-sm text-gray-600">{product.quantity}x</p>
+        <p className="text-lg font-normal text-gray-800">
+          Rs. {product.unitPrice}
+        </p>
       </div>
 
       {/* Delete Button */}
@@ -28,29 +31,18 @@ const CartItem = ({ product }) => {
   );
 };
 
-const CheckoutItems = () => {
-  // Sample product data
-  const products = [
-    {
-      id: 1,
-      name: 'AJ masala product 323',
-      price: 670,
-      image: 'https://nvhspices.com/wp-content/uploads/2024/02/NVH-GARAM-MASALA-POWDER.png', // Replace with actual image URL or path
-    },
-    {
-      id: 2,
-      name: 'AJ masala product 323',
-      price: 670,
-      image: 'https://nvhspices.com/wp-content/uploads/2024/02/NVH-GARAM-MASALA-POWDER.png', // Replace with actual image URL or path
-    },
-  ];
-
+const CheckoutItems = ({ products }) => {
+  // console.log("products from Checkout items", products);
+  if (!products) {
+    // If products is null, set it to an empty array
+    products = [];
+  }
   return (
     <div className="max-w-md mx-auto p-4 bg-white rounded-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl dark:bg-white">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-900 mb-4">
         Cart Items
       </h2>
-      
+
       {products.map((product) => (
         <CartItem key={product.id} product={product} />
       ))}

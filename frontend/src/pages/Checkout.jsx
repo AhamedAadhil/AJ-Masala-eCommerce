@@ -1,6 +1,7 @@
-import { ShoppingCart, CircleCheck, ListOrdered } from "lucide-react";
 import CheckoutItems from "../components/CheckoutItems";
 import PaymentSection from "../components/PaymentSection";
+
+import { useCartStore } from "../stores/useCartStore";
 
 const openModal = () => {
   document.getElementById("my_modal_1").showModal();
@@ -11,28 +12,10 @@ const closeModal = () => {
 };
 
 const Checkout = () => {
+  const { products, totalAmount } = useCartStore();
   return (
     <section className="bg-white rounded-md shadow-md lg:mt-4 lg:px-4 py-4 antialiased md:py-16">
       <form className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-        {/* <ol className="items-center flex w-full max-w-2xl text-center text-sm font-medium text-gray-500 sm:text-base">
-            <li className="after:border-1 flex items-center text-primary-700 after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-200 sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10">
-              <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['/'] sm:after:hidden">
-                <ShoppingCart />
-                Cart
-              </span>
-            </li>
-            <li className="after:border-1 flex items-center text-primary-700 after:mx-6 after:hidden after:h-1 after:w-full after:border-b after:border-gray-20 sm:after:inline-block sm:after:content-[''] md:w-full xl:after:mx-10">
-              <span className="flex items-center after:mx-2 after:text-gray-200 after:content-['/'] sm:after:hidden">
-                <CircleCheck />
-                Checkout
-              </span>
-            </li>
-            <li className="flex shrink-0 items-center">
-              <ListOrdered />
-              Order summary
-            </li>
-          </ol> */}
-
         <div className="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12 xl:gap-16">
           <div className="min-w-0 flex-1 space-y-8">
             <div className="space-y-4">
@@ -272,7 +255,7 @@ const Checkout = () => {
 
           <div className="mt-6 w-full space-y-6 sm:mt-8 lg:mt-0 lg:max-w-xs xl:max-w-md">
             <div>
-              <CheckoutItems />
+              <CheckoutItems products={products} />
             </div>
 
             <div>
@@ -308,7 +291,7 @@ const Checkout = () => {
                     Subtotal
                   </dt>
                   <dd className="text-base font-medium text-gray-900">
-                    $8,094.00
+                    LKR {totalAmount.toFixed(2)}
                   </dd>
                 </dl>
 
@@ -316,20 +299,20 @@ const Checkout = () => {
                   <dt className="text-base font-normal text-gray-500 ">
                     Shipping
                   </dt>
-                  <dd className="text-base font-medium text-gray-900">0</dd>
+                  <dd className="text-base font-medium text-gray-900">Free</dd>
                 </dl>
 
                 <dl className="flex items-center justify-between gap-4 py-3">
                   <dt className="text-base font-normal text-gray-500">
                     Discount
                   </dt>
-                  <dd className="text-base font-medium text-green-500">-$99</dd>
+                  <dd className="text-base font-medium text-green-500">-0</dd>
                 </dl>
 
                 <dl className="flex items-center justify-between gap-4 py-3">
                   <dt className="text-base font-bold text-gray-900 ">Total</dt>
                   <dd className="text-base font-bold text-gray-900 ">
-                    $8,392.00
+                    LKR {totalAmount.toFixed(2)}
                   </dd>
                 </dl>
 
@@ -345,7 +328,7 @@ const Checkout = () => {
               >
                 Proceed to Payment
               </button>
-              
+
               <dialog id="my_modal_1" className="modal rounded-2xl shadow-2xl">
                 <div className="modal-box">
                   <PaymentSection closeModal={closeModal} />

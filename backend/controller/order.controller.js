@@ -97,9 +97,28 @@ export const checkOutSummary = async (req, res) => {
         .status(400)
         .json({ message: "Please select at least one product." });
     }
+
+    // Verify each product exists in the database
+    for (let product of products) {
+      const exists = await Product.findById(product._id).select("_id");
+      if (!exists) {
+        return res
+          .status(404)
+          .json({ message: `Product with ID ${product._id} not found.` });
+      }
+    }
+
+    // Calculate total amount from frontend-provided unitPrice and quantity
     let totalAmount = 0;
-    const lineItems = products.map((product) => {
-      totalAmount += product.unitPrice * product.quantity;
+    products.forEach((product) => {
+      const { unitPrice, quantity } = product;
+      if (unitPrice && quantity) {
+        totalAmount += unitPrice * quantity;
+      } else {
+        console.warn(
+          `Missing unitPrice or quantity for product ID ${product._id}`
+        );
+      }
     });
 
     return res.status(200).json({ products, totalAmount, success: true });

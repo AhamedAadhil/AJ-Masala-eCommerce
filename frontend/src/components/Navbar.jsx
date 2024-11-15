@@ -13,10 +13,7 @@ const Navbar = () => {
 
   const isAdmin = user?.role === "admin";
 
-  const cartItemCount = user?.cartItems?.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+  const cartItemCount = user?.cartItems?.length;
 
   const [isOpen, setIsOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
