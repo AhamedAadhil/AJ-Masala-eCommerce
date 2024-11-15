@@ -1,15 +1,6 @@
 import CheckoutItems from "../components/CheckoutItems";
-import PaymentSection from "../components/PaymentSection";
 
 import { useCartStore } from "../stores/useCartStore";
-
-const openModal = () => {
-  document.getElementById("my_modal_1").showModal();
-};
-
-const closeModal = () => {
-  document.getElementById("my_modal_1").close();
-};
 
 const Checkout = () => {
   const { products, totalAmount } = useCartStore();
@@ -322,18 +313,11 @@ const Checkout = () => {
 
             <div className="space-y-3">
               <button
-                type="submit"
+                type="button"
                 className="flex w-full items-center justify-center rounded-lg bg-blue-400 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
-                onClick={openModal}
               >
                 Proceed to Payment
               </button>
-
-              <dialog id="my_modal_1" className="modal rounded-2xl shadow-2xl">
-                <div className="modal-box">
-                  <PaymentSection closeModal={closeModal} />
-                </div>
-              </dialog>
             </div>
           </div>
         </div>

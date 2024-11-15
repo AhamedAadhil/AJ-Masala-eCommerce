@@ -6,14 +6,14 @@ import { Search, Lock, ShoppingCart, Menu, UserPlus } from "lucide-react";
 import RegisterModal from "./RegisterModal";
 import LoginModal from "./LoginModal";
 import { useUserStore } from "../stores/useUserStore";
+import { useCartStore } from "../stores/useCartStore";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
+  const { cartItemCount } = useCartStore();
 
   const isAdmin = user?.role === "admin";
-
-  const cartItemCount = user?.cartItems?.length;
 
   const [isOpen, setIsOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);

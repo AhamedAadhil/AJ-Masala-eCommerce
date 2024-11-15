@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-
 import { Trash2 } from "lucide-react";
 
 const CartItem = ({ product }) => {
@@ -22,21 +21,11 @@ const CartItem = ({ product }) => {
           Rs. {product.unitPrice}
         </p>
       </div>
-
-      {/* Delete Button */}
-      <button className="text-red-600 hover:text-red-800">
-        <Trash2 size={20} />
-      </button>
     </div>
   );
 };
 
 const CheckoutItems = ({ products }) => {
-  // console.log("products from Checkout items", products);
-  if (!products) {
-    // If products is null, set it to an empty array
-    products = [];
-  }
   return (
     <div className="max-w-md mx-auto p-4 bg-white rounded-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl dark:bg-white">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-900 mb-4">
@@ -44,7 +33,7 @@ const CheckoutItems = ({ products }) => {
       </h2>
 
       {products.map((product) => (
-        <CartItem key={product.id} product={product} />
+        <CartItem key={product._id} product={product} />
       ))}
     </div>
   );

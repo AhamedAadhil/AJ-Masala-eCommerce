@@ -1,333 +1,107 @@
-import { useEffect } from "react";
-import CheckoutItems from "../components/CheckoutItems";
-
+import { useEffect, useState } from "react";
+import { Trash2, Frown } from "lucide-react";
 import { useCartStore } from "../stores/useCartStore";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
-  const { totalAmount, getUserCart, cart } = useCartStore();
+  const navigate = useNavigate();
+  const { getUserCart, cart, totalAmount, removeProductFromCart } =
+    useCartStore();
+  const [products, setProducts] = useState([]);
+
+  // Function to handle product removal
+  const handleRemoveProduct = (id) => {
+    removeProductFromCart(id);
+  };
 
   useEffect(() => {
-    getUserCart();
+    getUserCart(); // Fetch user cart
   }, [getUserCart]);
 
-  console.log("cart from cart page", cart);
+  useEffect(() => {
+    if (cart && Array.isArray(cart)) {
+      setProducts(cart); // Set products from cart
+    }
+  }, [cart]);
+
   return (
     <section className="bg-white rounded-md shadow-md lg:mt-4 lg:px-4 py-4 antialiased md:py-16">
-      <form className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-        <div className="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12 xl:gap-16">
-          <div className="min-w-0 flex-1 space-y-8">
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-gray-900">
-                Payment Method
-              </h3>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                {/* Repeated payment method options */}
-                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4">
-                  <div className="flex items-start">
-                    <div className="flex h-5 items-center">
-                      <input
-                        id="credit-card"
-                        aria-describedby="credit_card"
-                        type="radio"
-                        name="payment-method"
-                        value=""
-                        className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600"
-                        checked
-                      />
-                    </div>
+      <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Your Cart</h2>
 
-                    <div className="ms-4 text-sm">
-                      <label
-                        htmlFor="credit_card"
-                        className="font-medium leading-none text-gray-900"
-                      >
-                        Pay with Card
-                      </label>
-                      <p
-                        id="credit_card"
-                        className="mt-1 text-xs font-normal text-gray-500"
-                      >
-                        Pay with your credit/Debit card
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4">
-                  <div className="flex items-start">
-                    <div className="flex h-5 items-center">
-                      <input
-                        id="cod"
-                        aria-describedby="cod"
-                        type="radio"
-                        name="payment-method"
-                        value=""
-                        className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600"
-                      />
-                    </div>
-
-                    <div className="ms-4 text-sm">
-                      <label
-                        htmlFor="cod"
-                        className="font-medium leading-none text-gray-900"
-                      >
-                        COD
-                      </label>
-                      <p
-                        id="cod"
-                        className="mt-1 text-xs font-normal text-gray-500"
-                      >
-                        Cash on delivery
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4">
-                  <div className="flex items-start">
-                    <div className="flex h-5 items-center">
-                      <input
-                        id="bank_deposite"
-                        aria-describedby="bank_deposite"
-                        type="radio"
-                        name="payment-method"
-                        value=""
-                        className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600"
-                      />
-                    </div>
-
-                    <div className="ms-4 text-sm">
-                      <label
-                        htmlFor="paypal-2"
-                        className="font-medium leading-none text-gray-900"
-                      >
-                        Bank Deposite
-                      </label>
-                      <p
-                        id="bank_deposite"
-                        className="mt-1 text-xs font-normal text-gray-500"
-                      >
-                        Deposite the amount to our bank account
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                {/* Repeated payment method options */}
-              </div>
-            </div>
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Delivery Details
-              </h2>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="your_name"
-                    className="mb-2 block text-sm font-medium text-gray-900"
-                  >
-                    Your name
-                  </label>
-                  <input
-                    type="text"
-                    id="your_name"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
-                    placeholder="Bonnie Green"
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="mb-2 block text-sm font-medium text-gray-900"
-                  >
-                    Email Address
-                  </label>
-                  <input
-                    type="text"
-                    id="email"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
-                    placeholder="example@gmail.com"
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="mobile_number"
-                    className="mb-2 block text-sm font-medium text-gray-900"
-                  >
-                    Mobile Number
-                  </label>
-                  <input
-                    type="number"
-                    id="mobile_number"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
-                    placeholder="07x xxx xxxx"
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="house_number"
-                    className="mb-2 block text-sm font-medium text-gray-900"
-                  >
-                    House Number
-                  </label>
-                  <input
-                    type="text"
-                    id="house_number"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
-                    placeholder=""
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="street"
-                    className="mb-2 block text-sm font-medium text-gray-900"
-                  >
-                    Street
-                  </label>
-                  <input
-                    type="text"
-                    id="street"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
-                    placeholder=""
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="city"
-                    className="mb-2 block text-sm font-medium text-gray-900"
-                  >
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    id="city"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
-                    placeholder=""
-                    required
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="province"
-                    className="mb-2 block text-sm font-medium text-gray-900"
-                  >
-                    State/Province
-                  </label>
-                  <select
-                    id="province"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500"
-                  >
-                    <option value="EP">Eastern</option>
-                    <option value="NP">Nothern</option>
-                    <option value="NW">North Western</option>
-                    <option value="NC">Nothern Central</option>
-                    <option value="SP">Southern</option>
-                    <option value="WP">Western</option>
-                    <option value="CP">Central</option>
-                    <option value="SP">Sabragamuwa</option>
-                    <option value="UP">UVA</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="zip_code"
-                    className="mb-2 block text-sm font-medium text-gray-900"
-                  >
-                    Zip Code
-                  </label>
-                  <input
-                    type="number"
-                    id="zip_code"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
-                    placeholder="xxxxx"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
+        {/* Show message if cart is empty */}
+        {products?.length === 0 ? (
+          <div className="text-center py-10 flex flex-col items-center justify-center">
+            <Frown size={50} className="mb-4" />
+            <h3 className="text-xl font-semibold text-gray-600">
+              Your cart is empty. Start shopping now!
+            </h3>
+            <p className="text-gray-500 mt-4">
+              Browse our collection and add products to your cart.
+            </p>
+            <button
+              onClick={() => navigate("/")}
+              type="button"
+              className="mt-6 w-full max-w-xs rounded-lg bg-blue-500 px-5 py-2 text-white font-medium hover:bg-blue-700"
+            >
+              Shop Now
+            </button>
           </div>
-
-          <div className="mt-6 w-full space-y-6 sm:mt-8 lg:mt-0 lg:max-w-xs xl:max-w-md">
-            <div>
-              <CheckoutItems products={cart} />
-            </div>
-
-            <div>
-              <label
-                htmlFor="voucher"
-                className="mb-2 block text-sm font-medium text-gray-900"
+        ) : (
+          // Display cart items if products are available
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {products?.map((product) => (
+              <div
+                key={product._id}
+                className="flex items-center justify-between border rounded-lg p-4 shadow-sm"
               >
-                Enter a gift card, voucher or promotional code
-              </label>
-              <div className="flex max-w-md items-center gap-4">
-                <input
-                  type="text"
-                  id="voucher"
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500"
-                  placeholder=""
-                  required
+                {/* Product Image */}
+                <img
+                  src={product?.image}
+                  alt={product?.name}
+                  className="h-16 w-16 rounded-md object-cover"
                 />
+
+                {/* Product Details */}
+                <div className="flex-1 px-4">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {product?.name}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    LKR {product?.unitPrice?.toFixed(2)}
+                  </p>
+                  <p className="text-sm text-gray-500">X {product?.quantity}</p>
+                </div>
+
+                {/* Remove Button */}
                 <button
-                  type="button"
-                  className="flex items-center justify-center rounded-lg bg-blue-400 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 "
+                  className="text-red-600 hover:text-red-800"
+                  onClick={() => handleRemoveProduct(product.productId._id)}
                 >
-                  Apply
+                  <Trash2 size={20} />
                 </button>
               </div>
-            </div>
-
-            <div className="flow-root">
-              <div className="-my-3 divide-y divide-gray-500">
-                {/* Repeated summary details */}
-
-                <dl className="flex items-center justify-between gap-4 py-3">
-                  <dt className="text-base font-normal text-gray-500">
-                    Subtotal
-                  </dt>
-                  <dd className="text-base font-medium text-gray-900">
-                    LKR {totalAmount.toFixed(2)}
-                  </dd>
-                </dl>
-
-                <dl className="flex items-center justify-between gap-4 py-3">
-                  <dt className="text-base font-normal text-gray-500 ">
-                    Shipping
-                  </dt>
-                  <dd className="text-base font-medium text-gray-900">Free</dd>
-                </dl>
-
-                <dl className="flex items-center justify-between gap-4 py-3">
-                  <dt className="text-base font-normal text-gray-500">
-                    Discount
-                  </dt>
-                  <dd className="text-base font-medium text-green-500">-0</dd>
-                </dl>
-
-                <dl className="flex items-center justify-between gap-4 py-3">
-                  <dt className="text-base font-bold text-gray-900 ">Total</dt>
-                  <dd className="text-base font-bold text-gray-900 ">
-                    LKR {totalAmount.toFixed(2)}
-                  </dd>
-                </dl>
-
-                {/* Repeated summary details */}
-              </div>
-            </div>
-            <div className="space-y-3">
-              <button
-                type="submit"
-                className="flex w-full items-center justify-center rounded-lg bg-blue-400 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
-              >
-                Proceed to Payment
-              </button>
-            </div>
+            ))}
           </div>
-        </div>
-      </form>
+        )}
+
+        {/* Summary Section */}
+        {products?.length > 0 && (
+          <div className="mt-8 border-t pt-4">
+            <h3 className="text-xl font-semibold text-gray-900">Summary</h3>
+            <div className="flex justify-between text-gray-700 mt-2">
+              <span>Subtotal</span>
+              <span>LKR {totalAmount?.toFixed(2)}</span>
+            </div>
+            <button
+              type="button"
+              className="mt-4 w-full rounded-lg bg-blue-500 px-5 py-2 text-white font-medium hover:bg-blue-700"
+            >
+              Proceed to Checkout
+            </button>
+          </div>
+        )}
+      </div>
     </section>
   );
 };

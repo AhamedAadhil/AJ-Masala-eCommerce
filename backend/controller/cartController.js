@@ -39,53 +39,53 @@ export const addToCart = async (req, res) => {
 export const getCartProducts = async (req, res) => {
   const user = req.user;
   try {
-    const cachedCart = await redis.get(`cart_items:${user._id}`);
+    // const cachedCart = await redis.get(`cart_items:${user._id}`);
 
-    // Check if cart details exist in the cache
-    if (cachedCart) {
-      const parsedCart = JSON.parse(cachedCart);
+    // // Check if cart details exist in the cache
+    // if (cachedCart) {
+    //   const parsedCart = JSON.parse(cachedCart);
 
-      // Format the cart items to include necessary product details
-      const cartWithProductDetails = await Promise.all(
-        parsedCart.map(async (item) => {
-          // Fetch product details (name, images) using the productId
-          const product = await Product.findById(item.product)
-            .select("name images")
-            .lean();
+    //   // Format the cart items to include necessary product details
+    //   const cartWithProductDetails = await Promise.all(
+    //     parsedCart.map(async (item) => {
+    //       // Fetch product details (name, images) using the productId
+    //       const product = await Product.findById(item.product)
+    //         .select("name images")
+    //         .lean();
 
-          return {
-            _id: item._id,
-            productId: item.product,
-            name: product ? product.name : "Product not found",
-            image:
-              product && product.images && product.images.length > 0
-                ? product.images[0]
-                : "",
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-          };
-        })
-      );
+    //       return {
+    //         _id: item._id,
+    //         productId: item.product,
+    //         name: product ? product.name : "Product not found",
+    //         image:
+    //           product && product.images && product.images.length > 0
+    //             ? product.images[0]
+    //             : "",
+    //         quantity: item.quantity,
+    //         unitPrice: item.unitPrice,
+    //       };
+    //     })
+    //   );
 
-      // Calculate total amount from unitPrice and quantity
-      let totalAmount = 0;
-      cartWithProductDetails.forEach((item) => {
-        const { unitPrice, quantity } = item;
-        if (unitPrice && quantity) {
-          totalAmount += unitPrice * quantity;
-        } else {
-          console.warn(
-            `Missing unitPrice or quantity for product ID ${item._id}`
-          );
-        }
-      });
+    //   // Calculate total amount from unitPrice and quantity
+    //   let totalAmount = 0;
+    //   cartWithProductDetails.forEach((item) => {
+    //     const { unitPrice, quantity } = item;
+    //     if (unitPrice && quantity) {
+    //       totalAmount += unitPrice * quantity;
+    //     } else {
+    //       console.warn(
+    //         `Missing unitPrice or quantity for product ID ${item._id}`
+    //       );
+    //     }
+    //   });
 
-      return res.status(200).json({
-        products: cartWithProductDetails,
-        totalAmount,
-        success: true,
-      });
-    }
+    //   return res.status(200).json({
+    //     products: cartWithProductDetails,
+    //     totalAmount,
+    //     success: true,
+    //   });
+    // }
 
     // If not in cache, fetch user from the database and populate cart items with product details
     const userFromDB = await User.findById(req.user._id).populate({
@@ -133,13 +133,13 @@ export const getCartProducts = async (req, res) => {
       }
     });
 
-    // Cache the products in Redis
-    await redis.set(
-      `cart_items:${user._id}`,
-      JSON.stringify(userCart),
-      "EX",
-      86400 // Cache for 24 hours
-    );
+    // // Cache the products in Redis
+    // await redis.set(
+    //   `cart_items:${user._id}`,
+    //   JSON.stringify(userCart),
+    //   "EX",
+    //   86400 // Cache for 24 hours
+    // );
 
     return res.status(200).json({
       products: userCart,
@@ -155,19 +155,71 @@ export const removeProductFromCart = async (req, res) => {
   const { productId } = req.body;
   try {
     const user = req.user;
-    const productIndex = await user.cartItems.findIndex(
+
+    // Find the index of the product in the cart
+    const productIndex = user.cartItems.findIndex(
       (item) => item.product.toString() === productId
     );
+
     if (productIndex === -1) {
+      // console.log(item.product.toString());
       return res
         .status(404)
         .json({ message: "Product not found in cart", success: false });
     }
+
+    // Remove the product from the cart
     user.cartItems.splice(productIndex, 1);
     await user.save();
-    // cache the data in redis
-    await redis.set(`cart_items:${user._id}`, JSON.stringify(user.cartItems));
-    return res.status(200).json({ cartItems: user.cartItems, success: true });
+
+    // Format the remaining cart items with product details
+    const formattedCart = await Promise.all(
+      user.cartItems.map(async (item) => {
+        const product = await Product.findById(item.product).select(
+          "name images"
+        );
+
+        return {
+          _id: item._id,
+          productId: { _id: item.product },
+          name: product ? product.name : "Product not found",
+          image:
+            product && product.images && product.images.length > 0
+              ? product.images[0]
+              : "",
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+        };
+      })
+    );
+
+    // Calculate the total amount of the cart
+    let totalAmount = 0;
+    formattedCart.forEach((item) => {
+      const { unitPrice, quantity } = item;
+      if (unitPrice && quantity) {
+        totalAmount += unitPrice * quantity;
+      } else {
+        console.warn(
+          `remove Missing unitPrice or quantity for product ID ${item._id}`
+        );
+      }
+    });
+
+    // // Cache the updated cart in Redis
+    // await redis.set(
+    //   `cart_items:${user._id}`,
+    //   JSON.stringify(formattedCart),
+    //   "EX",
+    //   86400 // Cache for 24 hours
+    // );
+
+    // Return the updated cart and total amount
+    return res.status(200).json({
+      products: formattedCart,
+      totalAmount,
+      success: true,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

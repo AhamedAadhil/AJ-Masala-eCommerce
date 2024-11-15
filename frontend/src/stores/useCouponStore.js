@@ -47,8 +47,6 @@ export const useCouponStore = create((set) => ({
     try {
       const { discountAmount, code, expirationDate } = couponData;
 
-      console.log(couponData);
-
       const res = await axios.post("/coupon", {
         discountAmount,
         code,
