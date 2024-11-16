@@ -1,5 +1,5 @@
 import { LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 
 import { useUserStore } from "../stores/useUserStore";
@@ -8,12 +8,13 @@ import userSix from "../assets/user-06.png";
 import MyOrdersTable from "../components/MyOrdersTable";
 
 const UserProfile = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { logout, getUser, user } = useUserStore();
 
   useEffect(() => {
-    getUser();
-  }, [getUser]);
+    getUser(id);
+  }, [getUser, id]);
 
   return (
     <div className="overflow-hidden rounded-lg border border-stroke bg-white shadow-default my-5 md:mx-28 p-5 lg:mx-72">
@@ -63,7 +64,9 @@ const UserProfile = () => {
           <p className="font-medium">{user?.email}</p>
           <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1">
             <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 xsm:flex-row">
-              <span className="font-semibold text-black">15</span>
+              <span className="font-semibold text-black">
+                {user?.orderHistory?.length}
+              </span>
               <span className="text-sm">Total orders</span>
             </div>
             <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 xsm:flex-row">
@@ -71,14 +74,16 @@ const UserProfile = () => {
               <span className="text-sm">Total spends</span>
             </div>
             <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
-              <span className="font-semibold text-black">2023</span>
+              <span className="font-semibold text-black">
+                {user?.createdAt?.split("T")[0]}
+              </span>
               <span className="text-sm">Joined</span>
             </div>
           </div>
         </div>
       </div>
       <div>
-        <MyOrdersTable />
+        <MyOrdersTable orders={user.orderHistory} />
       </div>
     </div>
   );

@@ -114,7 +114,7 @@ const Checkout = () => {
                 Payment Method
               </h3>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                {/* Repeated payment method options */}
+                {/* payment method options */}
                 <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 ps-4">
                   <div className="flex items-start">
                     <div className="flex h-5 items-center">

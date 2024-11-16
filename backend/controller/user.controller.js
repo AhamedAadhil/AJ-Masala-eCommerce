@@ -11,8 +11,18 @@ export const getAllUsers = async (req, res) => {
 
 export const getUser = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const user = await User.findById(userId).select("-password");
+    const { id } = req.params;
+    // Find the user and populate orderHistory and products.product with additional fields
+    const user = await User.findById(id)
+      .select("-password")
+      .populate({
+        path: "orderHistory",
+        populate: {
+          path: "products.product", // Populate the product details
+          model: "Product", // Reference to the Product model
+          select: "name images", // Select additional fields from the Product model
+        },
+      });
     if (!user) {
       return res
         .status(404)

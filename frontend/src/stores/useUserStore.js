@@ -88,13 +88,19 @@ export const useUserStore = create((set, get) => ({
       console.log(error.response.data.message);
     }
   },
+
   getUser: async (userId) => {
     set({ loading: true });
     try {
       const currentUser = get().user;
       if (currentUser && currentUser._id === userId) {
         const res = await axios.get(`/user/${userId}`);
-        set({ user: res.data.user, loading: false });
+        if (res && res.data.user) {
+          set({ user: res.data.user, loading: false });
+        } else {
+          set({ loading: false });
+          toast.error("Failed to fetch user data");
+        }
       }
     } catch (error) {
       set({ loading: false });

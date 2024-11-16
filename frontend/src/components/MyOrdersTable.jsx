@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Star } from "lucide-react";
 
-const MyOrdersTable = () => {
+const MyOrdersTable = ({ orders }) => {
   const [expandedRows, setExpandedRows] = useState([]);
   const [reviews, setReviews] = useState({}); // Track ratings and comments for each product
 
@@ -50,32 +51,6 @@ const MyOrdersTable = () => {
     }
   };
 
-  const orders = [
-    {
-      id: "ODR-COD-1256",
-      date: "2023-10-15",
-      product: "AJ Garam Masala",
-      coupon: "AJ6842",
-      amount: "Rs. 2560",
-      status: "Successful",
-      products: [
-        { name: "AJ masala product 323", price: "Rs. 670", quantity: "1 Kg" },
-        { name: "AJ masala product 323", price: "Rs. 670", quantity: "1 Kg" },
-      ],
-    },
-    {
-      id: "ODR-COD-1256",
-      date: "2023-10-15",
-      product: "AJ Garam Masala",
-      coupon: "AJ6855",
-      amount: "Rs. 2560",
-      status: "Pending",
-      products: [
-        { name: "AJ masala product 323", price: "Rs. 670", quantity: "1 Kg" },
-      ],
-    },
-  ];
-
   return (
     <div className="p-2 sm:p-4 md:p-6 lg:p-10">
       <h2 className="text-xl sm:text-2xl font-bold mb-4">My Orders</h2>
@@ -91,18 +66,22 @@ const MyOrdersTable = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order, index) => (
+            {orders?.map((order, index) => (
               <React.Fragment key={index}>
                 <tr className="border-b">
-                  <td className="p-2 sm:p-3">{order.id}</td>
-                  <td className="p-2 sm:p-3">{order.date}</td>
-                  <td className="p-2 sm:p-3">{order.amount}</td>
+                  <td className="p-2 sm:p-3">{order?.orderId}</td>
+                  <td className="p-2 sm:p-3">
+                    {order?.orderDate?.split("T")[0]}
+                  </td>
+                  <td className="p-2 sm:p-3">{order?.totalAmount}</td>
                   <td className="p-2 sm:p-3">
                     <span
                       className={`px-2 sm:px-3 py-1 rounded-full text-white text-xs sm:text-sm ${
-                        order.status === "Successful"
-                          ? "bg-green-500"
-                          : "bg-blue-500"
+                        order.status === "placed"
+                          ? "bg-yellow-500"
+                          : order.status === "inTransit"
+                          ? "bg-blue-500"
+                          : "bg-green-500"
                       }`}
                     >
                       {order.status}
@@ -123,41 +102,107 @@ const MyOrdersTable = () => {
                 </tr>
                 {expandedRows.includes(index) && (
                   <tr className="border-b">
-                    <td colSpan="5" className="p-2 sm:p-3 bg-gray-50">
-                      {order.products.map((product, i) => (
+                    <td colSpan="5" className="p-4 sm:p-6 bg-gray-50">
+                      {/* Order Summary Details */}
+                      <div className="bg-white p-4 rounded-lg shadow-sm mb-6 border border-gray-200">
+                        <h4 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
+                          Order Summary
+                        </h4>
+                        <div className="space-y-2 text-sm sm:text-base text-gray-600">
+                          <p>
+                            <strong className="text-gray-800">
+                              Coupon Applied:
+                            </strong>{" "}
+                            {order?.couponCode || "NO"}
+                          </p>
+                          <p>
+                            <strong className="text-gray-800">
+                              Payment Method:
+                            </strong>{" "}
+                            {order?.paymentMethod?.toUpperCase()}
+                          </p>
+                          <p>
+                            <strong className="text-gray-800">
+                              Paid Status:
+                            </strong>{" "}
+                            {order?.isPaid ? "Paid" : "Unpaid"}
+                          </p>
+                          {order?.trackingId && (
+                            <p>
+                              <strong className="text-gray-800">
+                                Tracking ID:
+                              </strong>{" "}
+                              {order?.trackingId}
+                            </p>
+                          )}
+                          {order?.trackingUrl && (
+                            <p>
+                              <strong className="text-gray-800">
+                                Tracking URL:
+                              </strong>{" "}
+                              <a
+                                href={order?.trackingUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:text-blue-700"
+                              >
+                                {order?.trackingUrl}
+                              </a>
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Product Details */}
+                      {order?.products?.map((product, i) => (
                         <div
                           key={i}
                           className="flex flex-col sm:flex-row items-start sm:items-center border-b pb-4 mb-4 last:border-b-0 last:mb-0 last:pb-0"
                         >
                           <img
-                            src="https://via.placeholder.com/50"
+                            src={product?.product?.images[0]}
                             alt="Product"
-                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg mr-0 sm:mr-3 mb-2 sm:mb-0"
+                            className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg mr-4 mb-2 sm:mb-0"
                           />
-                          <div className="flex-1 text-xs sm:text-sm">
-                            <h4 className="font-semibold">{product.name}</h4>
-                            <p className="text-gray-600">{product.quantity}</p>
-                            <p className="text-gray-800 font-semibold">
-                              {product.price}
+                          <div className="flex-1 text-sm sm:text-base">
+                            <h4 className="font-semibold text-gray-800">
+                              {product?.product?.name}
+                            </h4>
+                            <p className="text-gray-600">
+                              Quantity: X{product?.quantity}
                             </p>
-                            <div className="flex items-center mt-2">
-                              {[...Array(5)].map((_, starIndex) => (
-                                <Star
-                                  key={starIndex}
-                                  size={14}
-                                  className={`cursor-pointer ${
-                                    reviews[order.id]?.[i]?.rating > starIndex
-                                      ? "text-yellow-500"
-                                      : "text-gray-300"
-                                  }`}
-                                  onClick={() =>
-                                    handleStarClick(order.id, i, starIndex + 1)
-                                  }
-                                />
-                              ))}
+                            <p className="text-gray-800 font-semibold">
+                              LKR {product?.price?.toFixed(2)}
+                            </p>
+                          </div>
+
+                          {order?.status === "delivered" && (
+                            <div className="flex flex-col items-start sm:items-center mt-2 sm:mt-0 sm:w-2/5">
+                              {/* Star Rating */}
+                              <div className="flex items-center mb-2">
+                                {[...Array(5)].map((_, starIndex) => (
+                                  <Star
+                                    key={starIndex}
+                                    size={16}
+                                    className={`cursor-pointer ${
+                                      reviews[order.id]?.[i]?.rating > starIndex
+                                        ? "text-yellow-500"
+                                        : "text-gray-300"
+                                    }`}
+                                    onClick={() =>
+                                      handleStarClick(
+                                        order.id,
+                                        i,
+                                        starIndex + 1
+                                      )
+                                    }
+                                  />
+                                ))}
+                              </div>
+                              {/* Feedback Input */}
                               <input
                                 type="text"
-                                placeholder="Feedback"
+                                placeholder="Leave a feedback"
                                 value={reviews[order.id]?.[i]?.comment || ""}
                                 onChange={(e) =>
                                   handleCommentChange(
@@ -166,16 +211,17 @@ const MyOrdersTable = () => {
                                     e.target.value
                                   )
                                 }
-                                className="ml-2 border border-gray-300 rounded px-1 py-1 w-full max-w-xs sm:max-w-sm focus:outline-none focus:border-blue-400 text-xs sm:text-sm"
+                                className="ml-2 border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                               />
+                              {/* Add Review Button */}
+                              <button
+                                onClick={() => handleAddReview(order.id, i)}
+                                className="mt-2 sm:mt-3 text-white bg-green-500 border border-green-500 rounded px-4 py-2 text-sm font-semibold hover:bg-green-600 hover:border-green-600 transition duration-300"
+                              >
+                                Add Review
+                              </button>
                             </div>
-                          </div>
-                          <button
-                            onClick={() => handleAddReview(order.id, i)}
-                            className="text-green-500 border border-green-500 rounded px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold hover:bg-green-500 hover:text-white transition mt-2 sm:mt-0"
-                          >
-                            Add Review
-                          </button>
+                          )}
                         </div>
                       ))}
                     </td>
