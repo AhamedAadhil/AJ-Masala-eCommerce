@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 // OrderPlacedModal.jsx
-import React from "react";
+
 import { ShoppingCart } from "lucide-react";
 import Confetti from "react-confetti";
 
-const OrderPlacedModal = ({ showModal, closeModal }) => {
+const OrderPlacedModal = ({ showModal, closeModal, orderId }) => {
   if (!showModal) return null;
 
   return (
@@ -18,9 +19,15 @@ const OrderPlacedModal = ({ showModal, closeModal }) => {
           Your order has been successfully placed. Thank you for shopping with
           us!
         </p>
+        <div className="mt-4">
+          <p className="text-lg text-gray-700">Your order ID is:</p>
+          <p className="bg-blue-100 text-blue-600 font-semibold text-lg px-4 py-2 rounded-md mt-2 inline-block shadow-sm">
+            {orderId}
+          </p>
+        </div>
         <button
           onClick={closeModal}
-          className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md"
+          className="mt-6 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
         >
           Close
         </button>

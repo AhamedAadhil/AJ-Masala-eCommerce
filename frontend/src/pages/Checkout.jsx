@@ -1,18 +1,27 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import CheckoutItems from "../components/CheckoutItems";
 import { useCartStore } from "../stores/useCartStore";
 import { useUserStore } from "../stores/useUserStore";
 import { useCouponStore } from "../stores/useCouponStore";
+import { useOrderStore } from "../stores/useOrderStore";
+
+import CheckoutItems from "../components/CheckoutItems";
+// import PaymentSuccessModal from "../components/PaymentSuccessModal";
+import OrderPlacedModal from "../components/OrderPlacedModal";
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const { products, totalAmount } = useCartStore();
   const { user } = useUserStore();
   const { applyCoupon, discountAmount, totalAmountAfterDiscount } =
     useCouponStore();
+  const { createOrder, orderId, loading } = useOrderStore();
 
   const [couponCode, setCouponCode] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("online"); // Default to 'online'
   const [couponApplied, setCouponApplied] = useState(false); // Flag to track if coupon is applied
+  const [showModal, setShowModal] = useState(false); // Manage modal visibility
   const [deliveryDetails, setDeliveryDetails] = useState({
     mobileNumber: user?.phone || "",
     no: user?.address?.no || "",
@@ -23,15 +32,20 @@ const Checkout = () => {
   });
 
   // to handle coupon apply
-  const handleApplyCoupon = (e) => {
+  const handleApplyCoupon = async (e) => {
     e.preventDefault();
     if (couponCode === "") return;
-    const success = applyCoupon(couponCode.toUpperCase(), totalAmount);
-    if (success) {
+    const isSuccess = await applyCoupon(couponCode.toUpperCase(), totalAmount);
+    if (isSuccess) {
       setCouponApplied(true);
     } else {
       setCouponApplied(false);
     }
+  };
+
+  //  to handle payment method change
+  const handlePaymentChange = (event) => {
+    setPaymentMethod(event.target.value);
   };
 
   // to handle order place
@@ -45,10 +59,6 @@ const Checkout = () => {
       return;
     }
 
-    // Check if payment method is selected
-    const paymentMethod = document.querySelector(
-      'input[name="payment-method"]:checked'
-    )?.value;
     if (!paymentMethod) {
       alert("Please select a payment method.");
       return;
@@ -72,12 +82,26 @@ const Checkout = () => {
         quantity: item.quantity,
         price: item.unitPrice,
       })),
-      couponCode: couponApplied ? couponCode : null,
+      couponCode: couponApplied ? couponCode : "",
       paymentMethod,
       finalAmount,
     };
 
-    console.log("order data before sending", orderData);
+    // console.log("order data before sending", orderData);
+    const isSuccess = createOrder(orderData);
+    if (isSuccess) {
+      setDeliveryDetails({});
+      setCouponCode("");
+      setCouponApplied(false);
+      if (paymentMethod === "cod") {
+        setShowModal(true); // Show the modal
+      }
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false); // Close the modal
+    navigate("/"); // Navigate to home after modal closes
   };
 
   return (
@@ -101,7 +125,8 @@ const Checkout = () => {
                         name="payment-method"
                         value="online"
                         className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600"
-                        checked
+                        checked={paymentMethod === "online"}
+                        onChange={handlePaymentChange}
                       />
                     </div>
 
@@ -132,6 +157,8 @@ const Checkout = () => {
                         name="payment-method"
                         value="cod"
                         className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600"
+                        checked={paymentMethod === "cod"}
+                        onChange={handlePaymentChange}
                       />
                     </div>
 
@@ -162,6 +189,8 @@ const Checkout = () => {
                         name="payment-method"
                         value="bank"
                         className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600"
+                        checked={paymentMethod === "bank"}
+                        onChange={handlePaymentChange}
                       />
                     </div>
 
@@ -449,14 +478,30 @@ const Checkout = () => {
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="flex w-full items-center justify-center rounded-lg bg-blue-400  hover:bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+                disabled={
+                  paymentMethod === "" || loading || products.length === 0
+                }
+                className="flex w-full items-center justify-center rounded-lg bg-blue-400 hover:bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
               >
-                Proceed to Payment
+                {paymentMethod === "online"
+                  ? `Proceed to Pay LKR ${
+                      couponApplied
+                        ? totalAmountAfterDiscount.toFixed(2)
+                        : totalAmount.toFixed(2)
+                    }`
+                  : paymentMethod === "cod"
+                  ? "Pay on Delivery"
+                  : "Upload Payment Receipt"}
               </button>
             </div>
           </div>
         </div>
       </form>
+      <OrderPlacedModal
+        showModal={showModal}
+        closeModal={closeModal}
+        orderId={orderId}
+      />
     </section>
   );
 };

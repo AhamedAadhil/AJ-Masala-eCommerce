@@ -1,5 +1,5 @@
+/* eslint-disable react/prop-types */
 // PaymentSuccessModal.jsx
-import React from "react";
 import { CheckCircle } from "lucide-react";
 import Confetti from "react-confetti";
 

@@ -76,15 +76,22 @@ export const useCouponStore = create((set) => ({
     try {
       const res = await axios.patch(`/coupon/apply/${code}`, { totalAmount });
       console.log(res.data);
-      if (res && res.data) {
+      if (res && res.data.success === true) {
         set({
           loading: false,
           totalAmountAfterDiscount: res.data.totalAmount,
           discountAmount: res.data.discountAmount,
         });
+        toast.success("Coupon applied");
+        return true;
+      } else {
+        set({
+          totalAmountAfterDiscount: null,
+          discountAmount: null,
+          loading: false,
+        });
+        return false;
       }
-      toast.success("Coupon applied");
-      return true;
     } catch (error) {
       set({ loading: false });
       toast.error(error.response.data.message || "Failed to apply coupon.");

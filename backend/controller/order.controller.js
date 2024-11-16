@@ -48,9 +48,9 @@ export const createOrder = async (req, res) => {
     // Step 3: Create new order
     const newOrder = new Order({
       orderId,
-      user: mongoose.Types.ObjectId(user._id),
+      user: user._id,
       products: products.map((item) => ({
-        product: mongoose.Types.ObjectId(item.product),
+        product: item.product,
         quantity: item.quantity,
         price: item.price,
       })),
