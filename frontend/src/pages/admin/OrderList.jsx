@@ -1,40 +1,65 @@
-import { Search, ChevronDown, ChevronUp, Edit } from "lucide-react";
-import { useState } from "react";
+import {
+  Search,
+  ChevronDown,
+  ChevronUp,
+  Edit,
+  Truck,
+  CreditCard,
+  Landmark,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useOrderStore } from "../../stores/useOrderStore";
 
 const OrderList = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [orderBy, setOrderBy] = useState("Status");
-  const [expandedOrderId, setExpandedOrderId] = useState(null);
+  const [orderBy, setOrderBy] = useState("status");
 
+  const { getAllOrders, orders, loading } = useOrderStore();
   const navigate = useNavigate();
 
-  const orders = [
-    // Sample order data; replace with actual data
-    {
-      id: "AJ-COD-12345",
-      email: "ahamedaathil5@gmail.com",
-      amount: 10000,
-      status: "placed",
-      paymentMethod: "ONLINE",
-      paid: "No",
-      date: "2024-11-12",
-    },
-    {
-      id: "AJ-COD-12346",
-      email: "ahamedaathil5@gmail.com",
-      amount: 10000,
-      status: "on the way",
-      paymentMethod: "COD",
-      paid: "Yes",
-      date: "2024-11-12",
-    },
-    // Add more sample orders
-  ];
+  // Helper function to format the order date
+  const formatOrderDate = (orderDate) => {
+    const orderDateTime = new Date(orderDate);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
 
-  const toggleOrderDetails = (orderId) => {
-    setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
+    // Clear time parts for comparison
+    today.setHours(0, 0, 0, 0);
+    yesterday.setHours(0, 0, 0, 0);
+
+    if (orderDateTime >= today) {
+      return "Today";
+    } else if (orderDateTime >= yesterday) {
+      return "Yesterday";
+    } else {
+      return orderDateTime.toLocaleDateString(); // Format as a standard date
+    }
   };
+
+  // Filter orders based on search term and order by selection
+  const filteredOrders = orders.filter((order) =>
+    order?.orderId.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Sort orders based on the selected orderBy value (status or order date)
+  const sortedOrders = filteredOrders.sort((a, b) => {
+    if (orderBy === "status") {
+      return a.status.localeCompare(b.status); // Sort by status (placed, inTransit, delivered)
+    } else if (orderBy === "Date") {
+      return new Date(a.orderDate) - new Date(b.orderDate); // Sort by order date
+    }
+    return 0;
+  });
+
+  useEffect(() => {
+    getAllOrders();
+  }, [getAllOrders]);
+
+  console.log("orders admin", orders);
+
+  if (loading) return <h1>Loading...</h1>;
 
   return (
     <div className="bg-gray-800 shadow-lg rounded-lg max-w-4xl mx-auto p-4">
@@ -95,36 +120,74 @@ const OrderList = () => {
             </tr>
           </thead>
           <tbody className="bg-gray-800 divide-y divide-gray-700 cursor-pointer">
-            {orders.map((order, index) => (
+            {sortedOrders.map((order, index) => (
               <tr key={index} className="hover:bg-gray-700">
                 <td className="px-3 py-4 text-sm font-medium text-white">
-                  {order.id}
-                </td>
-                <td className="px-3 py-4 text-sm text-white">{order.email}</td>
-                <td className="px-3 py-4 text-sm text-white">{order.amount}</td>
-                <td className="px-3 py-4 text-sm font-semibold text-green-500">
-                  {order.status}
+                  {order?.orderId}
                 </td>
                 <td className="px-3 py-4 text-sm text-white">
-                  {order.paymentMethod}
+                  {order?.user.email}
                 </td>
-                <td className="px-3 py-4 text-sm text-white">{order.paid}</td>
-                <td className="px-3 py-4 text-sm text-white">{order.date}</td>
+                <td className="px-3 py-4 text-sm text-white">
+                  LKR {order?.totalAmount.toFixed(2)}
+                </td>
+                <td
+                  className={`px-3 py-4 text-sm font-semibold ${
+                    order?.status === "placed"
+                      ? "text-yellow-500"
+                      : order?.status === "inTransit"
+                      ? "text-blue-500"
+                      : "text-green-500"
+                  }`}
+                >
+                  {order?.status === "placed"
+                    ? "Placed"
+                    : order?.status === "inTransit"
+                    ? "inTransit"
+                    : "Delivered"}
+                </td>
+                <td className="px-3 py-4 text-sm text-white">
+                  {order?.paymentMethod === "bank" ? (
+                    <span className="flex items-center gap-1">
+                      Bank <Landmark size={16} />
+                    </span>
+                  ) : order?.paymentMethod === "online" ? (
+                    <span className="flex items-center gap-1">
+                      Online <CreditCard size={16} />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1">
+                      COD <Truck size={16} />
+                    </span>
+                  )}
+                </td>
+                <td
+                  className={`px-3 py-4 text-sm ${
+                    order?.isPaid ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {order?.isPaid ? "Yes" : "No"}
+                </td>
+                <td className="px-3 py-4 text-sm text-white">
+                  {formatOrderDate(order?.orderDate)}
+                </td>
                 <td className="px-3 py-4 text-right">
-                  <button
-                    onClick={() => toggleOrderDetails(order.id)}
+                  {/* <button
+                    onClick={() => toggleOrderDetails(order?.orderId)}
                     className="text-gray-400 hover:text-blue-500"
                   >
-                    {expandedOrderId === order.id ? (
+                    {expandedOrderId === order?.orderId ? (
                       <ChevronUp className="h-5 w-5" />
                     ) : (
                       <ChevronDown className="h-5 w-5" />
                     )}
-                  </button>
+                  </button> */}
                   <button
-                    //   TODO: Have to change the URL dynamically
-                    onClick={() => navigate(`/admin/update-order`)}
-                    className="text-gray-400 hover:text-blue-500 ml-2"
+                    // TODO: Have to change the URL dynamically
+                    onClick={() =>
+                      navigate(`/admin/update-order/${order?.orderId}`)
+                    }
+                    className="text-gray-400 hover:text-yellow-500 ml-2"
                   >
                     <Edit className="h-5 w-5" />
                   </button>

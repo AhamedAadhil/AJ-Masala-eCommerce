@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema(
         required: [true, "Image is required"],
       },
     ],
-    stock: { type: Number, default: 0 },
+    stock: { type: Number, default: 1 },
     category: { type: String, required: true },
     isFeatured: {
       type: Boolean,

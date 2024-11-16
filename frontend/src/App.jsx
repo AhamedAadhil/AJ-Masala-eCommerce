@@ -62,8 +62,7 @@ function App() {
             <Route path="carousels" element={<CarouselList />} />
             <Route path="coupons" element={<CouponList />} />
             <Route path="orders" element={<OrderList />} />
-            {/* TODO: have to change the path dynamically */}
-            <Route path="update-order" element={<UpdateOrder />} />
+            <Route path="update-order/:id" element={<UpdateOrder />} />
           </Route>
         </Route>
       </Routes>

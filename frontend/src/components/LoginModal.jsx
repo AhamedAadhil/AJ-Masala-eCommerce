@@ -36,7 +36,7 @@ const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
         </p>
 
         {/* Google Signup Button */}
-        <button className="flex items-center justify-center w-full bg-gray-100 text-gray-700 py-2 px-4 rounded mb-4 hover:bg-gray-200">
+        {/* <button className="flex items-center justify-center w-full bg-gray-100 text-gray-700 py-2 px-4 rounded mb-4 hover:bg-gray-200">
           <img
             src="https://img.icons8.com/color/16/000000/google-logo.png"
             alt="Google Logo"
@@ -45,7 +45,7 @@ const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
           Login with Google
         </button>
 
-        <p className="text-center text-gray-500 mb-4">or with email</p>
+        <p className="text-center text-gray-500 mb-4">or with email</p> */}
 
         {/* login Form */}
         <form onSubmit={handleSubmit}>

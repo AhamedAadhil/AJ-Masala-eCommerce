@@ -6,6 +6,7 @@ export const getAnalyticsData = async () => {
   try {
     const totalUsers = await User.countDocuments();
     const totalProducts = await Product.countDocuments();
+    const totalOrders = await Order.countDocuments();
     const salesData = await Order.aggregate([
       {
         $match: { status: "delivered" },
@@ -13,7 +14,6 @@ export const getAnalyticsData = async () => {
       {
         $group: {
           _id: null,
-          totalSales: { $sum: 1 },
           totalRevenue: { $sum: "$totalAmount" },
         },
       },
@@ -23,12 +23,12 @@ export const getAnalyticsData = async () => {
     // console.log("Sales Data:", salesData);
 
     // Fallback if salesData array is empty
-    const { totalSales = 0, totalRevenue = 0 } = salesData[0] || {};
+    const { totalRevenue = 0 } = salesData[0] || {};
 
     return {
       users: totalUsers,
       products: totalProducts,
-      totalSales,
+      totalSales: totalOrders,
       totalRevenue,
     };
   } catch (error) {

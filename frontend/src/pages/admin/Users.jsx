@@ -51,7 +51,7 @@ const Users = () => {
   useEffect(() => {
     getAllUsers();
   }, [getAllUsers]);
-  console.log(users);
+
   if (loading) return <h1>Loading...</h1>;
 
   return (

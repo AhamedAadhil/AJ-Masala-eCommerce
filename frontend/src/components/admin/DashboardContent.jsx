@@ -41,6 +41,8 @@ function DashboardContent() {
     return <div>Loading...</div>;
   }
 
+  console.log(topUsersData);
+
   return (
     <div className="flex-1 p-6">
       <div className="grid grid-cols-4 gap-4">
@@ -56,7 +58,7 @@ function DashboardContent() {
         />
         <InfoCard
           title="Total Revenue"
-          value={`LKR. ${analyticsData?.totalRevenue?.toLocaleString() || 0}`}
+          value={`LKR ${analyticsData?.totalRevenue?.toFixed(2) || 0}`}
           icon="dollar-sign"
         />
         <InfoCard

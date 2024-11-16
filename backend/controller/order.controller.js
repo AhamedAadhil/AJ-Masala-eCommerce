@@ -127,10 +127,25 @@ export const checkOutSummary = async (req, res) => {
   }
 };
 
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .lean()
+      .populate("products.product")
+      .populate("user");
+    if (!orders) {
+      return res.status(404).json({ message: "No orders found." });
+    }
+    return res.status(200).json({ orders, success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
 export const getOrderAdmin = async (req, res) => {
   try {
-    const { orderId } = req.params;
-    const order = await Order.findOne({ orderId })
+    const { id } = req.params;
+    const order = await Order.findOne({ orderId: id })
       .populate("products.product")
       .populate("user");
     if (!order) {
@@ -147,8 +162,8 @@ export const getOrderAdmin = async (req, res) => {
 export const getOrder = async (req, res) => {
   try {
     const user = req.user;
-    const { orderId } = req.params;
-    const order = await Order.findOne({ orderId })
+    const { id } = req.params;
+    const order = await Order.findOne({ id })
       .populate("products.product")
       .populate("user");
     if (order.user.toString() !== user._id) {
@@ -170,15 +185,19 @@ export const getOrder = async (req, res) => {
 
 export const updateOrder = async (req, res) => {
   const { trackingId, trackingUrl, status } = req.body;
-  const { orderId } = req.params;
+  const { id } = req.params;
   try {
     const order = await Order.findOneAndUpdate(
-      { orderId },
+      { orderId: id },
       { trackingId, trackingUrl, status },
       { new: true }
     );
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
+    }
+    if (status === "delivered") {
+      order.isPaid = true;
+      await order.save();
     }
     return res.status(200).json({ order, success: true });
   } catch (error) {
