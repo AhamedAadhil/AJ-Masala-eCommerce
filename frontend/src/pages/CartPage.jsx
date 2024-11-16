@@ -5,13 +5,23 @@ import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const navigate = useNavigate();
-  const { getUserCart, cart, totalAmount, removeProductFromCart } =
+  const { getUserCart, cart, totalAmount, removeProductFromCart, checkOut } =
     useCartStore();
   const [products, setProducts] = useState([]);
 
   // Function to handle product removal
   const handleRemoveProduct = (id) => {
     removeProductFromCart(id);
+  };
+
+  const handleCheckoutSummary = () => {
+    // Transform the products array
+    const updatedProducts = products.map((product) => ({
+      ...product,
+      _id: product.productId._id, // Replace _id with productId._id
+    }));
+
+    checkOut(updatedProducts, navigate);
   };
 
   useEffect(() => {
@@ -94,6 +104,7 @@ const CartPage = () => {
               <span>LKR {totalAmount?.toFixed(2)}</span>
             </div>
             <button
+              onClick={handleCheckoutSummary}
               type="button"
               className="mt-4 w-full rounded-lg bg-blue-500 px-5 py-2 text-white font-medium hover:bg-blue-700"
             >

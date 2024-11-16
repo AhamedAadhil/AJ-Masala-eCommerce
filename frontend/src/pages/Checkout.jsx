@@ -1,9 +1,85 @@
-import CheckoutItems from "../components/CheckoutItems";
+import { useState } from "react";
 
+import CheckoutItems from "../components/CheckoutItems";
 import { useCartStore } from "../stores/useCartStore";
+import { useUserStore } from "../stores/useUserStore";
+import { useCouponStore } from "../stores/useCouponStore";
 
 const Checkout = () => {
   const { products, totalAmount } = useCartStore();
+  const { user } = useUserStore();
+  const { applyCoupon, discountAmount, totalAmountAfterDiscount } =
+    useCouponStore();
+
+  const [couponCode, setCouponCode] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false); // Flag to track if coupon is applied
+  const [deliveryDetails, setDeliveryDetails] = useState({
+    mobileNumber: user?.phone || "",
+    no: user?.address?.no || "",
+    street: user?.address?.street || "",
+    city: user?.address?.city || "",
+    province: user?.address?.province || "",
+    zipcode: user?.address?.zipcode || "",
+  });
+
+  // to handle coupon apply
+  const handleApplyCoupon = (e) => {
+    e.preventDefault();
+    if (couponCode === "") return;
+    const success = applyCoupon(couponCode.toUpperCase(), totalAmount);
+    if (success) {
+      setCouponApplied(true);
+    } else {
+      setCouponApplied(false);
+    }
+  };
+
+  // to handle order place
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Check if delivery details form is fully filled
+    const { mobileNumber, no, street, city, province, zipcode } =
+      deliveryDetails;
+    if (!mobileNumber || !no || !street || !city || !province || !zipcode) {
+      alert("Please fill in all the delivery details.");
+      return;
+    }
+
+    // Check if payment method is selected
+    const paymentMethod = document.querySelector(
+      'input[name="payment-method"]:checked'
+    )?.value;
+    if (!paymentMethod) {
+      alert("Please select a payment method.");
+      return;
+    }
+
+    // Determine total amount after discount if coupon is applied
+    const finalAmount = couponApplied ? totalAmountAfterDiscount : totalAmount;
+
+    // Prepare the data to be sent to the backend
+    const orderData = {
+      address: {
+        mobileNumber,
+        no,
+        street,
+        city,
+        province,
+        zipcode,
+      },
+      products: products.map((item) => ({
+        product: item.productId._id,
+        quantity: item.quantity,
+        price: item.unitPrice,
+      })),
+      couponCode: couponApplied ? couponCode : null,
+      paymentMethod,
+      finalAmount,
+    };
+
+    console.log("order data before sending", orderData);
+  };
+
   return (
     <section className="bg-white rounded-md shadow-md lg:mt-4 lg:px-4 py-4 antialiased md:py-16">
       <form className="mx-auto max-w-screen-xl px-4 2xl:px-0">
@@ -23,7 +99,7 @@ const Checkout = () => {
                         aria-describedby="credit_card"
                         type="radio"
                         name="payment-method"
-                        value=""
+                        value="online"
                         className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600"
                         checked
                       />
@@ -54,7 +130,7 @@ const Checkout = () => {
                         aria-describedby="cod"
                         type="radio"
                         name="payment-method"
-                        value=""
+                        value="cod"
                         className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600"
                       />
                     </div>
@@ -84,7 +160,7 @@ const Checkout = () => {
                         aria-describedby="bank_deposite"
                         type="radio"
                         name="payment-method"
-                        value=""
+                        value="bank"
                         className="h-4 w-4 border-gray-300 bg-white text-primary-600 focus:ring-2 focus:ring-primary-600"
                       />
                     </div>
@@ -105,9 +181,9 @@ const Checkout = () => {
                     </div>
                   </div>
                 </div>
-                {/* Repeated payment method options */}
               </div>
             </div>
+            {/* Delivery Details Section */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-900">
                 Delivery Details
@@ -123,8 +199,10 @@ const Checkout = () => {
                   <input
                     type="text"
                     id="your_name"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-yellow-500 focus:ring-yellow-500 focus:outline-none"
                     placeholder="Bonnie Green"
+                    value={user?.name}
+                    readOnly
                     required
                   />
                 </div>
@@ -138,8 +216,10 @@ const Checkout = () => {
                   <input
                     type="text"
                     id="email"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-yellow-500 focus:ring-yellow-500 focus:outline-none"
                     placeholder="example@gmail.com"
+                    value={user?.email}
+                    readOnly
                     required
                   />
                 </div>
@@ -153,8 +233,15 @@ const Checkout = () => {
                   <input
                     type="number"
                     id="mobile_number"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-yellow-500 focus:ring-yellow-500 focus:outline-none"
                     placeholder="07x xxx xxxx"
+                    value={deliveryDetails?.mobileNumber}
+                    onChange={(e) =>
+                      setDeliveryDetails({
+                        ...deliveryDetails,
+                        mobileNumber: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
@@ -168,8 +255,15 @@ const Checkout = () => {
                   <input
                     type="text"
                     id="house_number"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-yellow-500 focus:ring-yellow-500 focus:outline-none"
                     placeholder=""
+                    value={deliveryDetails?.no}
+                    onChange={(e) =>
+                      setDeliveryDetails({
+                        ...deliveryDetails,
+                        no: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
@@ -183,8 +277,15 @@ const Checkout = () => {
                   <input
                     type="text"
                     id="street"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-yellow-500 focus:ring-yellow-500 focus:outline-none"
                     placeholder=""
+                    value={deliveryDetails?.street}
+                    onChange={(e) =>
+                      setDeliveryDetails({
+                        ...deliveryDetails,
+                        street: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
@@ -198,8 +299,15 @@ const Checkout = () => {
                   <input
                     type="text"
                     id="city"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-yellow-500 focus:ring-yellow-500 focus:outline-none"
                     placeholder=""
+                    value={deliveryDetails?.city}
+                    onChange={(e) =>
+                      setDeliveryDetails({
+                        ...deliveryDetails,
+                        city: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
@@ -212,7 +320,15 @@ const Checkout = () => {
                   </label>
                   <select
                     id="province"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500"
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-yellow-500 focus:ring-yellow-500 focus:outline-none"
+                    value={deliveryDetails?.province}
+                    onChange={(e) =>
+                      setDeliveryDetails({
+                        ...deliveryDetails,
+                        province: e.target.value,
+                      })
+                    }
+                    required
                   >
                     <option value="EP">Eastern</option>
                     <option value="NP">Nothern</option>
@@ -221,7 +337,7 @@ const Checkout = () => {
                     <option value="SP">Southern</option>
                     <option value="WP">Western</option>
                     <option value="CP">Central</option>
-                    <option value="SP">Sabragamuwa</option>
+                    <option value="SG">Sabragamuwa</option>
                     <option value="UP">UVA</option>
                   </select>
                 </div>
@@ -230,13 +346,20 @@ const Checkout = () => {
                     htmlFor="zip_code"
                     className="mb-2 block text-sm font-medium text-gray-900"
                   >
-                    Zip Code
+                    Zip/Postal Code
                   </label>
                   <input
                     type="number"
                     id="zip_code"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 "
+                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-yellow-500 focus:ring-yellow-500 focus:outline-none"
                     placeholder="xxxxx"
+                    value={deliveryDetails?.zipcode}
+                    onChange={(e) =>
+                      setDeliveryDetails({
+                        ...deliveryDetails,
+                        zipcode: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
@@ -260,17 +383,23 @@ const Checkout = () => {
                 <input
                   type="text"
                   id="voucher"
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500"
-                  placeholder=""
-                  required
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900  focus:border-yellow-500 focus:ring-yellow-500 focus:outline-none"
+                  placeholder="COUPON CODE"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 />
                 <button
+                  onClick={handleApplyCoupon}
+                  disabled={couponApplied}
                   type="button"
-                  className="flex items-center justify-center rounded-lg bg-blue-400 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 "
+                  className="flex items-center justify-center rounded-lg bg-blue-400 hover:bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 "
                 >
                   Apply
                 </button>
               </div>
+              {couponApplied && (
+                <p className="text-green-500">Coupon applied successfully!</p>
+              )}
             </div>
 
             <div className="flow-root">
@@ -297,13 +426,18 @@ const Checkout = () => {
                   <dt className="text-base font-normal text-gray-500">
                     Discount
                   </dt>
-                  <dd className="text-base font-medium text-green-500">-0</dd>
+                  <dd className="text-base font-medium text-green-500">
+                    {couponApplied ? `-${discountAmount.toFixed(2)}` : "0.00"}
+                  </dd>
                 </dl>
 
                 <dl className="flex items-center justify-between gap-4 py-3">
                   <dt className="text-base font-bold text-gray-900 ">Total</dt>
                   <dd className="text-base font-bold text-gray-900 ">
-                    LKR {totalAmount.toFixed(2)}
+                    LKR{" "}
+                    {couponApplied
+                      ? totalAmountAfterDiscount.toFixed(2)
+                      : totalAmount.toFixed(2)}
                   </dd>
                 </dl>
 
@@ -314,7 +448,8 @@ const Checkout = () => {
             <div className="space-y-3">
               <button
                 type="button"
-                className="flex w-full items-center justify-center rounded-lg bg-blue-400 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+                onClick={handleSubmit}
+                className="flex w-full items-center justify-center rounded-lg bg-blue-400  hover:bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
               >
                 Proceed to Payment
               </button>

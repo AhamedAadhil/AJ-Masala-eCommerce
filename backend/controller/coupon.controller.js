@@ -70,8 +70,8 @@ export const applyCoupon = async (req, res) => {
         .status(400)
         .json({ message: "Coupon already used by this user", success: false });
     }
-    totalAmount -= code.discountAmount;
-    if (totalAmount < 0) {
+    const newTotalAmount = totalAmount - coupon.discountAmount;
+    if (newTotalAmount < 0) {
       return res.status(400).json({
         message: "Total amount after discount is invalid",
         success: false,
@@ -79,9 +79,12 @@ export const applyCoupon = async (req, res) => {
     }
     // coupon.userId.push(user._id);
     // await coupon.save();
-    return res
-      .status(200)
-      .json({ totalAmount, message: "Coupon Applied", success: true });
+    return res.status(200).json({
+      totalAmount: newTotalAmount,
+      discountAmount: coupon.discountAmount,
+      message: "Coupon Applied",
+      success: true,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
       no: String,
       street: String,
       city: String,
-      state: String,
+      province: String,
       zipcode: String,
     },
     cartItems: [

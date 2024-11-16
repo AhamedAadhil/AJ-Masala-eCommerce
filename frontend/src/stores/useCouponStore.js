@@ -7,6 +7,8 @@ export const useCouponStore = create((set) => ({
   coupon: null,
   loading: false,
   user: null,
+  totalAmountAfterDiscount: 0,
+  discountAmount: 0,
 
   getAllCoupons: async () => {
     set({ loading: true });
@@ -69,17 +71,24 @@ export const useCouponStore = create((set) => ({
     }
   },
 
-  applyCoupon: async (code) => {
+  applyCoupon: async (code, totalAmount) => {
     set({ loading: true });
     try {
-      const res = await axios.patch(`/coupon/apply/${code}`);
+      const res = await axios.patch(`/coupon/apply/${code}`, { totalAmount });
+      console.log(res.data);
       if (res && res.data) {
-        set({ loading: false });
+        set({
+          loading: false,
+          totalAmountAfterDiscount: res.data.totalAmount,
+          discountAmount: res.data.discountAmount,
+        });
       }
       toast.success("Coupon applied");
+      return true;
     } catch (error) {
       set({ loading: false });
       toast.error(error.response.data.message || "Failed to apply coupon.");
+      return false;
     }
   },
 

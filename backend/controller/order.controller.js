@@ -38,9 +38,10 @@ export const createOrder = async (req, res) => {
         no: address.no || user.address.no,
         street: address.street || user.address.street,
         city: address.city || user.address.city,
-        state: address.state || user.address.state,
+        province: address.province || user.address.province,
         zipcode: address.zipcode || user.address.zipcode,
       };
+      user.phone = address.mobileNumber;
       await user.save(); // Save the updated user object
     }
 
@@ -52,7 +53,6 @@ export const createOrder = async (req, res) => {
         product: mongoose.Types.ObjectId(item.product),
         quantity: item.quantity,
         price: item.price,
-        size: item.size,
       })),
       totalAmount: finalAmount,
       paymentMethod,

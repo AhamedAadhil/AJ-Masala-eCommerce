@@ -70,13 +70,15 @@ const SingleProduct = () => {
       const productsToCheckout = [
         {
           _id: product._id,
+          productId: {
+            _id: product._id,
+          },
           name: product.name,
           image: product.images[0],
           quantity: quantity,
           unitPrice: selectedPrice,
         },
       ];
-      console.log("productsToCheckout from frontend", productsToCheckout);
       checkOut(productsToCheckout, navigate);
     }
   };
