@@ -39,7 +39,7 @@ const Navbar = () => {
           onClick={() => navigate("/")}
           className="text-2xl font-bold text-black cursor-pointer"
         >
-          AJ MASALA
+          A.J FOODS
         </div>
 
         {/* Search Bar */}
@@ -90,7 +90,7 @@ const Navbar = () => {
           )}
 
           {/* Cart Icon with Badge */}
-          {user && user.role === "customer" && cartItemCount > 0 && (
+          {user && user.role === "customer" && cartItemCount >= 0 && (
             <div className="relative">
               <ShoppingCart
                 onClick={() => navigate("/cart")}

@@ -3,10 +3,9 @@ import ItemPreview from "./ItemPreview";
 
 const TrendingProducts = ({ products }) => {
   const generateOriginalPrice = (price) => {
-    // Generate a random factor between 1.1 and 1.5 (10% to 50% more expensive)
-    const randomFactor = 1 + Math.random() * 0.4; // 0.4 gives a 40% margin
-    const originalPrice = price * randomFactor;
-    // Round the originalPrice to the nearest integer (you can adjust to two decimals if needed)
+    const fivePercentage = price * 0.05; // 0.05 gives a 5% margin
+    const originalPrice = price + fivePercentage;
+    // Round the originalPrice to the nearest integer
     return Math.round(originalPrice); // rounds to the nearest whole number
   };
   return (

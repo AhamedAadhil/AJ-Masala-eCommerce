@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import { Order } from "../model/order.model.js";
 import { Product } from "../model/product.model.js";
 import { generateOrderID } from "../utils/generateOrderID.js";
@@ -5,8 +6,15 @@ import { generateOrderID } from "../utils/generateOrderID.js";
 export const createOrder = async (req, res) => {
   try {
     const user = req.user;
-    const { address, products, couponCode, paymentMethod, finalAmount } =
-      req.body;
+    const {
+      address,
+      products,
+      couponCode,
+      paymentMethod,
+      finalAmount,
+      receipt,
+    } = req.body;
+    let cloudinaryResponse = null;
 
     // Ensure user is authenticated
     if (!user) {
@@ -27,6 +35,13 @@ export const createOrder = async (req, res) => {
       return res
         .status(400)
         .json({ message: "Invalid total amount", success: false });
+    }
+
+    if (paymentMethod === "bank" && receipt) {
+      // upload image to cloudinary and get secureURl
+      cloudinaryResponse = await cloudinary.uploader.upload(receipt, {
+        folder: "payment-receipts",
+      });
     }
 
     //Step 1: generate  order id
@@ -59,6 +74,7 @@ export const createOrder = async (req, res) => {
       status: "placed",
       isPaid: paymentMethod === "online", // Assuming online orders are paid instantly
       couponCode,
+      receipt: cloudinaryResponse?.secure_url,
     });
 
     // Save the order to the database
@@ -184,7 +200,7 @@ export const getOrder = async (req, res) => {
 };
 
 export const updateOrder = async (req, res) => {
-  const { trackingId, trackingUrl, status } = req.body;
+  const { trackingId, trackingUrl, status, isPaid } = req.body;
   const { id } = req.params;
   try {
     const order = await Order.findOneAndUpdate(
@@ -197,8 +213,11 @@ export const updateOrder = async (req, res) => {
     }
     if (status === "delivered") {
       order.isPaid = true;
-      await order.save();
     }
+    if (req.body.hasOwnProperty("isPaid")) {
+      order.isPaid = isPaid;
+    }
+    await order.save();
     return res.status(200).json({ order, success: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });

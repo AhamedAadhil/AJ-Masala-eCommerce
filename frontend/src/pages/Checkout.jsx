@@ -9,6 +9,8 @@ import { useOrderStore } from "../stores/useOrderStore";
 import CheckoutItems from "../components/CheckoutItems";
 // import PaymentSuccessModal from "../components/PaymentSuccessModal";
 import OrderPlacedModal from "../components/OrderPlacedModal";
+import UploadReceiptModal from "../components/UploadReceiptModal";
+import { CreditCard, Truck, Upload } from "lucide-react";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -22,12 +24,14 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("online"); // Default to 'online'
   const [couponApplied, setCouponApplied] = useState(false); // Flag to track if coupon is applied
   const [showModal, setShowModal] = useState(false); // Manage modal visibility
+  const [showUploadPopup, setShowUploadPopup] = useState(false);
+  const [imageBase64, setImageBase64] = useState(""); // To store Base64 URL
   const [deliveryDetails, setDeliveryDetails] = useState({
     mobileNumber: user?.phone || "",
     no: user?.address?.no || "",
     street: user?.address?.street || "",
     city: user?.address?.city || "",
-    province: user?.address?.province || "",
+    province: user?.address?.province || "EP",
     zipcode: user?.address?.zipcode || "",
   });
 
@@ -54,8 +58,23 @@ const Checkout = () => {
     // Check if delivery details form is fully filled
     const { mobileNumber, no, street, city, province, zipcode } =
       deliveryDetails;
-    if (!mobileNumber || !no || !street || !city || !province || !zipcode) {
-      alert("Please fill in all the delivery details.");
+    if (!mobileNumber) {
+      alert("Please enter the mobile number. ");
+      return;
+    } else if (!no) {
+      alert("Please enter house number.");
+      return;
+    } else if (!street) {
+      alert("Please enter street name.");
+      return;
+    } else if (!city) {
+      alert("Please enter city name.");
+      return;
+    } else if (!province) {
+      alert("Please select province.");
+      return;
+    } else if (!zipcode) {
+      alert("Please enter zip/postal code.");
       return;
     }
 
@@ -87,14 +106,32 @@ const Checkout = () => {
       finalAmount,
     };
 
-    // console.log("order data before sending", orderData);
-    const isSuccess = createOrder(orderData);
-    if (isSuccess) {
-      setDeliveryDetails({});
-      setCouponCode("");
-      setCouponApplied(false);
-      if (paymentMethod === "cod") {
+    if (paymentMethod === "bank") {
+      if (!imageBase64) {
+        setShowUploadPopup(true);
+        return;
+      }
+      orderData.receipt = imageBase64; // Add receipt to order data
+    }
+
+    console.log("order data before sending", orderData);
+
+    if (paymentMethod === "cod") {
+      const isSuccess = await createOrder(orderData);
+      if (isSuccess) {
+        setDeliveryDetails({});
+        setCouponCode("");
+        setCouponApplied(false);
         setShowModal(true); // Show the modal
+      }
+    } else if (paymentMethod === "bank") {
+      // Submit the order with the receipt (imageBase64)
+      const isSuccess = await createOrder(orderData);
+      if (isSuccess) {
+        setDeliveryDetails({});
+        setCouponCode("");
+        setCouponApplied(false);
+        setShowModal(true); // Show success modal
       }
     }
   };
@@ -103,6 +140,30 @@ const Checkout = () => {
     setShowModal(false); // Close the modal
     navigate("/"); // Navigate to home after modal closes
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Image = reader.result;
+        setImageBase64(base64Image);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert("Please select a valid file.");
+    }
+  };
+
+  // const handleUpload = () => {
+  //   if (imageBase64) {
+  //     // Call your backend API with imageBase64
+  //     console.log("Uploading image:", imageBase64);
+  //     setShowUploadPopup(false);
+  //   } else {
+  //     alert("Please upload a file before submitting.");
+  //   }
+  // };
 
   return (
     <section className="bg-white rounded-md shadow-md lg:mt-4 lg:px-4 py-4 antialiased md:py-16">
@@ -483,20 +544,37 @@ const Checkout = () => {
                 }
                 className="flex w-full items-center justify-center rounded-lg bg-blue-400 hover:bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
               >
-                {paymentMethod === "online"
-                  ? `Proceed to Pay LKR ${
-                      couponApplied
-                        ? totalAmountAfterDiscount.toFixed(2)
-                        : totalAmount.toFixed(2)
-                    }`
-                  : paymentMethod === "cod"
-                  ? "Pay on Delivery"
-                  : "Upload Payment Receipt"}
+                {paymentMethod === "online" ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <CreditCard /> Proceed to Pay LKR $
+                    {couponApplied
+                      ? totalAmountAfterDiscount.toFixed(2)
+                      : totalAmount.toFixed(2)}
+                  </span>
+                ) : paymentMethod === "cod" ? (
+                  <span className="flex items-center justify-center gap-2">
+                    {" "}
+                    <Truck /> Pay on Delivery
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    <Upload /> Upload Payment Receipt
+                  </span>
+                )}
               </button>
             </div>
           </div>
         </div>
       </form>
+      {/* Upload Modal */}
+      <UploadReceiptModal
+        isOpen={showUploadPopup}
+        onClose={() => setShowUploadPopup(false)}
+        onFileChange={handleFileChange} // Bind to file input
+        onUpload={handleSubmit} // Trigger on upload button
+        loading={loading}
+      />
+
       <OrderPlacedModal
         showModal={showModal}
         closeModal={closeModal}

@@ -15,6 +15,7 @@ export const useOrderStore = create((set) => ({
     couponCode,
     paymentMethod,
     finalAmount,
+    receipt,
   }) => {
     set({ loading: true, orderId: "" });
     try {
@@ -24,6 +25,7 @@ export const useOrderStore = create((set) => ({
         couponCode,
         paymentMethod,
         finalAmount,
+        receipt,
       });
       if (res && res.data.success === true) {
         set({ orderId: res.data.orderId, loading: false });
@@ -42,7 +44,7 @@ export const useOrderStore = create((set) => ({
   },
 
   getAllOrders: async () => {
-    set({ loading: false, orderId: "" });
+    set({ loading: true, orderId: "" });
     try {
       const res = await axios.get("/order");
       if (res && res.data.success === true) {
@@ -57,19 +59,20 @@ export const useOrderStore = create((set) => ({
     }
   },
 
-  updateOrder: async (orderId, status, trackingId, trackingUrl) => {
-    set({ loading: false });
+  updateOrder: async (orderId, status, trackingId, trackingUrl, isPaid) => {
+    set({ loading: true });
     try {
       const res = await axios.patch(`/order/${orderId}`, {
         status,
         trackingId,
         trackingUrl,
+        isPaid,
       });
       if (res && res.data.success === true) {
         set((state) => {
           const updatedOrders = state.orders.map((order) =>
             order.orderId === orderId
-              ? { ...order, status, trackingId, trackingUrl }
+              ? { ...order, status, trackingId, trackingUrl, isPaid }
               : order
           );
           return { orders: updatedOrders, loading: false };

@@ -51,6 +51,10 @@ const orderSchema = new mongoose.Schema(
     trackingUrl: {
       type: String,
     },
+    receipt: {
+      type: String,
+      default: "",
+    },
     orderDate: {
       type: Date,
       default: Date.now,

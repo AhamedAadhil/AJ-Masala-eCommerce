@@ -184,8 +184,9 @@ const Users = () => {
                           <strong>Phone:</strong> {user.phone}
                         </p>
                         <p>
-                          <strong>Address:</strong> {user.address?.street},{" "}
-                          {user.address?.city}
+                          <strong>Address:</strong> {user.address?.no},{" "}
+                          {user.address?.street}, {user.address?.city},
+                          {user.address?.province}, {user.address?.zipcode}
                         </p>
                         <p>
                           <strong>Role:</strong> {user.role}

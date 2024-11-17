@@ -12,6 +12,7 @@ const UpdateOrder = () => {
   const [status, setStatus] = useState("");
   const [trackingId, setTrackingId] = useState("");
   const [trackingUrl, setTrackingUrl] = useState("");
+  const [isPaid, setIsPaid] = useState(false);
 
   useEffect(() => {
     getOrderAdmin(id);
@@ -23,12 +24,13 @@ const UpdateOrder = () => {
       setStatus(order.status || ""); // Set status if available
       setTrackingId(order.trackingId || ""); // Set tracking ID if available
       setTrackingUrl(order.trackingUrl || ""); // Set tracking URL if available
+      setIsPaid(order.isPaid); // Set tracking URL if available
     }
   }, [order]);
 
   const handleUpdateOrder = async () => {
     console.log(id, status, trackingId, trackingUrl);
-    await updateOrder(id, status, trackingId, trackingUrl);
+    await updateOrder(id, status, trackingId, trackingUrl, isPaid);
   };
 
   return (
@@ -56,6 +58,19 @@ const UpdateOrder = () => {
           <strong className="text-green-400">Order Date:</strong>{" "}
           {new Date(order?.orderDate).toLocaleDateString()}
         </p>
+        {order?.paymentMethod === "bank" && (
+          <p>
+            <strong className="text-green-400">Payment Receipt:</strong>{" "}
+            <a
+              href={order?.receipt}
+              download
+              target="_blank"
+              className="text-blue-500 hover:underline"
+            >
+              Download Receipt
+            </a>
+          </p>
+        )}
       </div>
 
       <h2 className="text-xl font-bold mb-4 text-gray-100">Products</h2>
@@ -107,6 +122,23 @@ const UpdateOrder = () => {
             <option value="cancelled">Cancelled</option>
           </select>
         </div>
+
+        {order?.paymentMethod === "bank" && (
+          <div>
+            <label className="block text-green-300 font-medium mb-1">
+              isPaid
+            </label>
+            <select
+              className="w-full border border-gray-600 rounded-md px-4 py-2 bg-gray-700 text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+              value={isPaid}
+              onChange={(e) => setIsPaid(e.target.value === "true")}
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+        )}
+
         <div>
           <label className="block text-green-300 font-medium mb-1">
             Tracking ID
@@ -135,8 +167,8 @@ const UpdateOrder = () => {
           className="w-full mt-4 px-4 py-2 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200"
         >
           {loading ? (
-            <span className="flex items-center gap-2">
-              <Loader /> Updating...
+            <span className="flex items-center justify-center gap-2">
+              <Loader className="spin animate-spin" /> Updating Order...
             </span>
           ) : (
             "Update Order"
