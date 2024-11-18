@@ -7,6 +7,7 @@ import RegisterModal from "./RegisterModal";
 import LoginModal from "./LoginModal";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
+import AJLogo from"../assets/AJLogo.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -34,12 +35,13 @@ const Navbar = () => {
   return (
     <nav className="bg-yellow-500 shadow-md">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
-        {/* Logo */}
-        <div
+       {/* Logo */}
+       <div
           onClick={() => navigate("/")}
-          className="text-2xl font-bold text-black cursor-pointer"
+          className="flex flex-row text-2xl font-bold text-black cursor-pointer"
         >
-          A.J FOODS
+          <img className="pt-2" src={AJLogo} alt="aj-logo" width={50}/>
+          <h2 className="pt-3 text-2xl font-bold">A. J FOODS</h2>
         </div>
 
         {/* Search Bar */}
