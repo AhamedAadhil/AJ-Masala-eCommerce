@@ -22,7 +22,7 @@ export const payherePayment = async (req, res) => {
   const merchant_secret =
     process.env.NODE_ENV === "development"
       ? process.env.PAYHERE_MERCHANT_SECRET
-      : process.env.PAYHERE_MERCHANT_SECRET_RENDER;
+      : process.env.PAYHERE_MERCHANT_SECRET_PRODUCTION;
 
   // Hash the secret separately
   const hashedSecret = CryptoJS.MD5(merchant_secret).toString().toUpperCase();
@@ -122,7 +122,7 @@ export const payhereNotify = async (req, res) => {
     const merchant_secret =
       process.env.NODE_ENV === "development"
         ? process.env.PAYHERE_MERCHANT_SECRET
-        : process.env.PAYHERE_MERCHANT_SECRET_RENDER;
+        : process.env.PAYHERE_MERCHANT_SECRET_PRODUCTION;
 
     // Hash the merchant secret separately
     const hashedSecret = CryptoJS.MD5(merchant_secret).toString().toUpperCase();

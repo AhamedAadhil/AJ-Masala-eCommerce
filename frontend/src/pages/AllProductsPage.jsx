@@ -1,125 +1,146 @@
-import React from 'react'
+import { useProductStore } from "../stores/useProductStore";
 import ItemPreview from "../components/ItemPreview";
+import { useEffect, useState } from "react";
 
-const products = [
-  // another array of product objects
-  {
-    id: 5,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 6,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 7,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 8,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 9,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 10,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 11,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 12,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 13,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 14,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 15,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-  {
-    id: 16,
-    name: "Garam Masala 100g",
-    price: "550",
-    originalPrice: "750",
-    rating: 4,
-    imageUrl:
-      "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
-  },
-];
+// const products = [
+//   // another array of product objects
+//   {
+//     id: 5,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 6,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 7,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 8,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 9,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 10,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 11,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 12,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 13,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 14,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 15,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+//   {
+//     id: 16,
+//     name: "Garam Masala 100g",
+//     price: "550",
+//     originalPrice: "750",
+//     rating: 4,
+//     imageUrl:
+//       "https://www.abidarasheed.com/cdn/shop/products/Untitleddesign_1.png?v=1645255233",
+//   },
+// ];
 
 const AllProductsPage = () => {
+  const { products, fetchAllProducts } = useProductStore();
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const generateOriginalPrice = (price) => {
+    const fivePercentage = price * 0.05; // 0.05 gives a 5% margin
+    const originalPrice = price + fivePercentage;
+    // Round the originalPrice to the nearest integer
+    return Math.round(originalPrice); // rounds to the nearest whole number
+  };
+
+  useEffect(() => {
+    fetchAllProducts();
+  }, [fetchAllProducts]);
+
+  // Filter products based on selected category
+  const filteredProducts =
+    selectedCategory === "All"
+      ? products // Show all products if "All" is selected
+      : products.filter((product) => product.category === selectedCategory);
+
   return (
     <div className="bg-white p-4 shadow-lg mt-4 lg:mx-64 md:mx-24">
       {/* Flex container to align heading and category selection */}
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-xl font-bold">ALL PRODUCTS</h2>
-        
+
         {/* Category dropdown positioned to the right */}
         <div className="w-40">
           <label
@@ -130,31 +151,36 @@ const AllProductsPage = () => {
           </label>
           <select
             id="Category"
+            value={selectedCategory}
+            onChange={(e) => {
+              setSelectedCategory(e.target.value);
+            }}
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500"
           >
-            <option value="EP">All</option>
-            <option value="NP">Masala</option>
-            <option value="NW">Seeds</option>
-            <option value="NC">Other</option>
+            <option value="All">All</option>
+            <option value="Herbs">Herbs</option>
+            <option value="Spices">Spices</option>
+            <option value="Grains">Grains</option>
           </select>
         </div>
       </div>
 
       {/* Products grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <ItemPreview
-            key={product.id}
+            productId={product._id}
+            key={product._id}
             name={product.name}
-            price={product.price}
-            originalPrice={product.originalPrice}
-            rating={product.rating}
-            imageUrl={product.imageUrl}
+            price={product.ps[0].price}
+            originalPrice={generateOriginalPrice(product.ps[0].price)}
+            rating={product.overAllRating || 5}
+            imageUrl={product.images[0]}
           />
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AllProductsPage
+export default AllProductsPage;
