@@ -18,7 +18,7 @@ const Checkout = () => {
   const { user } = useUserStore();
   const { applyCoupon, discountAmount, totalAmountAfterDiscount } =
     useCouponStore();
-  const { createOrder, orderId, loading } = useOrderStore();
+  const { createOrder, orderId, loading, payWithPayhere } = useOrderStore();
 
   const [couponCode, setCouponCode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("online"); // Default to 'online'
@@ -114,8 +114,6 @@ const Checkout = () => {
       orderData.receipt = imageBase64; // Add receipt to order data
     }
 
-    console.log("order data before sending", orderData);
-
     if (paymentMethod === "cod") {
       const isSuccess = await createOrder(orderData);
       if (isSuccess) {
@@ -133,6 +131,14 @@ const Checkout = () => {
         setCouponApplied(false);
         setShowModal(true); // Show success modal
       }
+    } else {
+      const randomOrderId = Math.floor(10000 + Math.random() * 90000); // Ensures a 5-digit number
+      const tempOrderId = `TMP-${randomOrderId}`;
+      setDeliveryDetails({});
+      setCouponCode("");
+      setCouponApplied(false);
+      await payWithPayhere(user, tempOrderId, finalAmount, orderData, navigate);
+      //  setShowModal(true);
     }
   };
 
@@ -154,16 +160,6 @@ const Checkout = () => {
       alert("Please select a valid file.");
     }
   };
-
-  // const handleUpload = () => {
-  //   if (imageBase64) {
-  //     // Call your backend API with imageBase64
-  //     console.log("Uploading image:", imageBase64);
-  //     setShowUploadPopup(false);
-  //   } else {
-  //     alert("Please upload a file before submitting.");
-  //   }
-  // };
 
   return (
     <section className="bg-white rounded-md shadow-md lg:mt-4 lg:px-4 py-4 antialiased md:py-16">

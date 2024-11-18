@@ -63,7 +63,7 @@ const UpdateOrder = () => {
             <strong className="text-green-400">Payment Receipt:</strong>{" "}
             <a
               href={order?.receipt}
-              download
+              download={order?.receipt}
               target="_blank"
               className="text-blue-500 hover:underline"
             >

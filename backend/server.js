@@ -12,6 +12,7 @@ import cartRoutes from "./routes/cart.routes.js";
 import couponRoutes from "./routes/coupon.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
+import payhereRoutes from "./routes/payhere.routes.js";
 import { connectDB } from "./lib/db.js";
 
 dotenv.config();
@@ -23,6 +24,7 @@ const __dirname = path.resolve();
 
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" })); //allow parse body of req
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -38,6 +40,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/coupon", couponRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/payhere", payhereRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));

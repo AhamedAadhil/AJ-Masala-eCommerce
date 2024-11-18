@@ -19,7 +19,7 @@ const TrendingProducts = ({ products }) => {
             name={product.name}
             price={product.ps[0].price}
             originalPrice={generateOriginalPrice(product.ps[0].price)}
-            rating={product.overAllRating}
+            rating={product.overAllRating || 5}
             imageUrl={product.images[0]}
           />
         ))}

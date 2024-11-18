@@ -8,6 +8,7 @@ export const useOrderStore = create((set) => ({
   loading: false,
   orders: [],
   order: null,
+  payment: [],
 
   createOrder: async ({
     address,
@@ -105,6 +106,94 @@ export const useOrderStore = create((set) => ({
     } catch (error) {
       set({ loading: false, order: null });
       toast.error(error.response.data.message || "Failed to get order");
+      return false;
+    }
+  },
+
+  payWithPayhere: async (user, tempOrderId, amount, orderData, navigate) => {
+    set({ loading: false, order: null });
+    try {
+      // Extract only the required data from orderData
+      const { finalAmount, paymentMethod, address, products, couponCode } =
+        orderData;
+      const filteredOrderData = {
+        finalAmount,
+        paymentMethod,
+        address,
+        products,
+        couponCode,
+      };
+
+      const res = await axios.post("/payhere/payment", {
+        tempOrderId,
+        amount,
+        user,
+        address,
+      });
+      if (res && res.data.success === true) {
+        // console.log("res data==", res.data);
+        const payment = {
+          sandbox: true,
+          merchant_id: res.data.merchant_id, // From backend
+          return_url: res.data.return_url, // From backend
+          cancel_url: res.data.cancel_url, // From backend
+          notify_url: res.data.notify_url, // From backend
+          order_id: res.data.orderId, // From backend
+          items: res.data.orderId, // Order ID or actual item data
+          amount: amount, // From frontend (order data)
+          currency: "LKR", // Static
+          hash: res.data.hash, // From backend
+          first_name: user?.name, // From frontend (user details)
+          last_name: "", // From frontend (optional)
+          email: user?.email, // From frontend (user details)
+          phone: user?.phone, // From frontend (user details)
+          address: address?.city, // From frontend (user details)
+          city: address?.city || "", // From frontend (user details)
+          country: "Sri Lanka", // Static
+          custom_1: JSON.stringify(filteredOrderData),
+          custom_2: user?._id,
+        };
+
+        console.log("payment data==", payment);
+
+        if (window.payhere) {
+          // Handle the PayHere payment events
+          window.payhere.onCompleted = function (orderId = res.data.orderId) {
+            console.log("Payment completed. OrderID:", orderId);
+
+            set({ loading: false, order: null, orderId: orderId });
+            navigate("/payment-success");
+          };
+
+          window.payhere.onDismissed = function () {
+            console.log("Payment dismissed");
+            toast.error("Payment dismissed");
+            set({ loading: false, order: null });
+            navigate("/payment-cancel");
+          };
+
+          window.payhere.onError = function (error) {
+            console.log("Error:", error);
+            toast.error(
+              `Error: ${error.message || "An error occurred during payment"}`
+            );
+            set({ loading: false, order: null });
+          };
+
+          // Start the payment process
+          window.payhere.startPayment(payment);
+        } else {
+          toast.error("Payhere not found");
+          set({ loading: false, order: null });
+        }
+      } else {
+        set({ loading: false, order: null });
+        toast.error("Failed to get hash");
+        return false;
+      }
+    } catch (error) {
+      set({ loading: false, order: null });
+      toast.error(error.response.data.message || "Failed to get with payhere");
       return false;
     }
   },

@@ -26,6 +26,8 @@ import UserProfile from "./pages/UserProfile";
 import Footer from "./components/Footer";
 import AllProductsPage from "./pages/AllProductsPage";
 import CartPage from "./pages/CartPage";
+import PaymentSuccessPage from "./components/PaymentSuccessPage";
+import PaymentFailurePage from "./components/PaymentFailurePage";
 
 function App() {
   const { checkAuth, checkingAuth } = useUserStore();
@@ -49,6 +51,8 @@ function App() {
           <Route path="/profile/:id" element={<UserProfile />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/payment-success" element={<PaymentSuccessPage />} />
+          <Route path="/payment-cancel" element={<PaymentFailurePage />} />
         </Route>
 
         {/* Admin Routes */}
