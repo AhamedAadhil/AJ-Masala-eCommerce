@@ -42,10 +42,18 @@ export const payherePayment = async (req, res) => {
   const paymentData = {
     sandbox: true,
     merchant_id: merchant_id,
-    return_url: "http://localhost:5173/payment-success",
-    cancel_url: "http://localhost:5173/payment-cancel",
+    return_url:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:5173/payment-success"
+        : "https://aj-masala-ecommerce.onrender.com/payment-success",
+    cancel_url:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:5173/payment-cancel"
+        : "https://aj-masala-ecommerce.onrender.com/payment-cancel",
     notify_url:
-      "https://88b6-2402-4000-23c0-17c9-b144-cff1-5383-53ed.ngrok-free.app/api/payhere/payment/notify", //http://localhost:5000/api/payment/notify
+      process.env.NODE_ENV === "development"
+        ? "https://88b6-2402-4000-23c0-17c9-b144-cff1-5383-53ed.ngrok-free.app/api/payhere/payment/notify"
+        : "https://aj-masala-ecommerce.onrender.com/api/payhere/payment/notify", //http://localhost:5000/api/payment/notify
     order_id: tempOrderId,
     items: tempOrderId,
     amount: amount,

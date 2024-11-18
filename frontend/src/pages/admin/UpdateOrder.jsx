@@ -51,8 +51,8 @@ const UpdateOrder = () => {
           {order?.paymentMethod}
         </p>
         <p className="mb-1">
-          <strong className="text-green-400">Total Amount:</strong> $
-          {order?.totalAmount}
+          <strong className="text-green-400">Total Amount:</strong>LKR{" "}
+          {order?.totalAmount.toFixed(2)}
         </p>
         <p>
           <strong className="text-green-400">Order Date:</strong>{" "}
@@ -92,8 +92,8 @@ const UpdateOrder = () => {
                 {item?.quantity}
               </p>
               <p className="text-sm">
-                <strong className="text-green-400">Price:</strong> $
-                {item?.price}
+                <strong className="text-green-400">Price:</strong> LKR{" "}
+                {item?.price.toFixed(2)}
               </p>
               {/* <p className="text-sm">
                 <strong className="text-green-400">Size:</strong> {item?.size}

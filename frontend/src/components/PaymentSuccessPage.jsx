@@ -1,10 +1,7 @@
 import { CheckCircle } from "lucide-react";
 import Confetti from "react-confetti";
 
-import { useOrderStore } from "../stores/useOrderStore";
-
 const PaymentSuccessPage = () => {
-  const { orderId } = useOrderStore();
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
       <Confetti width={window.innerWidth} height={window.innerHeight} />
@@ -17,7 +14,7 @@ const PaymentSuccessPage = () => {
           Your payment has been successfully processed.
         </p>
         <p className="mt-4 text-sm text-gray-500">
-          Order ID: <span className="font-semibold text-black">{orderId}</span>
+          Please check your profile for your order information
         </p>
         <button
           onClick={() => (window.location.href = "/")} // Redirect to homepage (or other page)
