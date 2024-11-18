@@ -12,9 +12,13 @@ import AJLogo from "../assets/AJLogo.png";
 const Navbar = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
-  const { cartItemCount } = useCartStore();
+  let { cartItemCount } = useCartStore();
 
   const isAdmin = user?.role === "admin";
+
+  if (cartItemCount === 0) {
+    cartItemCount += user.cartItems.length;
+  }
 
   const [isOpen, setIsOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
@@ -31,6 +35,8 @@ const Navbar = () => {
   };
   const closeRegisterModal = () => setRegisterModalOpen(false);
   const closeLoginModal = () => setLoginModalOpen(false);
+
+  console.log("user cartItem length", user.cartItems.length);
 
   return (
     <nav className="bg-yellow-500 shadow-md">
@@ -65,12 +71,13 @@ const Navbar = () => {
           <Link to="/" className="text-black hover:text-gray-800">
             Home
           </Link>
-          <Link to="/top-selling" className="text-black hover:text-gray-800">
-            Top Selling
-          </Link>
           <Link to="/all" className="text-black hover:text-gray-800">
             All Products
           </Link>
+          <Link to="/about" className="text-black hover:text-gray-800">
+            About us
+          </Link>
+
           <Link to="/contact" className="text-black hover:text-gray-800">
             Contact us
           </Link>
@@ -139,17 +146,18 @@ const Navbar = () => {
               Home
             </Link>
             <Link
-              to="/top-selling"
-              className="block py-2 text-black hover:text-gray-800"
-            >
-              Top Selling
-            </Link>
-            <Link
               to="/all"
               className="block py-2 text-black hover:text-gray-800"
             >
               All Products
             </Link>
+            <Link
+              to="/about"
+              className="block py-2 text-black hover:text-gray-800"
+            >
+              About us
+            </Link>
+
             <Link
               to="/contact"
               className="block py-2 text-black hover:text-gray-800"
