@@ -132,12 +132,10 @@ const Checkout = () => {
         setShowModal(true); // Show success modal
       }
     } else {
-      const randomOrderId = Math.floor(10000 + Math.random() * 90000); // Ensures a 5-digit number
-      const tempOrderId = `TMP-${randomOrderId}`;
       setDeliveryDetails({});
       setCouponCode("");
       setCouponApplied(false);
-      await payWithPayhere(user, tempOrderId, finalAmount, orderData, navigate);
+      await payWithPayhere(user, finalAmount, orderData, navigate);
       //  setShowModal(true);
     }
   };

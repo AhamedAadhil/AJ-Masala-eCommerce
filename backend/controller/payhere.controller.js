@@ -10,13 +10,10 @@ import { generateOrderID } from "../utils/generateOrderID.js";
 dotenv.config();
 
 export const payherePayment = async (req, res) => {
-  const { tempOrderId, amount, user, address } = req.body;
+  const { amount, user, address } = req.body;
 
   const currency = "LKR";
 
-  if (!tempOrderId) {
-    return res.status(400).json({ message: "Order ID is required" });
-  }
   if (!amount) {
     return res.status(400).json({ message: "Amount is required" });
   }
@@ -31,9 +28,11 @@ export const payherePayment = async (req, res) => {
     .toLocaleString("en-us", { minimumFractionDigits: 2 })
     .replaceAll(",", "");
 
+  const orderId = generateOrderID("bank");
+
   // Create the hash for the payment
   const hash = CryptoJS.MD5(
-    merchant_id + tempOrderId + amountFormated + currency + hashedSecret
+    merchant_id + orderId + amountFormated + currency + hashedSecret
   )
     .toString()
     .toUpperCase();
@@ -53,9 +52,9 @@ export const payherePayment = async (req, res) => {
     notify_url:
       process.env.NODE_ENV === "development"
         ? "https://88b6-2402-4000-23c0-17c9-b144-cff1-5383-53ed.ngrok-free.app/api/payhere/payment/notify"
-        : "https://aj-masala-ecommerce.onrender.com/api/payhere/payment/notify", //http://localhost:5000/api/payment/notify
-    order_id: tempOrderId,
-    items: tempOrderId,
+        : "https://aj-masala-ecommerce.onrender.com/api/payhere/payment/notify",
+    order_id: orderId,
+    items: orderId,
     amount: amount,
     currency: "LKR",
     hash: hash,
@@ -86,7 +85,7 @@ export const payherePayment = async (req, res) => {
     res.status(200).json({
       success: true,
       merchant_id: merchant_id,
-      orderId: paymentData.order_id,
+      orderId,
       hash,
       return_url: paymentData.return_url,
       cancel_url: paymentData.cancel_url,
@@ -148,12 +147,9 @@ export const payhereNotify = async (req, res) => {
 
     const user = await User.findById(userId);
 
-    //Step 1: generate  order id
-    const orderId = generateOrderID(orderData.paymentMethod);
-
     // console.log("orderId==", orderId);
 
-    // Step 2: Update the user's address directly and save it
+    // Step 1: Update the user's address directly and save it
     if (orderData.address) {
       user.address = {
         no: orderData.address.no || user.address.no,
@@ -170,7 +166,7 @@ export const payhereNotify = async (req, res) => {
     if (status_code === "2") {
       // Assuming you have a method to create the order
       const order = new Order({
-        orderId: orderId, // Using the PayHere order ID
+        orderId: order_id, // Using the PayHere order ID
         user: userId, // Assuming you are passing the user ID
         products: orderData?.products,
         totalAmount: orderData?.finalAmount,

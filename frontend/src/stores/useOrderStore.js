@@ -110,7 +110,7 @@ export const useOrderStore = create((set) => ({
     }
   },
 
-  payWithPayhere: async (user, tempOrderId, amount, orderData, navigate) => {
+  payWithPayhere: async (user, amount, orderData, navigate) => {
     set({ loading: false, order: null });
     try {
       // Extract only the required data from orderData
@@ -125,7 +125,6 @@ export const useOrderStore = create((set) => ({
       };
 
       const res = await axios.post("/payhere/payment", {
-        tempOrderId,
         amount,
         user,
         address,
