@@ -20,7 +20,7 @@ export const getUser = async (req, res) => {
         populate: {
           path: "products.product", // Populate the product details
           model: "Product", // Reference to the Product model
-          select: "name images", // Select additional fields from the Product model
+          select: "name images rating", // Select additional fields from the Product model
         },
       });
     if (!user) {

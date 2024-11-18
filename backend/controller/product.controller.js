@@ -1,6 +1,7 @@
 import cloudinary from "../lib/cloudinary.js";
 import { redis } from "../lib/redis.js";
 import { Product } from "../model/product.model.js";
+import { Order } from "../model/order.model.js";
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -253,6 +254,71 @@ export const updateProduct = async (req, res) => {
       message: "Product updated successfully",
       success: true,
       product: updatedProduct,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+export const createReview = async (req, res) => {
+  const { productId, orderId } = req.params;
+  const { star, comment } = req.body;
+  const user = req.user;
+
+  try {
+    const order = await Order.findOne({ orderId });
+    if (!order) {
+      return res
+        .status(404)
+        .json({ message: "Order not found", success: false });
+    }
+
+    const productInOrder = order.products.find(
+      (product) => product.product.toString() === productId
+    );
+
+    if (!productInOrder) {
+      return res
+        .status(404)
+        .json({ message: "Product not found in the order", success: false });
+    }
+
+    // Find the product in the Product collection
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: "Product not found", success: false });
+    }
+
+    if (product.rating.some((review) => review.user === user.email)) {
+      return res
+        .status(400)
+        .json({
+          message: "You have already reviewed this product",
+          success: false,
+        });
+    }
+
+    // Add the review to the product's rating array
+    product.rating.push({ star, comment, user: user.email });
+
+    // Calculate the new `overAllRating`
+    const totalStars = product.rating.reduce(
+      (total, review) => total + review.star,
+      0
+    );
+    const numberOfReviews = product.rating.length;
+    product.overAllRating = totalStars / numberOfReviews;
+
+    // Save the updated product
+    await product.save();
+
+    return res.status(200).json({
+      message: "Review added successfully",
+      success: true,
+      product,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });

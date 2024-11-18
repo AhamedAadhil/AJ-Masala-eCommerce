@@ -17,7 +17,7 @@ const Navbar = () => {
   const isAdmin = user?.role === "admin";
 
   if (cartItemCount === 0) {
-    cartItemCount += user.cartItems.length;
+    cartItemCount += user?.cartItems?.length;
   }
 
   const [isOpen, setIsOpen] = useState(false);
@@ -35,8 +35,6 @@ const Navbar = () => {
   };
   const closeRegisterModal = () => setRegisterModalOpen(false);
   const closeLoginModal = () => setLoginModalOpen(false);
-
-  console.log("user cartItem length", user.cartItems.length);
 
   return (
     <nav className="bg-yellow-500 shadow-md">

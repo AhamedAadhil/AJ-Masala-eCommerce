@@ -2,9 +2,12 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Star } from "lucide-react";
 
+import { useUserStore } from "../stores/useUserStore";
 const MyOrdersTable = ({ orders }) => {
   const [expandedRows, setExpandedRows] = useState([]);
   const [reviews, setReviews] = useState({}); // Track ratings and comments for each product
+
+  const { user } = useUserStore();
 
   const toggleRow = (id) => {
     if (expandedRows.includes(id)) {
@@ -50,6 +53,8 @@ const MyOrdersTable = ({ orders }) => {
       console.log("No review data available.");
     }
   };
+
+  console.log(orders);
 
   return (
     <div className="p-2 sm:p-4 md:p-6 lg:p-10">
@@ -176,52 +181,57 @@ const MyOrdersTable = ({ orders }) => {
                             </p>
                           </div>
 
-                          {order?.status === "delivered" && (
-                            <div className="flex flex-col items-start sm:items-center mt-2 sm:mt-0 sm:w-2/5">
-                              {/* Star Rating */}
-                              <div className="flex items-center mb-2">
-                                {[...Array(5)].map((_, starIndex) => (
-                                  <Star
-                                    key={starIndex}
-                                    size={16}
-                                    className={`cursor-pointer ${
-                                      reviews[order.id]?.[i]?.rating > starIndex
-                                        ? "text-yellow-500"
-                                        : "text-gray-300"
-                                    }`}
-                                    onClick={() =>
-                                      handleStarClick(
-                                        order.id,
-                                        i,
-                                        starIndex + 1
-                                      )
-                                    }
-                                  />
-                                ))}
+                          {order?.status === "delivered" &&
+                            Array.isArray(product?.product?.rating) &&
+                            !product?.product?.rating.some(
+                              (review) => review.user === user.email
+                            ) && (
+                              <div className="flex flex-col items-start sm:items-center mt-2 sm:mt-0 sm:w-2/5">
+                                {/* Star Rating */}
+                                <div className="flex items-center mb-2">
+                                  {[...Array(5)].map((_, starIndex) => (
+                                    <Star
+                                      key={starIndex}
+                                      size={16}
+                                      className={`cursor-pointer ${
+                                        reviews[order.id]?.[i]?.rating >
+                                        starIndex
+                                          ? "text-yellow-500"
+                                          : "text-gray-300"
+                                      }`}
+                                      onClick={() =>
+                                        handleStarClick(
+                                          order.id,
+                                          i,
+                                          starIndex + 1
+                                        )
+                                      }
+                                    />
+                                  ))}
+                                </div>
+                                {/* Feedback Input */}
+                                <input
+                                  type="text"
+                                  placeholder="Leave a feedback"
+                                  value={reviews[order.id]?.[i]?.comment || ""}
+                                  onChange={(e) =>
+                                    handleCommentChange(
+                                      order.id,
+                                      i,
+                                      e.target.value
+                                    )
+                                  }
+                                  className="ml-2 border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
+                                />
+                                {/* Add Review Button */}
+                                <button
+                                  onClick={() => handleAddReview(order.id, i)}
+                                  className="mt-2 sm:mt-3 text-white bg-green-500 border border-green-500 rounded px-4 py-2 text-sm font-semibold hover:bg-green-600 hover:border-green-600 transition duration-300"
+                                >
+                                  Add Review
+                                </button>
                               </div>
-                              {/* Feedback Input */}
-                              <input
-                                type="text"
-                                placeholder="Leave a feedback"
-                                value={reviews[order.id]?.[i]?.comment || ""}
-                                onChange={(e) =>
-                                  handleCommentChange(
-                                    order.id,
-                                    i,
-                                    e.target.value
-                                  )
-                                }
-                                className="ml-2 border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
-                              />
-                              {/* Add Review Button */}
-                              <button
-                                onClick={() => handleAddReview(order.id, i)}
-                                className="mt-2 sm:mt-3 text-white bg-green-500 border border-green-500 rounded px-4 py-2 text-sm font-semibold hover:bg-green-600 hover:border-green-600 transition duration-300"
-                              >
-                                Add Review
-                              </button>
-                            </div>
-                          )}
+                            )}
                         </div>
                       ))}
                     </td>
