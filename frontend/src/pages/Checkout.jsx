@@ -476,7 +476,7 @@ const Checkout = () => {
                   onClick={handleApplyCoupon}
                   disabled={couponApplied}
                   type="button"
-                  className="flex items-center justify-center rounded-lg bg-blue-400 hover:bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 "
+                  className="flex items-center justify-center rounded-lg bg-blue-600 hover:bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 "
                 >
                   Apply
                 </button>
@@ -536,11 +536,17 @@ const Checkout = () => {
                 disabled={
                   paymentMethod === "" || loading || products.length === 0
                 }
-                className="flex w-full items-center justify-center rounded-lg bg-blue-400 hover:bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+                className="flex w-full items-center justify-center rounded-lg bg-blue-600 hover:bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
               >
                 {paymentMethod === "online" ? (
                   <span className="flex items-center justify-center gap-2">
-                    <CreditCard /> Proceed to Pay LKR $
+                    <img
+                      width={50}
+                      height={50}
+                      src="/payherelogo.png"
+                      alt="payhere logo"
+                    />{" "}
+                    Proceed to Pay LKR{" "}
                     {couponApplied
                       ? totalAmountAfterDiscount.toFixed(2)
                       : totalAmount.toFixed(2)}
