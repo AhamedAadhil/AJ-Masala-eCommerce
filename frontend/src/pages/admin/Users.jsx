@@ -18,19 +18,20 @@ const Users = () => {
   const [orderBy, setOrderBy] = useState("lastLogin");
   const [expandedUserId, setExpandedUserId] = useState(null);
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 20;
   const totalPages = Math.ceil(users.length / itemsPerPage);
 
   const filteredUsers = users?.filter((user) =>
-    user?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    user?.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedUsers = [...filteredUsers].sort((a, b) => {
     if (orderBy === "lastLogin") {
       return parseInt(b.lastLogin) - parseInt(a.lastLogin);
-    } else {
+    } else if (orderBy === "joined") {
       return new Date(b.createdAt) - new Date(a.createdAt);
     }
+    return 0;
   });
 
   const currentUsers = sortedUsers.slice(
@@ -47,6 +48,11 @@ const Users = () => {
   const toggleUserDetails = (userId) => {
     setExpandedUserId(expandedUserId === userId ? null : userId);
   };
+
+  // Reset currentPage to 1 when searchTerm changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   useEffect(() => {
     getAllUsers();

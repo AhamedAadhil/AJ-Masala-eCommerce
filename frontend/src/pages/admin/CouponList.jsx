@@ -109,11 +109,17 @@ const CouponList = () => {
                   </td>
                   <td className="px-3 py-4">
                     <div className="text-sm text-white">
-                      {coupon.discountAmount}
+                      LKR {coupon.discountAmount.toFixed(2)}
                     </div>
                   </td>
                   <td className="px-3 py-4">
-                    <div className="text-sm text-white">
+                    <div
+                      className={`text-sm ${
+                        new Date(coupon.expirationDate) > new Date()
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
+                    >
                       {
                         new Date(coupon.expirationDate)
                           .toISOString()
@@ -167,6 +173,10 @@ const CouponList = () => {
                   <tr>
                     <td colSpan="6" className="px-3 py-4 bg-gray-700">
                       <div className="text-white">
+                        <p>
+                          <strong>Created on:</strong>{" "}
+                          {coupon?.createdAt.split("T")[0]}
+                        </p>
                         <p>
                           <strong>Used By:</strong>{" "}
                           {coupon?.userId?.map((user) => user.email).join(", ")}

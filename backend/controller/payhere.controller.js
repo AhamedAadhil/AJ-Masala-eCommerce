@@ -14,6 +14,10 @@ export const payherePayment = async (req, res) => {
 
   const currency = "LKR";
 
+  if (user.role === "admin") {
+    return res.status(403).json({ message: "Access Denied", success: false });
+  }
+
   if (!amount) {
     return res.status(400).json({ message: "Amount is required" });
   }

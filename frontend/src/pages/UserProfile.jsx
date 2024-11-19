@@ -12,6 +12,11 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const { logout, getUser, user } = useUserStore();
 
+  // Filter and sort products based on search term and createdAt
+  const sortedOrders = user.orderHistory
+    ?.slice() // Create a shallow copy to avoid mutating the original array
+    ?.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate)); // Sort by createdAt (descending)
+
   useEffect(() => {
     getUser(id);
   }, [getUser, id]);
@@ -69,7 +74,7 @@ const UserProfile = () => {
         </div>
       </div>
       <div>
-        <MyOrdersTable orders={user.orderHistory} />
+        <MyOrdersTable orders={sortedOrders} />
       </div>
     </div>
   );

@@ -37,6 +37,7 @@ const productSchema = new mongoose.Schema(
         star: Number,
         comment: String,
         user: String,
+        orderId: String,
       },
     ],
     visibility: {

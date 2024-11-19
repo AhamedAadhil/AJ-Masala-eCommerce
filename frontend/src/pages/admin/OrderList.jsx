@@ -1,11 +1,11 @@
 import {
   Search,
-  ChevronDown,
-  ChevronUp,
   Edit,
   Truck,
   CreditCard,
   Landmark,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,10 +13,14 @@ import { useOrderStore } from "../../stores/useOrderStore";
 
 const OrderList = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [orderBy, setOrderBy] = useState("status");
+  const [orderBy, setOrderBy] = useState("Date");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { getAllOrders, orders, loading } = useOrderStore();
   const navigate = useNavigate();
+
+  const itemsPerPage = 20;
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
 
   // Helper function to format the order date
   const formatOrderDate = (orderDate) => {
@@ -45,19 +49,37 @@ const OrderList = () => {
 
   // Sort orders based on the selected orderBy value (status or order date)
   const sortedOrders = filteredOrders.sort((a, b) => {
-    if (orderBy === "status") {
+    if (orderBy === "Status") {
       return a.status.localeCompare(b.status); // Sort by status (placed, inTransit, delivered)
     } else if (orderBy === "Date") {
-      return new Date(a.orderDate) - new Date(b.orderDate); // Sort by order date
+      return new Date(b.orderDate) - new Date(a.orderDate); // Sort by order date
+    } else if (orderBy === "isPaid") {
+      return b.isPaid - a.isPaid; // Sort by isPaid (true, false)
+    } else if (orderBy === "PaymentMethod") {
+      return b.paymentMethod.localeCompare(a.paymentMethod);
     }
     return 0;
   });
 
+  const currentOrders = sortedOrders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  // Reset currentPage to 1 when searchTerm changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   useEffect(() => {
     getAllOrders();
   }, [getAllOrders]);
-
-  console.log("orders admin", orders);
 
   if (loading) return <h1>Loading...</h1>;
 
@@ -82,8 +104,10 @@ const OrderList = () => {
             value={orderBy}
             onChange={(e) => setOrderBy(e.target.value)}
           >
-            <option value="Status">Status</option>
             <option value="Date">Order Date</option>
+            <option value="Status">Status</option>
+            <option value="isPaid">isPaid</option>
+            <option value="PaymentMethod">Payment Method</option>
           </select>
         </div>
       </div>
@@ -120,7 +144,7 @@ const OrderList = () => {
             </tr>
           </thead>
           <tbody className="bg-gray-800 divide-y divide-gray-700 cursor-pointer">
-            {sortedOrders.map((order, index) => (
+            {currentOrders.map((order, index) => (
               <tr key={index} className="hover:bg-gray-700">
                 <td className="px-3 py-4 text-sm font-medium text-white">
                   {order?.orderId}
@@ -196,6 +220,33 @@ const OrderList = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center items-center mt-4 space-x-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`p-2 rounded ${
+            currentPage === 1 ? "text-gray-400" : "text-white hover:bg-gray-700"
+          }`}
+        >
+          <ChevronLeft size={20} />
+        </button>
+        <span className="text-white">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`p-2 rounded ${
+            currentPage === totalPages
+              ? "text-gray-400"
+              : "text-white hover:bg-gray-700"
+          }`}
+        >
+          <ChevronRight size={20} />
+        </button>
       </div>
     </div>
   );

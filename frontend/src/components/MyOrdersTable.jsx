@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
-import { Check, ChevronDown, ChevronUp, Star } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Check, ChevronDown, ChevronUp, Star, X } from "lucide-react";
 
 import { useUserStore } from "../stores/useUserStore";
 import { useProductStore } from "../stores/useProductStore";
@@ -8,6 +8,53 @@ import toast from "react-hot-toast";
 const MyOrdersTable = ({ orders }) => {
   const [expandedRows, setExpandedRows] = useState([]);
   const [reviews, setReviews] = useState({}); // Track ratings and comments for each product
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredOrders, setFilteredOrders] = useState(orders);
+
+  const itemsPerPage = 15;
+
+  // Calculate the index of the first and last order for the current page
+  const indexOfLastOrder = currentPage * itemsPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - itemsPerPage;
+
+  // Handle the change in the search input
+  const handleSearchChange = (e) => {
+    const value = e.target.value.toUpperCase();
+    setSearchQuery(value);
+
+    // Filter orders based on the Order ID
+    if (value) {
+      setFilteredOrders(
+        orders.filter((order) =>
+          order.orderId.toUpperCase().includes(value.toUpperCase())
+        )
+      );
+    } else {
+      setFilteredOrders(orders); // Show all orders if search is cleared
+    }
+    setCurrentPage(1);
+  };
+
+  // Get the orders for the current page
+  const currentOrders = filteredOrders?.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder
+  );
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(filteredOrders?.length / itemsPerPage);
+
+  // Clear the search query
+  const clearSearch = () => {
+    setSearchQuery("");
+    setFilteredOrders(orders); // Reset to all orders
+  };
+
+  // Function to change page
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const { user } = useUserStore();
   const { submitReview } = useProductStore();
@@ -51,11 +98,6 @@ const MyOrdersTable = ({ orders }) => {
       rating: 0,
       comment: "",
     };
-    console.log(`Order ID: ${orderId}`);
-    console.log(`Product ID: ${productId}`);
-    console.log(`User Email: ${user.email}`);
-    console.log(`Rating: ${productReview.rating}`);
-    console.log(`Review: ${productReview.comment}`);
     if (productReview.rating > 0 && productReview.comment) {
       // Call API to submit the review if required
       submitReview(
@@ -64,8 +106,6 @@ const MyOrdersTable = ({ orders }) => {
         productReview.rating,
         productReview.comment
       );
-
-      console.log("perfect review");
     } else {
       toast.error(
         "Please provide a rating and comment before adding a review."
@@ -73,11 +113,32 @@ const MyOrdersTable = ({ orders }) => {
     }
   };
 
-  console.log(orders);
+  useEffect(() => {
+    setFilteredOrders(orders); // Reset filtered orders when orders change
+  }, [orders]);
 
   return (
     <div className="p-2 sm:p-4 md:p-6 lg:p-10">
-      <h2 className="text-xl sm:text-2xl font-bold mb-4">My Orders</h2>
+      <div className="flex justify-between items-center mb-4 space-x-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-nowrap">My Orders</h2>
+        <div className="relative w-full sm:w-64 md:w-80">
+          <input
+            type="text"
+            placeholder="Search by Order ID"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          {searchQuery && (
+            <button
+              onClick={clearSearch}
+              className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full border border-gray-300 rounded-lg text-sm sm:text-base">
           <thead>
@@ -90,13 +151,33 @@ const MyOrdersTable = ({ orders }) => {
             </tr>
           </thead>
           <tbody>
-            {orders?.map((order, index) => (
+            {currentOrders?.map((order, index) => (
               <React.Fragment key={index}>
                 <tr className="border-b">
                   <td className="p-2 sm:p-3">{order?.orderId}</td>
                   <td className="p-2 sm:p-3">
-                    {order?.orderDate?.split("T")[0]}
+                    {order?.orderDate
+                      ? (() => {
+                          const date = new Date(order.orderDate);
+                          const year = date.getFullYear();
+                          const month = String(date.getMonth() + 1).padStart(
+                            2,
+                            "0"
+                          ); // Adds leading zero
+                          const day = String(date.getDate()).padStart(2, "0"); // Adds leading zero
+                          const hours = String(date.getHours()).padStart(
+                            2,
+                            "0"
+                          ); // Adds leading zero
+                          const minutes = String(date.getMinutes()).padStart(
+                            2,
+                            "0"
+                          ); // Adds leading zero
+                          return `${year}-${month}-${day} ${hours}:${minutes}`;
+                        })()
+                      : null}
                   </td>
+
                   <td className="p-2 sm:p-3">{order?.totalAmount}</td>
                   <td className="p-2 sm:p-3">
                     <span
@@ -151,6 +232,31 @@ const MyOrdersTable = ({ orders }) => {
                             </strong>{" "}
                             {order?.isPaid ? "Paid" : "Unpaid"}
                           </p>
+                          <p>
+                            <strong className="text-gray-800">
+                              Last Update On:
+                            </strong>{" "}
+                            {order?.updatedAt
+                              ? (() => {
+                                  const date = new Date(order.updatedAt);
+                                  const year = date.getFullYear();
+                                  const month = String(
+                                    date.getMonth() + 1
+                                  ).padStart(2, "0"); // Adds leading zero
+                                  const day = String(date.getDate()).padStart(
+                                    2,
+                                    "0"
+                                  ); // Adds leading zero
+                                  const hours = String(
+                                    date.getHours()
+                                  ).padStart(2, "0"); // Adds leading zero
+                                  const minutes = String(
+                                    date.getMinutes()
+                                  ).padStart(2, "0"); // Adds leading zero
+                                  return `${year}-${month}-${day} ${hours}:${minutes}`;
+                                })()
+                              : null}
+                          </p>
                           {order?.trackingId && (
                             <p>
                               <strong className="text-gray-800">
@@ -202,7 +308,9 @@ const MyOrdersTable = ({ orders }) => {
                           {order?.status === "delivered" ? (
                             Array.isArray(product?.product?.rating) &&
                             product?.product?.rating.some(
-                              (review) => review.user === user.email
+                              (review) =>
+                                review.user === user.email &&
+                                review.orderId === order.orderId
                             ) ? (
                               <span className="flex items-center mt-2 sm:mt-3 text-green-500 border-green-500 rounded py-2 text-sm font-semibold">
                                 <Check size={20} /> Review added
@@ -235,6 +343,8 @@ const MyOrdersTable = ({ orders }) => {
                                 {/* Feedback Input */}
                                 <input
                                   type="text"
+                                  maxLength={100}
+                                  minLength={5}
                                   placeholder="Leave a feedback"
                                   value={
                                     reviews[order.orderId]?.[
@@ -250,6 +360,13 @@ const MyOrdersTable = ({ orders }) => {
                                   }
                                   className="ml-2 border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                                 />
+                                <small className="text-gray-500">
+                                  {100 -
+                                    (reviews[order.orderId]?.[
+                                      product.product._id
+                                    ]?.comment?.length || 0)}{" "}
+                                  characters remaining
+                                </small>
                                 <button
                                   onClick={() =>
                                     handleAddReview(
@@ -273,6 +390,25 @@ const MyOrdersTable = ({ orders }) => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-between items-center mt-4">
+        <div className="flex items-center">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handlePageChange(index + 1)}
+              className={`px-3 py-1 mx-1 rounded-lg ${
+                currentPage === index + 1
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-600"
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

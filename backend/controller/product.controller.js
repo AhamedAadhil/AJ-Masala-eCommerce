@@ -265,6 +265,10 @@ export const createReview = async (req, res) => {
   const { star, comment } = req.body;
   const user = req.user;
 
+  if (user.role === "admin") {
+    return res.status(403).json({ message: "Access Denied", success: false });
+  }
+
   try {
     const order = await Order.findOne({ orderId });
     if (!order) {
@@ -292,17 +296,19 @@ export const createReview = async (req, res) => {
         .json({ message: "Product not found", success: false });
     }
 
-    if (product.rating.some((review) => review.user === user.email)) {
-      return res
-        .status(400)
-        .json({
-          message: "You have already reviewed this product",
-          success: false,
-        });
+    if (
+      product.rating.some(
+        (review) => review.user === user.email && review.orderId === orderId
+      )
+    ) {
+      return res.status(400).json({
+        message: "You have already reviewed this product",
+        success: false,
+      });
     }
 
     // Add the review to the product's rating array
-    product.rating.push({ star, comment, user: user.email });
+    product.rating.push({ star, comment, user: user.email, orderId });
 
     // Calculate the new `overAllRating`
     const totalStars = product.rating.reduce(

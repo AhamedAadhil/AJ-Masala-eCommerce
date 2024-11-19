@@ -48,6 +48,11 @@ export const applyCoupon = async (req, res) => {
     const { code } = req.params;
     const { totalAmount } = req.body;
     const user = req.user;
+
+    if (user.role === "admin") {
+      return res.status(403).json({ message: "Access Denied", success: false });
+    }
+
     const coupon = await Coupon.findOne({ code });
     if (!coupon) {
       return res

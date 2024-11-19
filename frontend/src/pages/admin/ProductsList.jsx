@@ -16,10 +16,13 @@ const ProductsList = () => {
     fetchAllProducts();
   };
 
-  // Filter products based on search term
-  const filteredProducts = products?.filter((product) =>
-    product?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter and sort products based on search term and createdAt
+  const filteredProducts = products
+    ?.slice() // Create a shallow copy to avoid mutating the original array
+    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by createdAt (descending)
+    ?.filter((product) =>
+      product?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   useEffect(() => {
     fetchAllProducts();

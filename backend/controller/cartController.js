@@ -6,6 +6,10 @@ export const addToCart = async (req, res) => {
   const { productId, quantity, unitPrice } = req.body;
   try {
     const user = req.user;
+
+    if (user.role === "admin") {
+      return res.status(403).json({ message: "Access Denied", success: false });
+    }
     const existingItem = user.cartItems.find(
       (item) => item.product.toString() === productId
     );

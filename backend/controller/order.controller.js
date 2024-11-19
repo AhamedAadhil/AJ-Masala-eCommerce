@@ -23,6 +23,10 @@ export const createOrder = async (req, res) => {
         .json({ message: "User not authenticated", success: false });
     }
 
+    if (user.role === "admin") {
+      return res.status(403).json({ message: "Access Denied", success: false });
+    }
+
     // check if the product arrray contain atleast one product
     if (!Array.isArray(products) || products.length === 0) {
       return res
