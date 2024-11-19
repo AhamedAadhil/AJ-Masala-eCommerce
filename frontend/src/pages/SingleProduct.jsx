@@ -14,11 +14,12 @@ import { useUserStore } from "../stores/useUserStore";
 import ReviewCard from "../components/ReviewCard";
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const SingleProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { product, getSingleProduct } = useProductStore();
+  const { product, getSingleProduct, loading } = useProductStore();
   const { user } = useUserStore();
   const { addToCart, checkOut } = useCartStore();
 
@@ -83,7 +84,9 @@ const SingleProduct = () => {
     }
   };
 
-  console.log("product==", product);
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-start p-10 bg-slate-50 shadow-sm lg:mx-60 border-l-2 border-r-2 border-b-2 rounded-b-xl">
