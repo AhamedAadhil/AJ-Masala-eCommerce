@@ -141,7 +141,7 @@ const SingleProduct = () => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-4">
-          {product.stock === 0 ? (
+          {product?.stock === 0 ? (
             // Out of Stock Message
             <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center">
               <strong className="font-bold">Out of Stock!</strong>
