@@ -83,6 +83,8 @@ const SingleProduct = () => {
     }
   };
 
+  console.log("product==", product);
+
   return (
     <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-start p-10 bg-slate-50 shadow-sm lg:mx-60 border-l-2 border-r-2 border-b-2 rounded-b-xl">
       <div className="flex flex-col gap-6 lg:w-2/4 content-center">
@@ -103,7 +105,7 @@ const SingleProduct = () => {
           ))}
         </div>
         <div className="hidden sm:block">
-          <ReviewCard />
+          <ReviewCard reviews={product?.rating} />
         </div>
       </div>
 
@@ -139,44 +141,61 @@ const SingleProduct = () => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-4">
-          {/* Quantity Button */}
-          <div className="flex items-center">
-            <button
-              className="bg-gray-200 py-1.5 px-4 rounded-lg text-violet-800 text-xl lg:text-2xl"
-              onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
-            >
-              -
-            </button>
-            <span className="py-3 px-4 rounded-lg text-base lg:text-lg">
-              {quantity}
-            </span>
-            <button
-              className="bg-gray-200 py-1.5 px-4 rounded-lg text-violet-800 text-xl lg:text-2xl"
-              onClick={() =>
-                setQuantity((prev) => (prev <= product.stock ? prev + 1 : 1))
-              }
-            >
-              +
-            </button>
-          </div>
+          {product.stock === 0 ? (
+            // Out of Stock Message
+            <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center">
+              <strong className="font-bold">Out of Stock!</strong>
+              <span className="block sm:inline">
+                {" "}
+                This product is currently unavailable. We’ll restock soon. Stay
+                tuned!
+              </span>
+            </div>
+          ) : (
+            // Quantity Buttons and AddToCart/BuyNow Buttons
+            <>
+              <div className="flex items-center">
+                <button
+                  className="bg-gray-200 py-1.5 px-4 rounded-lg text-violet-800 text-xl lg:text-2xl"
+                  onClick={() =>
+                    setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
+                  }
+                >
+                  -
+                </button>
+                <span className="py-3 px-4 rounded-lg text-base lg:text-lg">
+                  {quantity}
+                </span>
+                <button
+                  className="bg-gray-200 py-1.5 px-4 rounded-lg text-violet-800 text-xl lg:text-2xl"
+                  onClick={() =>
+                    setQuantity((prev) =>
+                      prev < product.stock ? prev + 1 : prev
+                    )
+                  }
+                >
+                  +
+                </button>
+              </div>
 
-          {/* AddToCart and BuyNow Buttons */}
-          <div className="flex space-x-3">
-            <button
-              onClick={handleAddToCart}
-              className="flex justify-center items-center bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition duration-300 text-sm lg:text-base whitespace-nowrap min-w-[110px]"
-            >
-              <span>Add to Cart</span>
-              <ShoppingCart className="ml-2" size={18} />
-            </button>
-            <button
-              onClick={handleCheckoutSummary}
-              className="flex justify-center items-center bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition duration-300 text-sm lg:text-base whitespace-nowrap min-w-[110px]"
-            >
-              <span>Buy Now</span>
-              <ShoppingBag className="ml-2" size={18} />
-            </button>
-          </div>
+              <div className="flex space-x-3">
+                <button
+                  onClick={handleAddToCart}
+                  className="flex justify-center items-center bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition duration-300 text-sm lg:text-base whitespace-nowrap min-w-[110px]"
+                >
+                  <span>Add to Cart</span>
+                  <ShoppingCart className="ml-2" size={18} />
+                </button>
+                <button
+                  onClick={handleCheckoutSummary}
+                  className="flex justify-center items-center bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition duration-300 text-sm lg:text-base whitespace-nowrap min-w-[110px]"
+                >
+                  <span>Buy Now</span>
+                  <ShoppingBag className="ml-2" size={18} />
+                </button>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="text-orange-700 font-bold">Description</div>
@@ -222,7 +241,7 @@ const SingleProduct = () => {
 
       {/* Display ReviewCard after the Bottom Section for mobile */}
       <div className="sm:hidden mt-4">
-        <ReviewCard />
+        <ReviewCard reviews={product?.rating} />
       </div>
       {/* Register and Login Modals */}
       <RegisterModal

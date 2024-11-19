@@ -203,20 +203,25 @@ export const updateOrder = async (req, res) => {
   const { trackingId, trackingUrl, status, isPaid } = req.body;
   const { id } = req.params;
   try {
-    const order = await Order.findOneAndUpdate(
-      { orderId: id },
-      { trackingId, trackingUrl, status },
-      { new: true }
-    );
+    const order = await Order.findOne({ orderId: id });
+
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+    if (trackingId) order.trackingId = trackingId;
+    if (trackingUrl) order.trackingUrl = trackingUrl;
+    if (status) order.status = status;
+
+    // Set isPaid to true if the status is "delivered"
     if (status === "delivered") {
       order.isPaid = true;
     }
+
+    // If isPaid is explicitly provided, update it
     if (req.body.hasOwnProperty("isPaid")) {
       order.isPaid = isPaid;
     }
+
     await order.save();
     return res.status(200).json({ order, success: true });
   } catch (error) {

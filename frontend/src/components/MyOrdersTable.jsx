@@ -1,13 +1,16 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, Star } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Star } from "lucide-react";
 
 import { useUserStore } from "../stores/useUserStore";
+import { useProductStore } from "../stores/useProductStore";
+import toast from "react-hot-toast";
 const MyOrdersTable = ({ orders }) => {
   const [expandedRows, setExpandedRows] = useState([]);
   const [reviews, setReviews] = useState({}); // Track ratings and comments for each product
 
   const { user } = useUserStore();
+  const { submitReview } = useProductStore();
 
   const toggleRow = (id) => {
     if (expandedRows.includes(id)) {
@@ -17,40 +20,56 @@ const MyOrdersTable = ({ orders }) => {
     }
   };
 
-  const handleStarClick = (orderId, productIndex, rating) => {
+  const handleStarClick = (orderId, productId, rating) => {
     setReviews((prevReviews) => ({
       ...prevReviews,
       [orderId]: {
         ...prevReviews[orderId],
-        [productIndex]: {
-          ...prevReviews[orderId]?.[productIndex],
+        [productId]: {
+          ...(prevReviews[orderId]?.[productId] || {}),
           rating,
         },
       },
     }));
   };
 
-  const handleCommentChange = (orderId, productIndex, comment) => {
+  const handleCommentChange = (orderId, productId, comment) => {
     setReviews((prevReviews) => ({
       ...prevReviews,
       [orderId]: {
         ...prevReviews[orderId],
-        [productIndex]: {
-          ...prevReviews[orderId]?.[productIndex],
+        [productId]: {
+          ...(prevReviews[orderId]?.[productId] || {}),
           comment,
         },
       },
     }));
   };
 
-  const handleAddReview = (orderId, productIndex) => {
-    const productReview = reviews[orderId]?.[productIndex];
-    if (productReview) {
-      console.log(`Order ID: ${orderId}, Product Index: ${productIndex}`);
-      console.log(`Rating: ${productReview.rating || 0}`);
-      console.log(`Comment: ${productReview.comment || ""}`);
+  const handleAddReview = (orderId, productId) => {
+    const productReview = reviews[orderId]?.[productId] || {
+      rating: 0,
+      comment: "",
+    };
+    console.log(`Order ID: ${orderId}`);
+    console.log(`Product ID: ${productId}`);
+    console.log(`User Email: ${user.email}`);
+    console.log(`Rating: ${productReview.rating}`);
+    console.log(`Review: ${productReview.comment}`);
+    if (productReview.rating > 0 && productReview.comment) {
+      // Call API to submit the review if required
+      submitReview(
+        productId,
+        orderId,
+        productReview.rating,
+        productReview.comment
+      );
+
+      console.log("perfect review");
     } else {
-      console.log("No review data available.");
+      toast.error(
+        "Please provide a rating and comment before adding a review."
+      );
     }
   };
 
@@ -180,12 +199,15 @@ const MyOrdersTable = ({ orders }) => {
                               LKR {product?.price?.toFixed(2)}
                             </p>
                           </div>
-
-                          {order?.status === "delivered" &&
+                          {order?.status === "delivered" ? (
                             Array.isArray(product?.product?.rating) &&
-                            !product?.product?.rating.some(
+                            product?.product?.rating.some(
                               (review) => review.user === user.email
-                            ) && (
+                            ) ? (
+                              <span className="flex items-center mt-2 sm:mt-3 text-green-500 border-green-500 rounded py-2 text-sm font-semibold">
+                                <Check size={20} /> Review added
+                              </span>
+                            ) : (
                               <div className="flex flex-col items-start sm:items-center mt-2 sm:mt-0 sm:w-2/5">
                                 {/* Star Rating */}
                                 <div className="flex items-center mb-2">
@@ -194,15 +216,16 @@ const MyOrdersTable = ({ orders }) => {
                                       key={starIndex}
                                       size={16}
                                       className={`cursor-pointer ${
-                                        reviews[order.id]?.[i]?.rating >
-                                        starIndex
+                                        reviews[order.orderId]?.[
+                                          product.product._id
+                                        ]?.rating > starIndex
                                           ? "text-yellow-500"
                                           : "text-gray-300"
                                       }`}
                                       onClick={() =>
                                         handleStarClick(
-                                          order.id,
-                                          i,
+                                          order.orderId,
+                                          product.product._id,
                                           starIndex + 1
                                         )
                                       }
@@ -213,25 +236,34 @@ const MyOrdersTable = ({ orders }) => {
                                 <input
                                   type="text"
                                   placeholder="Leave a feedback"
-                                  value={reviews[order.id]?.[i]?.comment || ""}
+                                  value={
+                                    reviews[order.orderId]?.[
+                                      product.product._id
+                                    ]?.comment || ""
+                                  }
                                   onChange={(e) =>
                                     handleCommentChange(
-                                      order.id,
-                                      i,
+                                      order.orderId,
+                                      product.product._id,
                                       e.target.value
                                     )
                                   }
                                   className="ml-2 border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                                 />
-                                {/* Add Review Button */}
                                 <button
-                                  onClick={() => handleAddReview(order.id, i)}
+                                  onClick={() =>
+                                    handleAddReview(
+                                      order.orderId,
+                                      product?.product?._id
+                                    )
+                                  }
                                   className="mt-2 sm:mt-3 text-white bg-green-500 border border-green-500 rounded px-4 py-2 text-sm font-semibold hover:bg-green-600 hover:border-green-600 transition duration-300"
                                 >
                                   Add Review
                                 </button>
                               </div>
-                            )}
+                            )
+                          ) : null}
                         </div>
                       ))}
                     </td>

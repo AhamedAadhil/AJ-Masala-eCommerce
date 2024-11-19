@@ -18,8 +18,10 @@ const TrendingProducts = ({ products }) => {
             key={product._id}
             name={product.name}
             price={product.ps[0].price}
+            stock={product.stock}
             originalPrice={generateOriginalPrice(product.ps[0].price)}
-            rating={product.overAllRating || 5}
+            rating={product.overAllRating || 0}
+            ratingCount={product.rating.length}
             imageUrl={product.images[0]}
           />
         ))}

@@ -123,21 +123,22 @@ const UpdateOrder = () => {
           </select>
         </div>
 
-        {order?.paymentMethod === "bank" && (
-          <div>
-            <label className="block text-green-300 font-medium mb-1">
-              isPaid
-            </label>
-            <select
-              className="w-full border border-gray-600 rounded-md px-4 py-2 bg-gray-700 text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-              value={isPaid}
-              onChange={(e) => setIsPaid(e.target.value === "true")}
-            >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </div>
-        )}
+        {order?.paymentMethod === "bank" ||
+          (order?.paymentMethod === "cod" && (
+            <div>
+              <label className="block text-green-300 font-medium mb-1">
+                isPaid
+              </label>
+              <select
+                className="w-full border border-gray-600 rounded-md px-4 py-2 bg-gray-700 text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                value={isPaid}
+                onChange={(e) => setIsPaid(e.target.value === "true")}
+              >
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+          ))}
 
         <div>
           <label className="block text-green-300 font-medium mb-1">

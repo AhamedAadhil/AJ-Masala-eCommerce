@@ -107,4 +107,30 @@ export const useProductStore = create((set) => ({
       console.log(error.response?.data?.message);
     }
   },
+
+  submitReview: async (productId, orderId, star, comment) => {
+    set({ loading: true });
+    try {
+      const res = await axios.patch(
+        `/products/review/${productId}/${orderId}`,
+        {
+          star,
+          comment,
+        }
+      );
+      if (res && res.data.success === true) {
+        set({ loading: false });
+        toast.success("Review submitted successfully");
+        return true;
+      } else {
+        set({ loading: false });
+        throw new Error("Failed to submit review");
+      }
+    } catch (error) {
+      set({ loading: false });
+      toast.error(error.response?.data?.message || "Failed to submit review");
+      console.log(error.response?.data?.message);
+      return false;
+    }
+  },
 }));
