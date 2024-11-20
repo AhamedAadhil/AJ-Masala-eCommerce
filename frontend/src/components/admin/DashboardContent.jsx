@@ -41,8 +41,6 @@ function DashboardContent() {
     return <div>Loading...</div>;
   }
 
-  console.log(topUsersData);
-
   return (
     <div className="flex-1 p-6">
       <div className="grid grid-cols-4 gap-4">

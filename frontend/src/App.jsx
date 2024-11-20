@@ -28,6 +28,8 @@ import AllProductsPage from "./pages/AllProductsPage";
 import CartPage from "./pages/CartPage";
 import PaymentSuccessPage from "./components/PaymentSuccessPage";
 import PaymentFailurePage from "./components/PaymentFailurePage";
+import AboutusPage from "./pages/AboutusPage";
+import ContactusPage from "./pages/ContactusPage";
 
 function App() {
   const { checkAuth, checkingAuth } = useUserStore();
@@ -45,6 +47,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/product/:id" element={<SingleProduct />} />
         <Route path="/all" element={<AllProductsPage />} />
+        <Route path="/about" element={<AboutusPage />} />
+        <Route path="/contact" element={<ContactusPage />} />
 
         {/* Customer Private Routes */}
         <Route element={<PrivateRoutes allowedRole="customer" />}>

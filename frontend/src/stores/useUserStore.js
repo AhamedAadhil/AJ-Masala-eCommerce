@@ -89,7 +89,6 @@ export const useUserStore = create((set, get) => ({
       console.log(error.response.data.message);
     }
   },
-
   getUser: async (userId) => {
     set({ loading: true });
     try {
@@ -133,6 +132,19 @@ export const useUserStore = create((set, get) => ({
     } catch (error) {
       set({ loading: false });
       toast.error("Error toggling user status");
+      console.log(error.response.data.message);
+    }
+  },
+  sendMailToAdmin: async (formData) => {
+    const { email, name, message } = formData;
+    set({ loading: true });
+    try {
+      await axios.post("/user/send-mail", { email, name, message });
+      set({ loading: false });
+      return toast.success(`Query sent successfully`);
+    } catch (error) {
+      set({ loading: false });
+      toast.error("Error sending mail");
       console.log(error.response.data.message);
     }
   },

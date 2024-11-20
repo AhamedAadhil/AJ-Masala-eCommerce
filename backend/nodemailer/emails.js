@@ -1,6 +1,7 @@
 import { sendMail } from "./config.js";
 
 import {
+  ADMIN_QUERY_NOTIFICATION_MAIL,
   ORDER_DELIVERED_MAIL,
   ORDER_PLACED_MAIL,
   ORDER_PLACED_MAIL_ADMIN,
@@ -133,5 +134,25 @@ export const sendOrderDeliveryEmail = async (email, name, orderId) => {
   } catch (error) {
     console.error(error.message);
     throw new Error("Error sending new order placed email ", error.message);
+  }
+};
+
+export const sendAdminQueryNotificationEmail = async (email, content, name) => {
+  const message = ADMIN_QUERY_NOTIFICATION_MAIL.replace(
+    "{customerEmail}",
+    email
+  )
+    .replace("{message}", content)
+    .replace("{customerName}", name);
+  try {
+    const response = await sendMail(
+      "ahamedaathil.5@gmail.com",
+      "AJ Foods: Query Notification",
+      message
+    );
+    console.log("Query notification email send successfully! ", response);
+  } catch (error) {
+    console.error(error.message);
+    throw new Error("Error sending query notification email ", error.message);
   }
 };

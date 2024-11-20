@@ -1,4 +1,5 @@
 import User from "../model/user.model.js";
+import { sendAdminQueryNotificationEmail } from "../nodemailer/emails.js";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -54,6 +55,18 @@ export const toggleUserStatus = async (req, res) => {
     user.status = user.status === "active" ? "hold" : "active";
     await user.save();
     return res.status(200).json({ user, succes: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+export const sendQueryMailToAdmin = async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    await sendAdminQueryNotificationEmail(email, message, name);
+    return res
+      .status(200)
+      .json({ message: "Email sent successfully", success: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

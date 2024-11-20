@@ -539,3 +539,112 @@ export const ORDER_DELIVERED_MAIL = `
 </body>
 </html>
 `;
+
+export const ADMIN_QUERY_NOTIFICATION_MAIL = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border: 1px solid #eaeaea;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    .header h1 {
+      font-size: 24px;
+      margin: 0;
+      color: #FFD700; /* Yellow for contrast */
+    }
+    .content {
+      padding: 20px;
+    }
+    .content h2 {
+      font-size: 20px;
+      color: #000;
+      margin-bottom: 10px;
+    }
+    .content p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .query-details {
+      background-color: #f7f7f7;
+      border: 1px solid #eaeaea;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .query-details p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    .footer {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+    }
+    .footer a {
+      color: #FFD700;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <!-- Header Section -->
+    <div class="header">
+      <h1>New Query Received</h1>
+    </div>
+    
+    <!-- Content Section -->
+    <div class="content">
+      <h2>Hello Admin,</h2>
+      <p>
+        You have received a new query via the **Contact Us** form on the A.J Foods website. Below are the details of the query:
+      </p>
+      <div class="query-details">
+        <p><strong>Email:</strong> {customerEmail}</p>
+        <p><strong>Name:</strong> {customerName}</p>
+        <p><strong>Message:</strong></p>
+        <p>{message}</p>
+      </div>
+      <p>
+        Please respond to the query at your earliest convenience. For more details, check the admin portal.
+      </p>
+    </div>
+    
+    <!-- Footer Section -->
+    <div class="footer">
+      <p>
+        Thank you for staying on top of customer interactions.
+      </p>
+      <p>
+        <a href="https://www.ajfoods.com/admin">Go to Admin Portal</a> | 
+        <a href="https://www.ajfoods.com/support">Support</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+`;

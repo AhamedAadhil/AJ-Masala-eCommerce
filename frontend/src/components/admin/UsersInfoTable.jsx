@@ -1,9 +1,5 @@
 /* eslint-disable react/prop-types */
 function UsersInfoTable({ data }) {
-  // Sort products based on stock, lowest stock first
-  // const sortedData = data?.sort((a, b) => a.stock - b.stock);
-
-  console.log("from user tabel", data);
   return (
     <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg">
       <h3 className="text-2xl font-semibold mb-6 text-center">Top Users</h3>

@@ -29,7 +29,6 @@ const UpdateOrder = () => {
   }, [order]);
 
   const handleUpdateOrder = async () => {
-    console.log(id, status, trackingId, trackingUrl);
     await updateOrder(id, status, trackingId, trackingUrl, isPaid);
   };
 

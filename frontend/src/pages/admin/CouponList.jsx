@@ -10,8 +10,6 @@ const CouponList = () => {
   const { createCoupon, getAllCoupons, toggleCouponActive, coupons } =
     useCouponStore();
 
-  console.log(coupons);
-
   const handleCreateCoupon = (couponData) => {
     createCoupon(couponData);
   };

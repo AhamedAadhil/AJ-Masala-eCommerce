@@ -68,9 +68,6 @@ const UpdateProduct = () => {
     return <div>Loading...</div>; // Show loading message while fetching product data
   }
 
-  console.log(`product `, product);
-  console.log(`product Data `, productData);
-
   const handleChange = (e) => {
     setProductData({ ...productData, [e.target.name]: e.target.value });
   };
@@ -148,7 +145,6 @@ const UpdateProduct = () => {
       fetchAllProducts,
       navigate
     );
-    console.log("Updated Product Data:", productData);
   };
 
   return (
