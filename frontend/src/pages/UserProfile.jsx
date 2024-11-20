@@ -10,7 +10,7 @@ import MyOrdersTable from "../components/MyOrdersTable";
 const UserProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { logout, getUser, user } = useUserStore();
+  const { logout, getUser, user, totalSpent } = useUserStore();
 
   // Filter and sort products based on search term and createdAt
   const sortedOrders = user.orderHistory
@@ -61,7 +61,9 @@ const UserProfile = () => {
               <span className="text-sm">Total orders</span>
             </div>
             <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 xsm:flex-row">
-              <span className="font-semibold text-black">9K</span>
+              <span className="font-semibold text-black">
+                LKR {totalSpent?.toFixed(2)}
+              </span>
               <span className="text-sm">Total spends</span>
             </div>
             <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">

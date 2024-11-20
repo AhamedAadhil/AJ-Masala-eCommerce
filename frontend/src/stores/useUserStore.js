@@ -8,6 +8,7 @@ export const useUserStore = create((set, get) => ({
   loading: false,
   checkingAuth: true,
   error: null,
+  totalSpent: 0,
 
   signup: async ({ name, email, password, confirmPassword }, onClose) => {
     set({ loading: true });
@@ -96,7 +97,11 @@ export const useUserStore = create((set, get) => ({
       if (currentUser && currentUser._id === userId) {
         const res = await axios.get(`/user/${userId}`);
         if (res && res.data.user) {
-          set({ user: res.data.user, loading: false });
+          set({
+            user: res.data.user,
+            loading: false,
+            totalSpent: res.data.totalSpent,
+          });
         } else {
           set({ loading: false });
           toast.error("Failed to fetch user data");

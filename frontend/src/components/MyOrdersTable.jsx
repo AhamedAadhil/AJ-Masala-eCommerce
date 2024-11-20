@@ -143,8 +143,8 @@ const MyOrdersTable = ({ orders }) => {
         <table className="w-full border border-gray-300 rounded-lg text-sm sm:text-base">
           <thead>
             <tr className="bg-gray-100">
-              <th className="p-2 sm:p-3 text-left">Order ID</th>
-              <th className="p-2 sm:p-3 text-left">Order date</th>
+              <th className="p-2 sm:p-3 text-left text-nowrap">Order ID</th>
+              <th className="p-2 sm:p-3 text-left text-nowrap">Order Date</th>
               <th className="p-2 sm:p-3 text-left">Amount</th>
               <th className="p-2 sm:p-3 text-left">Status</th>
               <th className="p-2 sm:p-3 text-left">Action</th>
@@ -154,8 +154,8 @@ const MyOrdersTable = ({ orders }) => {
             {currentOrders?.map((order, index) => (
               <React.Fragment key={index}>
                 <tr className="border-b">
-                  <td className="p-2 sm:p-3">{order?.orderId}</td>
-                  <td className="p-2 sm:p-3">
+                  <td className="p-2 sm:p-3 text-nowrap">{order?.orderId}</td>
+                  <td className="p-2 sm:p-3 text-nowrap">
                     {order?.orderDate
                       ? (() => {
                           const date = new Date(order.orderDate);
@@ -178,7 +178,9 @@ const MyOrdersTable = ({ orders }) => {
                       : null}
                   </td>
 
-                  <td className="p-2 sm:p-3">{order?.totalAmount}</td>
+                  <td className="p-2 sm:p-3">
+                    {order?.totalAmount?.toFixed(2)}
+                  </td>
                   <td className="p-2 sm:p-3">
                     <span
                       className={`px-2 sm:px-3 py-1 rounded-full text-white text-xs sm:text-sm ${
@@ -187,11 +189,12 @@ const MyOrdersTable = ({ orders }) => {
                           : order.status === "inTransit"
                           ? "bg-blue-500"
                           : "bg-green-500"
-                      }`}
+                      } `} // Fixed minimum width
                     >
                       {order.status}
                     </span>
                   </td>
+
                   <td className="p-2 sm:p-3">
                     <button
                       onClick={() => toggleRow(index)}

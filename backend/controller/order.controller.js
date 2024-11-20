@@ -1,7 +1,14 @@
 import cloudinary from "../lib/cloudinary.js";
 import { Order } from "../model/order.model.js";
+import User from "../model/user.model.js";
 import { Product } from "../model/product.model.js";
 import { generateOrderID } from "../utils/generateOrderID.js";
+import {
+  sendOrderStatusChangeEmail,
+  sendOrderPlacedEmail,
+  sendOrderPlacedEmailAdmin,
+  sendOrderDeliveryEmail,
+} from "../nodemailer/emails.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -64,6 +71,9 @@ export const createOrder = async (req, res) => {
       await user.save(); // Save the updated user object
     }
 
+    // Create a formatted address string
+    const fullAddress = `${user.address.no}, ${user.address.street}, ${user.address.city}, ${user.address.province}, ${user.address.zipcode}<br><b>Contact Number:</b> ${user.phone}`;
+
     // Step 3: Create new order
     const newOrder = new Order({
       orderId,
@@ -95,6 +105,27 @@ export const createOrder = async (req, res) => {
         { new: true }
       );
     }
+
+    await sendOrderPlacedEmail(
+      user.email,
+      user.name,
+      user._id,
+      newOrder.orderId,
+      newOrder.orderDate,
+      newOrder.status,
+      fullAddress,
+      newOrder.paymentMethod.toUpperCase(),
+      newOrder.totalAmount
+    );
+
+    await sendOrderPlacedEmailAdmin(
+      user.email,
+      newOrder.orderId,
+      newOrder.orderDate,
+      fullAddress,
+      newOrder.paymentMethod.toUpperCase(),
+      newOrder.totalAmount
+    );
 
     return res.status(201).json({
       message: "Order created successfully",
@@ -227,6 +258,29 @@ export const updateOrder = async (req, res) => {
     }
 
     await order.save();
+
+    const orderedUser = await User.findOne({ _id: order.user }).select(
+      "email name"
+    );
+
+    if (status !== "delivered") {
+      await sendOrderStatusChangeEmail(
+        orderedUser.email,
+        orderedUser.name,
+        order.orderId,
+        order.status,
+        order.updatedAt,
+        order.isPaid,
+        order.trackingUrl,
+        order.trackingId
+      );
+    } else {
+      await sendOrderDeliveryEmail(
+        orderedUser.email,
+        orderedUser.name,
+        order.orderId
+      );
+    }
     return res.status(200).json({ order, success: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });

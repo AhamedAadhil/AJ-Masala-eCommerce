@@ -28,7 +28,15 @@ export const getUser = async (req, res) => {
         .status(404)
         .json({ message: "User not found", success: false });
     }
-    return res.status(200).json({ user, succes: true });
+    // Calculate the total amount spent on delivered orders
+    const totalSpent = user.orderHistory.reduce((acc, order) => {
+      if (order.status === "delivered") {
+        acc += order.totalAmount;
+      }
+      return acc;
+    }, 0);
+
+    return res.status(200).json({ user, totalSpent, succes: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

@@ -2,10 +2,12 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 import User from "../model/user.model.js";
+
 import { generateTokens } from "../utils/generateTokens.js";
 import { storeRefreshToken } from "../utils/storeRefreshToken.js";
 import { setCookies } from "../utils/setCookies.js";
 import { redis } from "../lib/redis.js";
+import { sendWelcomeEmail } from "../nodemailer/emails.js";
 
 dotenv.config();
 
@@ -33,6 +35,9 @@ export const signup = async (req, res) => {
 
     // set cookie with token
     setCookies(res, accessToken, refreshToken);
+
+    // Send welcome mail
+    await sendWelcomeEmail(user.email, user.name);
 
     res.status(201).json({
       user: {

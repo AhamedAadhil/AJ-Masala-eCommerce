@@ -6,6 +6,10 @@ import { Order } from "../model/order.model.js";
 import User from "../model/user.model.js";
 import { Product } from "../model/product.model.js";
 import { generateOrderID } from "../utils/generateOrderID.js";
+import {
+  sendOrderPlacedEmail,
+  sendOrderPlacedEmailAdmin,
+} from "../nodemailer/emails.js";
 
 dotenv.config();
 
@@ -172,6 +176,9 @@ export const payhereNotify = async (req, res) => {
       await user.save(); // Save the updated user object
     }
 
+    // Create a formatted address string
+    const fullAddress = `${user.address.no}, ${user.address.street}, ${user.address.city}, ${user.address.province}, ${user.address.zipcode}<br><b>Contact Number:</b> ${user.phone}`;
+
     // Check payment status code
     if (status_code === "2") {
       // Assuming you have a method to create the order
@@ -200,6 +207,27 @@ export const payhereNotify = async (req, res) => {
           { new: true }
         );
       }
+
+      await sendOrderPlacedEmail(
+        user.email,
+        user.name,
+        user._id,
+        order.orderId,
+        order.orderDate,
+        order.status,
+        fullAddress,
+        order.paymentMethod.toUpperCase(),
+        order.totalAmount
+      );
+
+      await sendOrderPlacedEmailAdmin(
+        user.email,
+        order.orderId,
+        order.orderDate,
+        fullAddress,
+        order.paymentMethod.toUpperCase(),
+        order.totalAmount
+      );
 
       return res.status(200).json({ success: true }); // Send success response to PayHere
     } else {

@@ -10,7 +10,7 @@ import CheckoutItems from "../components/CheckoutItems";
 // import PaymentSuccessModal from "../components/PaymentSuccessModal";
 import OrderPlacedModal from "../components/OrderPlacedModal";
 import UploadReceiptModal from "../components/UploadReceiptModal";
-import { CreditCard, Truck, Upload } from "lucide-react";
+import { Loader, Truck, Upload } from "lucide-react";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -132,10 +132,11 @@ const Checkout = () => {
         setShowModal(true); // Show success modal
       }
     } else {
+      await payWithPayhere(user, finalAmount, orderData, navigate);
       setDeliveryDetails({});
       setCouponCode("");
       setCouponApplied(false);
-      await payWithPayhere(user, finalAmount, orderData, navigate);
+
       //  setShowModal(true);
     }
   };
@@ -536,16 +537,21 @@ const Checkout = () => {
                 disabled={
                   paymentMethod === "" || loading || products.length === 0
                 }
-                className="flex w-full items-center justify-center rounded-lg bg-blue-600 hover:bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+                className="flex w-full items-center justify-center rounded-lg bg-blue-600 hover:bg-blue-700 px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-primary-300"
               >
-                {paymentMethod === "online" ? (
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader className="animate-spin" />
+                    Creating Order...
+                  </span>
+                ) : paymentMethod === "online" ? (
                   <span className="flex items-center justify-center gap-2">
                     <img
                       width={50}
                       height={50}
                       src="/payherelogo.png"
                       alt="payhere logo"
-                    />{" "}
+                    />
                     Proceed to Pay LKR{" "}
                     {couponApplied
                       ? totalAmountAfterDiscount.toFixed(2)
@@ -553,7 +559,6 @@ const Checkout = () => {
                   </span>
                 ) : paymentMethod === "cod" ? (
                   <span className="flex items-center justify-center gap-2">
-                    {" "}
                     <Truck /> Pay on Delivery
                   </span>
                 ) : (
