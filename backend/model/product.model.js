@@ -23,6 +23,7 @@ const productSchema = new mongoose.Schema(
       },
     ],
     stock: { type: Number, default: 1 },
+    sold: { type: Number, default: 0 },
     category: { type: String, required: true },
     isFeatured: {
       type: Boolean,

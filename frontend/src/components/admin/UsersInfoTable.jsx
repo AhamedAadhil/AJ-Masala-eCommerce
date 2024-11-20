@@ -21,9 +21,11 @@ function UsersInfoTable({ data }) {
               } hover:bg-gray-500 transition-colors duration-200`}
             >
               <td className="py-2 px-4">{index + 1}</td>
-              <td className="py-2 px-4">{user.email}</td>
-              <td className="py-2 px-4">{user.totalOrders}</td>
-              <td className="py-2 px-4">{user.totalPurchase.toFixed(2)}</td>
+              <td className="py-2 px-4">{user?.email}</td>
+              <td className="py-2 px-4">{user?.totalOrders}</td>
+              <td className="py-2 px-4">
+                {(user?.totalPurchase / 1000).toFixed(1)}K
+              </td>
             </tr>
           ))}
         </tbody>

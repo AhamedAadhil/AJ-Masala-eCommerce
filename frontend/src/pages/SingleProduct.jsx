@@ -143,6 +143,21 @@ const SingleProduct = () => {
           ))}
         </div>
 
+        {/* Stock Indicator and Progress Bar in between 1 to 10 */}
+        {product?.stock > 0 && product?.stock < 10 && (
+          <div className="flex flex-col gap-2">
+            <div className="text-red-600 font-semibold">
+              Hurry! Only {product?.stock} left in stock.
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-red-500 h-2 rounded-full"
+                style={{ width: `${(product?.stock / 10) * 100}%` }}
+              />
+            </div>
+          </div>
+        )}
+
         <div className="flex flex-col md:flex-row gap-4">
           {product?.stock === 0 ? (
             // Out of Stock Message

@@ -250,6 +250,17 @@ export const updateOrder = async (req, res) => {
     // Set isPaid to true if the status is "delivered"
     if (status === "delivered") {
       order.isPaid = true;
+
+      // Increment the `sold` count for each product in the order
+      const incrementSoldCount = order.products.map(async (item) => {
+        return Product.findByIdAndUpdate(
+          item.product, // Product ID
+          { $inc: { sold: item.quantity } }, // Increment `sold` by quantity ordered
+          { new: true }
+        );
+      });
+
+      await Promise.all(incrementSoldCount); // Execute all updates in parallel
     }
 
     // If isPaid is explicitly provided, update it

@@ -7,11 +7,13 @@ import RegisterModal from "./RegisterModal";
 import LoginModal from "./LoginModal";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
+import { useProductStore } from "../stores/useProductStore";
 import AJLogo from "../assets/AJLogo.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
+  const { products } = useProductStore();
   let { cartItemCount } = useCartStore();
 
   const isAdmin = user?.role === "admin";
@@ -24,6 +26,9 @@ const Navbar = () => {
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
 
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [searchResults, setSearchResults] = useState([]); // State for filtered products
+
   const toggleMenu = () => setIsOpen(!isOpen);
   const openRegisterModal = () => {
     setRegisterModalOpen(true);
@@ -35,6 +40,23 @@ const Navbar = () => {
   };
   const closeRegisterModal = () => setRegisterModalOpen(false);
   const closeLoginModal = () => setLoginModalOpen(false);
+
+  // Handle search input change
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    if (query) {
+      const results = products.filter(
+        (product) =>
+          product.name.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query)
+      );
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  };
 
   return (
     <nav className="bg-yellow-500 shadow-md">
@@ -58,9 +80,42 @@ const Navbar = () => {
             <input
               type="text"
               placeholder="Search products"
+              value={searchQuery}
+              onChange={handleSearch}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
             />
             <Search className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500" />
+            {/* Search Results Dropdown */}
+            {searchResults.length > 0 && (
+              <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-2 z-10">
+                {searchResults.map((product) => (
+                  <div
+                    key={product._id}
+                    className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-4"
+                    onClick={() => {
+                      navigate(`/product/${product._id}`);
+                      setSearchQuery("");
+                      setSearchResults([]);
+                    }}
+                  >
+                    {/* Product Image */}
+                    <img
+                      src={product.images[0]} // Assuming each product has an 'image' property
+                      alt={product.name}
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
+
+                    {/* Product Details */}
+                    <div>
+                      <h4 className="font-medium text-black">{product.name}</h4>
+                      <p className="text-sm text-gray-600">
+                        {product.category}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -140,6 +195,53 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-yellow-500">
           <div className="p-4 border-t border-gray-300">
+            <div
+              className={`relative w-full ${
+                user?.role === "admin" ? "hidden" : ""
+              }`}
+            >
+              <input
+                type="text"
+                placeholder="Search products"
+                value={searchQuery}
+                onChange={handleSearch}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+              />
+              <Search className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500" />
+              {/* Search Results Dropdown */}
+              {searchResults.length > 0 && (
+                <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-2 z-10">
+                  {searchResults.map((product) => (
+                    <div
+                      key={product._id}
+                      className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-4"
+                      onClick={() => {
+                        navigate(`/product/${product._id}`);
+                        setSearchQuery("");
+                        setSearchResults([]);
+                      }}
+                    >
+                      {/* Product Image */}
+                      <img
+                        src={product.images[0]} // Assuming each product has an 'image' property
+                        alt={product.name}
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
+
+                      {/* Product Details */}
+                      <div>
+                        <h4 className="font-medium text-black">
+                          {product.name}
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          {product.category}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <Link to="/" className="block py-2 text-black hover:text-gray-800">
               Home
             </Link>

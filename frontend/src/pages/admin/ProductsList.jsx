@@ -71,9 +71,15 @@ const ProductsList = () => {
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider"
+              className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider text-nowrap"
             >
               Stock Count
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider text-nowrap"
+            >
+              Total Sold
             </th>
             <th
               scope="col"
@@ -131,6 +137,9 @@ const ProductsList = () => {
                         : "(In stock)"}
                     </span>
                   </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-white">{product?.sold}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button
