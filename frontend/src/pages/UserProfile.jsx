@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useUserStore } from "../stores/useUserStore";
 import CoverOne from "../assets/cover-01.png";
 import userSix from "../assets/user-06.png";
+import user1 from "../assets/user-061.png";
 import MyOrdersTable from "../components/MyOrdersTable";
 
 const UserProfile = () => {
@@ -38,25 +39,11 @@ const UserProfile = () => {
         </div>
       </div>
       <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
-        <div className="relative z-30 mx-auto -mt-20 lg:h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
-          <div className="relative drop-shadow-2">
-            <img src={userSix} alt="profile" className="rounded-full" />
-            {/* <label
-              htmlFor="profile"
-              className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-black hover:bg-opacity-90 sm:bottom-2 sm:right-2"
-            >
-              <div className='bg-blue-500 rounded-full p-1'>
-              <CameraIcon color='#FFF' size={16}/>
-              <input
-                type="file"
-                name="profile"
-                id="profile"
-                className="sr-only"
-              />
-              </div>
-            </label> */}
-          </div>
+      <div className="relative z-30 mx-auto -mt-12 w-full max-w-[120px] rounded-full bg-white/20 p-1 backdrop-blur sm:-mt-14 sm:max-w-[160px] sm:h-[160px] sm:p-2 md:-mt-16 md:max-w-[180px] md:h-[180px] md:p-2 lg:-mt-20 lg:max-w-[200px] lg:h-[200px] lg:p-3">
+        <div className="relative drop-shadow-2xl">
+          <img src={user1} alt="profile" className="rounded-full w-full h-full" />
         </div>
+      </div>
         <div className="mt-4">
           <h3 className="mb-1.5 text-2xl font-semibold text-black">
             {user?.name}
