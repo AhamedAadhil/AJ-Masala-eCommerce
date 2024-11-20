@@ -63,7 +63,7 @@ function DashboardContent() {
           title="Total Revenue"
           value={
             analyticsData?.totalRevenue
-              ? `LKR ${(analyticsData.totalRevenue / 1000).toFixed(1)}K`
+              ? `LKR ${(analyticsData.totalRevenue / 1000)?.toFixed(1)}K`
               : "LKR 0"
           }
           icon="dollar-sign"

@@ -24,7 +24,7 @@ function UsersInfoTable({ data }) {
               <td className="py-2 px-4">{user?.email}</td>
               <td className="py-2 px-4">{user?.totalOrders}</td>
               <td className="py-2 px-4">
-                {(user?.totalPurchase / 1000).toFixed(1)}K
+                {(user?.totalPurchase / 1000)?.toFixed(1)}K
               </td>
             </tr>
           ))}

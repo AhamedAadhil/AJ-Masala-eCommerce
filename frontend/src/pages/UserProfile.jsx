@@ -66,7 +66,7 @@ const UserProfile = () => {
             </div>
             <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 xsm:flex-row">
               <span className="font-semibold text-black">
-                LKR {totalSpent ? `${(totalSpent / 1000).toFixed(1)}K` : "0"}
+                LKR {totalSpent ? `${(totalSpent / 1000)?.toFixed(1)}K` : "0"}
               </span>
 
               <span className="text-sm">Total spends</span>
