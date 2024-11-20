@@ -118,7 +118,11 @@ const Users = () => {
           <tbody className="bg-gray-800 divide-y divide-gray-700 cursor-pointer">
             {currentUsers.map((user, index) => (
               <>
-                <tr key={index} className="hover:bg-gray-700">
+                <tr
+                  key={index}
+                  onClick={() => toggleUserDetails(user._id)}
+                  className="hover:bg-gray-700"
+                >
                   <td className="px-3 py-4">
                     <div className="text-sm font-medium text-white">
                       {user.name}

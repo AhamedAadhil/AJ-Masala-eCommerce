@@ -153,7 +153,10 @@ const MyOrdersTable = ({ orders }) => {
           <tbody>
             {currentOrders?.map((order, index) => (
               <React.Fragment key={index}>
-                <tr className="border-b">
+                <tr
+                  className="border-b cursor-pointer"
+                  onClick={() => toggleRow(index)}
+                >
                   <td className="p-2 sm:p-3 text-nowrap">{order?.orderId}</td>
                   <td className="p-2 sm:p-3 text-nowrap">
                     {order?.orderDate
