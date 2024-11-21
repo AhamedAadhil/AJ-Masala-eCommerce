@@ -79,7 +79,7 @@ const BannerCarousel = () => {
           {carouselLoading && (
             <div className="absolute top-0 left-0 w-full h-full bg-gray-200 flex items-center justify-center">
               <span className="text-gray-400 font-semibold text-lg">
-                A.J Foods
+                A.J FOODS
               </span>
             </div>
           )}

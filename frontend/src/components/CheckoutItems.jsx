@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { Trash2 } from "lucide-react";
 
 const CartItem = ({ product }) => {
   return (
@@ -16,11 +15,13 @@ const CartItem = ({ product }) => {
       {/* Product Details */}
       <div className="flex-1">
         <h3 className="text-lg font-medium text-gray-800">{product.name}</h3>
-        <p className="text-sm text-gray-600">{product.quantity}x</p>
+        <p className="text-sm text-gray-600"> x{product.quantity}</p>
         <p className="text-lg font-normal text-gray-800">
           Rs. {product.unitPrice}
         </p>
       </div>
+      {/* Total of each product * qunatity */}
+      <div>{"Rs. " + (product.unitPrice * product.quantity).toFixed(2)}</div>
     </div>
   );
 };

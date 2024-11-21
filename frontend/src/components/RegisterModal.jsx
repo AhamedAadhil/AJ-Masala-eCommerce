@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { Loader, Lock, Mail, User, UserPlus } from "lucide-react";
+import { Loader, Lock, Mail, User, UserPlus, EyeOff, Eye } from "lucide-react";
 import { useState } from "react";
 import { useUserStore } from "../stores/useUserStore";
 
 const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,7 +32,7 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
       <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-lg relative">
         <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
         <p className="text-center text-gray-600 mb-4">
-          Join the AJ Masala family and spice up your life with exclusive access
+          Join the A.J Foods family and spice up your life with exclusive access
           to authentic flavors!
         </p>
 
@@ -92,7 +93,7 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                 <Lock className="w-5 h-5" />
               </span>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"} // Toggle between text and password
                 required
                 value={formData.password}
                 onChange={(e) =>
@@ -101,6 +102,17 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                 className="w-full pl-10 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 placeholder="********"
               />
+              {/* Eye Icon */}
+              <span
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </span>
             </div>
           </div>
           <div className="mb-4">
@@ -112,7 +124,7 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                 <Lock className="w-5 h-5" />
               </span>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"} // Toggle between text and password
                 required
                 value={formData.confirmPassword}
                 onChange={(e) =>
@@ -121,6 +133,17 @@ const RegisterModal = ({ isOpen, onClose, onOpenLogin }) => {
                 className="w-full pl-10 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 placeholder="********"
               />
+              {/* Eye Icon */}
+              <span
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </span>
             </div>
           </div>
           <button

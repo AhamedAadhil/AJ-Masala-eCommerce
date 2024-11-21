@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
 
 import { motion } from "framer-motion";
-import { Lock, Mail, Loader, LogIn } from "lucide-react";
+import { Lock, Mail, Loader, LogIn, EyeOff, Eye } from "lucide-react";
 import { useState } from "react";
 
 import { useUserStore } from "../stores/useUserStore";
 const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,7 +30,7 @@ const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
     >
       <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-lg relative">
         <h2 className="text-2xl font-bold mb-4 text-center">
-          Welcome to AJ Masala!
+          Welcome to A.J Foods!
         </h2>
         <p className="text-center text-gray-600 mb-4">
           Log in to explore a world of authentic spices and exclusive deals
@@ -73,7 +74,7 @@ const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
                 <Lock className="w-5 h-5" />
               </span>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"} // Toggle between text and password
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
@@ -81,6 +82,17 @@ const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
                 className="w-full pl-10 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 placeholder="********"
               />
+              {/* Eye Icon */}
+              <span
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </span>
             </div>
           </div>
           <button
