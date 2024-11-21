@@ -120,17 +120,6 @@ export const getRecommendedProducts = async (req, res) => {
       {
         $sample: { size: 4 },
       },
-      {
-        project: {
-          _id: 1,
-          name: 1,
-          ps: 1,
-          description: 1,
-          images: 1,
-          category: 1,
-          tags: 1,
-        },
-      },
     ]);
     res.status(200).json({ products, success: true });
   } catch (error) {

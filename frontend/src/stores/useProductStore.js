@@ -5,6 +5,7 @@ import axios from "../lib/axios";
 export const useProductStore = create((set) => ({
   products: [],
   product: null,
+  suggestProducts: [],
   loading: false,
   error: null,
   setProducts: (products) => set({ products }),
@@ -24,7 +25,6 @@ export const useProductStore = create((set) => ({
       set({ loading: false });
     }
   },
-
   getSingleProduct: async (productId) => {
     set({ loading: true });
     try {
@@ -42,7 +42,6 @@ export const useProductStore = create((set) => ({
       toast.error(error.response?.data?.message || "Failed to fetch product");
     }
   },
-
   fetchAllProducts: async () => {
     set({ loading: true });
     try {
@@ -56,7 +55,6 @@ export const useProductStore = create((set) => ({
       toast.error(error.response.data.message || "Failed to fetch products");
     }
   },
-
   deleteProduct: async (id) => {
     set({ loading: true });
     try {
@@ -107,7 +105,6 @@ export const useProductStore = create((set) => ({
       console.log(error.response?.data?.message);
     }
   },
-
   submitReview: async (productId, orderId, star, comment) => {
     set({ loading: true });
     try {
@@ -131,6 +128,19 @@ export const useProductStore = create((set) => ({
       toast.error(error.response?.data?.message || "Failed to submit review");
       console.log(error.response?.data?.message);
       return false;
+    }
+  },
+  fetchSuggestProducts: async () => {
+    set({ loading: true });
+    try {
+      const res = await axios.get("/products/recommendations");
+      set({ loading: false, suggestProducts: res.data.products });
+    } catch (error) {
+      set({
+        loading: false,
+        error: `Failed loading Products: ${error.response.data.message}`,
+      });
+      toast.error(error.response.data.message || "Failed to fetch products");
     }
   },
 }));
