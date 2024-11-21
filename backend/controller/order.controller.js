@@ -2,6 +2,7 @@ import cloudinary from "../lib/cloudinary.js";
 import { Order } from "../model/order.model.js";
 import User from "../model/user.model.js";
 import { Product } from "../model/product.model.js";
+import { Coupon } from "../model/coupon.model.js";
 import { generateOrderID } from "../utils/generateOrderID.js";
 import {
   sendOrderStatusChangeEmail,
@@ -104,6 +105,12 @@ export const createOrder = async (req, res) => {
         { $inc: { stock: -item.quantity } },
         { new: true }
       );
+    }
+
+    const couponApplied = await Coupon.findOne({ code: couponCode });
+    if (couponApplied) {
+      couponApplied.userId.push(user._id);
+      await couponApplied.save();
     }
 
     await sendOrderPlacedEmail(

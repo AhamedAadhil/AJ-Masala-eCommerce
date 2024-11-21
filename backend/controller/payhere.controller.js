@@ -5,6 +5,7 @@ import axios from "axios";
 import { Order } from "../model/order.model.js";
 import User from "../model/user.model.js";
 import { Product } from "../model/product.model.js";
+import { Coupon } from "../model/coupon.model.js";
 import { generateOrderID } from "../utils/generateOrderID.js";
 import {
   sendOrderPlacedEmail,
@@ -228,6 +229,12 @@ export const payhereNotify = async (req, res) => {
         order.paymentMethod.toUpperCase(),
         order.totalAmount
       );
+
+      const couponApplied = await Coupon.findOne({ code: couponCode });
+      if (couponApplied) {
+        couponApplied.userId.push(user._id);
+        await couponApplied.save();
+      }
 
       return res.status(200).json({ success: true }); // Send success response to PayHere
     } else {
