@@ -44,7 +44,7 @@ const SingleProduct = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  }, [product]);
 
   useEffect(() => {
     getSingleProduct(id);
