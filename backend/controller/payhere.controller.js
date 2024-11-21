@@ -39,7 +39,7 @@ export const payherePayment = async (req, res) => {
     .toLocaleString("en-us", { minimumFractionDigits: 2 })
     .replaceAll(",", "");
 
-  const orderId = generateOrderID("bank");
+  const orderId = generateOrderID("online");
 
   // Create the hash for the payment
   const hash = CryptoJS.MD5(

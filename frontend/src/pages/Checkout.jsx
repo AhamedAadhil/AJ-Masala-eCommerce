@@ -14,7 +14,7 @@ import { Loader, Truck, Upload } from "lucide-react";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { products, totalAmount } = useCartStore();
+  const { products, totalAmount, deliveryFee } = useCartStore();
   const { user } = useUserStore();
   const { applyCoupon, discountAmount, totalAmountAfterDiscount } =
     useCouponStore();
@@ -83,8 +83,10 @@ const Checkout = () => {
       return;
     }
 
-    // Determine total amount after discount if coupon is applied
-    const finalAmount = couponApplied ? totalAmountAfterDiscount : totalAmount;
+    // Determine total amount after discount if coupon is applied and if delivery fee exist
+    const finalAmount = couponApplied
+      ? totalAmountAfterDiscount + deliveryFee
+      : totalAmount + deliveryFee;
 
     // Prepare the data to be sent to the backend
     const orderData = {
@@ -504,7 +506,9 @@ const Checkout = () => {
                   <dt className="text-base font-normal text-gray-500 ">
                     Shipping
                   </dt>
-                  <dd className="text-base font-medium text-gray-900">Free</dd>
+                  <dd className="text-base font-medium text-gray-900">
+                    LKR {deliveryFee?.toFixed(2)}
+                  </dd>
                 </dl>
 
                 <dl className="flex items-center justify-between gap-4 py-3">
@@ -521,8 +525,8 @@ const Checkout = () => {
                   <dd className="text-base font-bold text-gray-900 ">
                     LKR{" "}
                     {couponApplied
-                      ? totalAmountAfterDiscount.toFixed(2)
-                      : totalAmount.toFixed(2)}
+                      ? (totalAmountAfterDiscount + deliveryFee).toFixed(2)
+                      : (totalAmount + deliveryFee).toFixed(2)}
                   </dd>
                 </dl>
 
@@ -554,8 +558,8 @@ const Checkout = () => {
                     />
                     Proceed to Pay LKR{" "}
                     {couponApplied
-                      ? totalAmountAfterDiscount.toFixed(2)
-                      : totalAmount.toFixed(2)}
+                      ? (totalAmountAfterDiscount + deliveryFee).toFixed(2)
+                      : (totalAmount + deliveryFee).toFixed(2)}
                   </span>
                 ) : paymentMethod === "cod" ? (
                   <span className="flex items-center justify-center gap-2">

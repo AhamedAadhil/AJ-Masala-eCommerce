@@ -43,16 +43,24 @@ const UpdateOrder = () => {
           <strong className="text-green-400">Order ID:</strong> {order?.orderId}
         </p>
         <p className="mb-1">
-          <strong className="text-green-400">Status:</strong> {order?.status}
+          <strong className="text-green-400">Status:</strong>{" "}
+          {order?.status.toUpperCase()}
         </p>
         <p className="mb-1">
           <strong className="text-green-400">Payment Method:</strong>{" "}
-          {order?.paymentMethod}
+          {order?.paymentMethod?.toUpperCase()}{" "}
         </p>
         <p className="mb-1">
-          <strong className="text-green-400">Total Amount:</strong>LKR{" "}
+          <strong className="text-green-400">Total Amount:</strong> LKR{" "}
           {order?.totalAmount.toFixed(2)}
         </p>
+        {order?.couponCode && (
+          <p className="mb-1">
+            <strong className="text-green-400">Coupon Code:</strong>{" "}
+            {order?.couponCode}
+          </p>
+        )}
+
         <p>
           <strong className="text-green-400">Order Date:</strong>{" "}
           {new Date(order?.orderDate).toLocaleDateString()}

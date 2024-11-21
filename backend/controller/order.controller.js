@@ -161,6 +161,7 @@ export const checkOutSummary = async (req, res) => {
 
     // Calculate total amount from frontend-provided unitPrice and quantity
     let totalAmount = 0;
+    let deliveryFee = 0;
     products.forEach((product) => {
       const { unitPrice, quantity } = product;
       if (unitPrice && quantity) {
@@ -172,7 +173,14 @@ export const checkOutSummary = async (req, res) => {
       }
     });
 
-    return res.status(200).json({ products, totalAmount, success: true });
+    // if total is < 2000 then add 350 delivery fee
+    if (totalAmount < 2000) {
+      deliveryFee += 350;
+    }
+
+    return res
+      .status(200)
+      .json({ products, totalAmount, deliveryFee, success: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

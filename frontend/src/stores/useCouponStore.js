@@ -75,7 +75,6 @@ export const useCouponStore = create((set) => ({
     set({ loading: true });
     try {
       const res = await axios.patch(`/coupon/apply/${code}`, { totalAmount });
-      console.log(res.data);
       if (res && res.data.success === true) {
         set({
           loading: false,

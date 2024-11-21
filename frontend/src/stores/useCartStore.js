@@ -9,6 +9,7 @@ export const useCartStore = create((set) => ({
   error: null,
   totalAmount: 0,
   cartItemCount: 0,
+  deliveryFee: 0,
 
   addToCart: async (productId, quantity, selectedPrice) => {
     set({ loading: true });
@@ -46,6 +47,7 @@ export const useCartStore = create((set) => ({
           loading: false,
           products: res.data.products,
           totalAmount: res.data.totalAmount,
+          deliveryFee: res.data.deliveryFee,
         });
         navigate("/checkout");
       } else {
