@@ -19,7 +19,7 @@ const ItemPreview = ({
       onClick={() => {
         navigate(`/product/${productId}`);
       }}
-      className="relative max-w-xs bg-white rounded-2xl overflow-hidden shadow-lg mx-2 my-4 cursor-pointer"
+      className="relative w-full bg-white rounded-2xl overflow-hidden shadow-lg mx-2 my-4 cursor-pointer"
       whileHover={{
         scale: 1.05,
         boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.1)",
