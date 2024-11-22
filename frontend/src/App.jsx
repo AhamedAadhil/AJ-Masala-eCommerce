@@ -30,6 +30,7 @@ import PaymentSuccessPage from "./components/PaymentSuccessPage";
 import PaymentFailurePage from "./components/PaymentFailurePage";
 import AboutusPage from "./pages/AboutusPage";
 import ContactusPage from "./pages/ContactusPage";
+import NoInternet from "./components/NoInternet";
 
 function App() {
   const { checkAuth, checkingAuth } = useUserStore();
@@ -42,6 +43,7 @@ function App() {
   }
   return (
     <div>
+      <NoInternet />
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />

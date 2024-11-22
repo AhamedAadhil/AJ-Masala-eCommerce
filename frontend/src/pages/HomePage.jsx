@@ -1,13 +1,13 @@
-import { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 
-import TrendingProducts from "../components/TrendingProducts";
 import BannerCarousel from "../components/BannerCarousel";
-import AllProducts from "../components/AllProducts";
+const ProductList = React.lazy(() => import("../components/ProductList"));
 
 import { useProductStore } from "../stores/useProductStore";
+import ProductPlaceholder from "../components/ProductLoadingPlacehoder";
 
 const HomePage = () => {
-  const { products, fetchAllProducts } = useProductStore();
+  const { products, fetchAllProducts, loading } = useProductStore();
 
   useEffect(() => {
     fetchAllProducts();
@@ -20,8 +20,28 @@ const HomePage = () => {
       <div className="md:w-full lg:w-3/5 justify-items-center ">
         <BannerCarousel />
         <div className="mx-0 max-w-full">
-          <TrendingProducts products={featuredProducts} />
-          <AllProducts products={products} />
+          {/* Use Suspense with custom placeholder */}
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                <ProductPlaceholder />
+                <ProductPlaceholder />
+                <ProductPlaceholder />
+                <ProductPlaceholder />
+              </div>
+            }
+          >
+            <ProductList
+              title={"TrendingProducts"}
+              products={featuredProducts}
+              loading={loading}
+            />
+            <ProductList
+              title={"All Products"}
+              products={products}
+              loading={loading}
+            />
+          </Suspense>
         </div>
       </div>
     </div>
