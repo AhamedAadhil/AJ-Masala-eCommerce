@@ -559,19 +559,20 @@ const Checkout = () => {
                   </p>
                   <ul className="mt-2 space-y-2 text-sm text-gray-700">
                     <li>
-                      <strong>Bank Name:</strong> XYZ Bank
+                      <strong>Bank Name:</strong> National Development Bank
+                      (NDB)
                     </li>
                     <li>
-                      <strong>Account Number:</strong> 1234567890
+                      <strong>Account Number:</strong> 100570004326
                     </li>
                     <li>
-                      <strong>Account Name:</strong> A.J Foods Pvt Ltd
+                      <strong>Account Name:</strong> AJ FOODS PVT LTD
                     </li>
                     <li>
-                      <strong>Branch:</strong> Main Street Branch
+                      <strong>Branch:</strong> AKKARAIPATTU
                     </li>
                     <li>
-                      <strong>SWIFT Code:</strong> CCEYLKLX
+                      <strong>SWIFT Code:</strong> NDBSLKLX
                     </li>
                   </ul>
                   <p className="mt-2 text-xs text-gray-500">
