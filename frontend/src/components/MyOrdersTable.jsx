@@ -236,7 +236,14 @@ const MyOrdersTable = ({ orders }) => {
                             <strong className="text-gray-800">
                               Paid Status:
                             </strong>{" "}
-                            {order?.isPaid ? "Paid" : "Unpaid"}
+                            {order?.isPaid ? "Paid" : "Unpaid"}{" "}
+                            <Check
+                              className={`${
+                                order?.isPaid ? "inline" : "hidden"
+                              }`}
+                              color="green"
+                              size={16}
+                            />
                           </p>
                           <p>
                             <strong className="text-gray-800">

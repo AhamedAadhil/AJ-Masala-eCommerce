@@ -498,7 +498,7 @@ const Checkout = () => {
                     Subtotal
                   </dt>
                   <dd className="text-base font-medium text-gray-900">
-                    LKR {totalAmount.toFixed(2)}
+                    Rs {totalAmount.toFixed(2)}
                   </dd>
                 </dl>
 
@@ -506,8 +506,23 @@ const Checkout = () => {
                   <dt className="text-base font-normal text-gray-500 ">
                     Shipping
                   </dt>
-                  <dd className="text-base font-medium text-gray-900">
-                    LKR {deliveryFee?.toFixed(2)}
+                  <dd
+                    className={`text-base font-medium ${
+                      deliveryFee === 0 ? "text-green-500" : "text-gray-900"
+                    }`}
+                  >
+                    {deliveryFee > 0 ? (
+                      `Rs ${deliveryFee.toFixed(2)}`
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500 line-through">
+                          Rs 350.00
+                        </span>
+                        <span className="text-green-600 font-semibold">
+                          Free
+                        </span>
+                      </div>
+                    )}
                   </dd>
                 </dl>
 
@@ -516,22 +531,55 @@ const Checkout = () => {
                     Discount
                   </dt>
                   <dd className="text-base font-medium text-green-500">
-                    {couponApplied ? `-${discountAmount.toFixed(2)}` : "0.00"}
+                    {couponApplied
+                      ? `-Rs ${discountAmount.toFixed(2)}`
+                      : "Rs 0.00"}
                   </dd>
                 </dl>
 
                 <dl className="flex items-center justify-between gap-4 py-3">
                   <dt className="text-base font-bold text-gray-900 ">Total</dt>
                   <dd className="text-base font-bold text-gray-900 ">
-                    LKR{" "}
+                    Rs{" "}
                     {couponApplied
                       ? (totalAmountAfterDiscount + deliveryFee).toFixed(2)
                       : (totalAmount + deliveryFee).toFixed(2)}
                   </dd>
                 </dl>
-
-                {/* Repeated summary details */}
               </div>
+              {/* Show bank details when payment method is "bank" */}
+              {paymentMethod === "bank" && (
+                <div className="mt-4 p-4 rounded-lg border border-gray-300 bg-gray-50">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Bank Details
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-700">
+                    Please deposit the total amount to the following bank
+                    account:
+                  </p>
+                  <ul className="mt-2 space-y-2 text-sm text-gray-700">
+                    <li>
+                      <strong>Bank Name:</strong> XYZ Bank
+                    </li>
+                    <li>
+                      <strong>Account Number:</strong> 1234567890
+                    </li>
+                    <li>
+                      <strong>Account Name:</strong> A.J Foods Pvt Ltd
+                    </li>
+                    <li>
+                      <strong>Branch:</strong> Main Street Branch
+                    </li>
+                    <li>
+                      <strong>SWIFT Code:</strong> CCEYLKLX
+                    </li>
+                  </ul>
+                  <p className="mt-2 text-xs text-gray-500">
+                    After depositing, please upload the payment receipt using
+                    the &quot;Upload Payment Receipt&quot; button.
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3">

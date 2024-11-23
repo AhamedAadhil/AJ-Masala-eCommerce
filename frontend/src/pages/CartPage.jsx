@@ -78,7 +78,7 @@ const CartPage = () => {
                     {product?.name}
                   </h3>
                   <p className="text-sm text-gray-500">
-                    LKR {product?.unitPrice?.toFixed(2)}
+                    Rs {product?.unitPrice?.toFixed(2)}
                   </p>
                   <p className="text-sm text-gray-500">X {product?.quantity}</p>
                 </div>
@@ -101,7 +101,7 @@ const CartPage = () => {
             <h3 className="text-xl font-semibold text-gray-900">Summary</h3>
             <div className="flex justify-between text-gray-700 mt-2">
               <span>Subtotal</span>
-              <span>LKR {totalAmount?.toFixed(2)}</span>
+              <span>Rs {totalAmount?.toFixed(2)}</span>
             </div>
             <button
               onClick={handleCheckoutSummary}

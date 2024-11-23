@@ -26,7 +26,7 @@ export const payherePayment = async (req, res) => {
   if (!amount) {
     return res.status(400).json({ message: "Amount is required" });
   }
-
+  // TODO: conditionally get merchantit after deploy
   const merchant_id = process.env.PAYHERE_MERCHANT_ID;
   const merchant_secret =
     process.env.NODE_ENV === "development"
@@ -55,16 +55,16 @@ export const payherePayment = async (req, res) => {
     merchant_id: merchant_id,
     return_url:
       process.env.NODE_ENV === "development"
-        ? "http://localhost:5173/payment-success"
-        : "https://aj-masala-ecommerce.onrender.com/payment-success",
+        ? process.env.PAYHERE_RETURN_URL_LOCAL
+        : process.env.PAYHERE_RETURN_URL_CLOUD,
     cancel_url:
       process.env.NODE_ENV === "development"
-        ? "http://localhost:5173/payment-cancel"
-        : "https://aj-masala-ecommerce.onrender.com/payment-cancel",
+        ? process.env.PAYHERE_CANCEL_URL_LOCAL
+        : process.env.PAYHERE_CANCEL_URL_CLOUD,
     notify_url:
       process.env.NODE_ENV === "development"
-        ? "https://88b6-2402-4000-23c0-17c9-b144-cff1-5383-53ed.ngrok-free.app/api/payhere/payment/notify"
-        : "https://aj-masala-ecommerce.onrender.com/api/payhere/payment/notify",
+        ? process.env.PAYHERE_NOTIFY_URL_LOCAL
+        : process.env.PAYHERE_NOTIFY_URL_CLOUD,
     order_id: orderId,
     items: orderId,
     amount: amount,
@@ -84,7 +84,7 @@ export const payherePayment = async (req, res) => {
   try {
     // Make a POST request to PayHere to initiate payment
     const response = await axios.post(
-      "https://sandbox.payhere.lk/pay/checkout",
+      process.env.PAYHERE_PAYMENT_URL,
       paymentData,
       {
         headers: {

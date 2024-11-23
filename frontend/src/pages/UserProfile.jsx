@@ -29,9 +29,11 @@ const UserProfile = () => {
           alt="profile cover"
           className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
         />
-        <div className="absolute top-1 right-1 z-10 xsm:bottom-4 xsm:right-4 bg-red-600 rounded-lg">
+        <div
+          onClick={() => logout(navigate)}
+          className="absolute top-1 right-1 z-10 xsm:bottom-4 xsm:right-4 bg-red-600 rounded-lg"
+        >
           <label
-            onClick={() => logout(navigate)}
             htmlFor="cover"
             className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary py-1 px-2 text-sm font-medium text-white hover:bg-opacity-90 xsm:px-4"
           >
@@ -62,17 +64,17 @@ const UserProfile = () => {
               <span className="font-semibold text-black">
                 {user?.orderHistory?.length}
               </span>
-              <span className="text-sm">Total orders</span>
+              <span className="text-sm text-nowrap">Total orders</span>
             </div>
             <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 xsm:flex-row">
-              <span className="font-semibold text-black">
+              <span className="font-semibold text-black text-nowrap">
                 LKR {totalSpent ? `${(totalSpent / 1000)?.toFixed(1)}K` : "0"}
               </span>
 
-              <span className="text-sm">Total spends</span>
+              <span className="text-sm text-nowrap">Total spends</span>
             </div>
             <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
-              <span className="font-semibold text-black">
+              <span className="font-semibold text-black text-nowrap">
                 {user?.createdAt?.split("T")[0]}
               </span>
               <span className="text-sm">Joined</span>
