@@ -8,7 +8,7 @@ const ProductList = ({ title, products, loading }) => {
     return Math.round(originalPrice); // round to nearest integer
   };
 
-  const placeholders = Array.from({ length: products.length || 0 }); // Number of placeholders
+  const placeholders = Array.from({ length: products?.length || 0 }); // Number of placeholders
 
   return (
     <div className="bg-white p-4 shadow-lg mt-4">
