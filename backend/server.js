@@ -31,7 +31,9 @@ app.use(
     credentials: true,
   })
 );
-
+app.use("/", (req, res) => {
+  res.send("API is working!");
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/products", productRotes);

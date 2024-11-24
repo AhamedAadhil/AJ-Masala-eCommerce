@@ -31,6 +31,9 @@ import PaymentFailurePage from "./components/PaymentFailurePage";
 import AboutusPage from "./pages/AboutusPage";
 import ContactusPage from "./pages/ContactusPage";
 import NoInternet from "./components/NoInternet";
+import RefundPolicy from "./pages/RefundPolicy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
 
 function App() {
   const { checkAuth, checkingAuth } = useUserStore();
@@ -51,6 +54,9 @@ function App() {
         <Route path="/all" element={<AllProductsPage />} />
         <Route path="/about" element={<AboutusPage />} />
         <Route path="/contact" element={<ContactusPage />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
 
         {/* Customer Private Routes */}
         <Route element={<PrivateRoutes allowedRole="customer" />}>
