@@ -12,7 +12,7 @@ const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
     password: "",
   });
 
-  const { login, loading } = useUserStore();
+  const { login, loading, error } = useUserStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -95,6 +95,10 @@ const LoginModal = ({ isOpen, onOpenRegister, onClose }) => {
               </span>
             </div>
           </div>
+
+          {/* Error message */}
+          <p className="text-red-500 text-sm">{error && `*${error}`}</p>
+
           <button
             type="submit"
             className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800"

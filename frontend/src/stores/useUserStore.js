@@ -11,10 +11,13 @@ export const useUserStore = create((set, get) => ({
   totalSpent: 0,
 
   signup: async ({ name, email, password, confirmPassword }, onClose) => {
-    set({ loading: true });
+    set({ loading: true, error: null });
     if (password !== confirmPassword) {
-      set({ loading: false });
-      return toast.error("Password and Confirm Password must be the same");
+      set({
+        loading: false,
+        error: "Password and Confirm Password must be the same",
+      });
+      return;
     }
     try {
       const res = await axios.post("/auth/signup", {
@@ -27,13 +30,10 @@ export const useUserStore = create((set, get) => ({
       return toast.success(`Welcome ${res.data.user.name}`);
     } catch (error) {
       set({ error: error.response.data.message, loading: false });
-      return toast.error(
-        error.response.data.message || "An error occured, please try again"
-      );
     }
   },
   login: async ({ email, password }, onClose) => {
-    set({ loading: true });
+    set({ loading: true, error: null });
     try {
       const res = await axios.post("/auth/login", { email, password });
       set({ user: res.data.user, loading: false });
@@ -41,10 +41,7 @@ export const useUserStore = create((set, get) => ({
       return toast.success("Welcome Back");
     } catch (error) {
       console.log(error?.response?.data?.message || error.message);
-      set({ loading: false });
-      return toast.error(
-        error?.response?.data?.message || "An error occured, please try again"
-      );
+      set({ loading: false, error: error.response.data.message });
     }
   },
   checkAuth: async () => {
