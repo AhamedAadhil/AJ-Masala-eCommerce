@@ -31,9 +31,7 @@ app.use(
     credentials: true,
   })
 );
-app.use("/", (req, res) => {
-  res.send("API is working!");
-});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/products", productRotes);
@@ -43,6 +41,11 @@ app.use("/api/coupon", couponRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/payhere", payhereRoutes);
+
+// Default "/" route (after APIs)
+app.use("/", (req, res) => {
+  res.send("API is working!");
+});
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
