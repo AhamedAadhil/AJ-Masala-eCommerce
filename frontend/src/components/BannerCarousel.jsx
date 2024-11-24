@@ -76,7 +76,7 @@ const BannerCarousel = () => {
           {/* This ensures a 18:10 or 9:5 aspect ratio */}
           {/*pb-[33.3%] will be use for 3:1 aspect ratio*/}
           {/* Show a placeholder if there are no carousels */}
-          {carousels.length === 0 ? (
+          {carousels?.length === 0 ? (
             <div className="absolute top-0 left-0 w-full h-full bg-gray-200 flex items-center justify-center">
               <span className="text-gray-400 font-semibold text-lg">
                 No Carousels Available

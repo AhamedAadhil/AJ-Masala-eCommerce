@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const isAdmin = user?.role === "admin";
 
-  if (cartItemCount === 0 && user?.cartItems) {
+  if (cartItemCount === 0 && user?.cartItems?.length) {
     cartItemCount += user?.cartItems?.length;
   }
 
