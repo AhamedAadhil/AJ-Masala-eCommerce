@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const isAdmin = user?.role === "admin";
 
-  if (cartItemCount === 0) {
+  if (cartItemCount === 0 && user?.cartItems) {
     cartItemCount += user?.cartItems?.length;
   }
 
@@ -49,8 +49,8 @@ const Navbar = () => {
     if (query) {
       const results = products?.filter(
         (product) =>
-          product.name.toLowerCase().includes(query) ||
-          product.category.toLowerCase().includes(query)
+          product?.name?.toLowerCase().includes(query) ||
+          product?.category?.toLowerCase().includes(query)
       );
       setSearchResults(results);
     } else {
@@ -100,8 +100,8 @@ const Navbar = () => {
                   >
                     {/* Product Image */}
                     <img
-                      src={product.images[0]} // Assuming each product has an 'image' property
-                      alt={product.name}
+                      src={product?.images?.[0]} // Assuming each product has an 'image' property
+                      alt={product?.name}
                       className="w-16 h-16 object-cover rounded-md"
                     />
 
@@ -223,7 +223,7 @@ const Navbar = () => {
                     >
                       {/* Product Image */}
                       <img
-                        src={product.images[0]} // Assuming each product has an 'image' property
+                        src={product?.images?.[0]} // Assuming each product has an 'image' property
                         alt={product.name}
                         className="w-16 h-16 object-cover rounded-md"
                       />

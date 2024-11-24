@@ -8,14 +8,14 @@ const ProductList = ({ title, products, loading }) => {
     return Math.round(originalPrice); // round to nearest integer
   };
 
-  const placeholders = Array.from({ length: products?.length || 0 }); // Number of placeholders
+  const placeholders = Array.from({ length: 4 }); // Number of placeholders (set to 4 for example)
 
   return (
     <div className="bg-white p-4 shadow-lg mt-4">
       <h2 className="text-xl font-bold mb-3">{title}</h2>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-        {loading
-          ? placeholders?.map((_, index) => (
+        {loading || products?.length === 0
+          ? placeholders.map((_, index) => (
               <div
                 key={index}
                 className="animate-pulse bg-gray-100 rounded-2xl shadow-lg p-4"

@@ -75,26 +75,37 @@ const BannerCarousel = () => {
         <div className="relative w-full h-0 pb-[55.6%]">
           {/* This ensures a 18:10 or 9:5 aspect ratio */}
           {/*pb-[33.3%] will be use for 3:1 aspect ratio*/}
-          {/* Placeholder */}
-          {carouselLoading && (
+          {/* Show a placeholder if there are no carousels */}
+          {carousels.length === 0 ? (
             <div className="absolute top-0 left-0 w-full h-full bg-gray-200 flex items-center justify-center">
               <span className="text-gray-400 font-semibold text-lg">
-                A.J FOODS
+                No Carousels Available
               </span>
             </div>
+          ) : (
+            <>
+              {/* Placeholder */}
+              {carouselLoading && (
+                <div className="absolute top-0 left-0 w-full h-full bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-400 font-semibold text-lg">
+                    A.J FOODS
+                  </span>
+                </div>
+              )}
+              {/* carousel image */}
+              <img
+                onClick={() => {
+                  navigate(carousels[currentIndex]?.url);
+                }}
+                src={carousels[currentIndex]?.image}
+                alt="Banner"
+                className={`absolute top-0 left-0 w-full h-full object-cover object-center transition-opacity duration-500 ${
+                  carouselLoading ? "opacity-0" : "opacity-100"
+                }`}
+                onLoad={() => setCarouselLoading(false)} // Set loading to false when image loads
+              />
+            </>
           )}
-          {/* carousel image */}
-          <img
-            onClick={() => {
-              navigate(carousels[currentIndex]?.url);
-            }}
-            src={carousels[currentIndex]?.image}
-            alt="Banner"
-            className={`absolute top-0 left-0 w-full h-full object-cover object-center transition-opacity duration-500 ${
-              carouselLoading ? "opacity-0" : "opacity-100"
-            }`}
-            onLoad={() => setCarouselLoading(false)} // Set loading to false when image loads
-          />
         </div>
       </div>
 
