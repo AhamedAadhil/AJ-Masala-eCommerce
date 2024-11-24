@@ -88,7 +88,7 @@ const Navbar = () => {
             {/* Search Results Dropdown */}
             {searchResults.length > 0 && (
               <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-2 z-10">
-                {searchResults.map((product) => (
+                {searchResults?.map((product) => (
                   <div
                     key={product._id}
                     className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-4"
