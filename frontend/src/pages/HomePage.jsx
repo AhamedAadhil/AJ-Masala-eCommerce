@@ -13,7 +13,7 @@ const HomePage = () => {
     fetchAllProducts();
   }, [fetchAllProducts]);
 
-  const featuredProducts = products.filter((product) => product.isFeatured);
+  const featuredProducts = products?.filter((product) => product.isFeatured);
 
   return (
     <div className="lg:place-items-center">

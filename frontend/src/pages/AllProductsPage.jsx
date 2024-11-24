@@ -133,7 +133,7 @@ const AllProductsPage = () => {
   const filteredProducts =
     selectedCategory === "All"
       ? products // Show all products if "All" is selected
-      : products.filter((product) => product.category === selectedCategory);
+      : products?.filter((product) => product.category === selectedCategory);
 
   return (
     <div className="bg-white p-4 shadow-lg mt-4 lg:mx-64 md:mx-24">

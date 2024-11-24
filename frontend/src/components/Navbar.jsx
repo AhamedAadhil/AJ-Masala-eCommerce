@@ -47,7 +47,7 @@ const Navbar = () => {
     setSearchQuery(query);
 
     if (query) {
-      const results = products.filter(
+      const results = products?.filter(
         (product) =>
           product.name.toLowerCase().includes(query) ||
           product.category.toLowerCase().includes(query)
