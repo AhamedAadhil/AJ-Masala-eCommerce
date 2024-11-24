@@ -9,9 +9,9 @@ const seedAdmin = async () => {
   try {
     await connectDB();
     const adminDetails = {
-      name: "Ajmal",
-      email: "ajmal@gmail.com",
-      password: "123456",
+      name: "adminname",
+      email: "adminemail",
+      password: "password",
       role: "admin",
     };
 
