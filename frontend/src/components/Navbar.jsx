@@ -152,7 +152,7 @@ const Navbar = () => {
           )}
 
           {/* Cart Icon with Badge */}
-          {user && user.role === "customer" && cartItemCount >= 0 && (
+          {user && user?.role === "customer" && cartItemCount >= 0 && (
             <div className="relative">
               <ShoppingCart
                 onClick={() => navigate("/cart")}
@@ -166,16 +166,16 @@ const Navbar = () => {
           )}
 
           {/* Login/Profile Icon */}
-          {user && user.role === "customer" ? (
+          {user && user?.role === "customer" ? (
             <img
               src="https://img.icons8.com/color/48/000000/user.png"
               height={30}
               width={30}
               alt="Profile"
-              onClick={() => navigate(`/profile/${user._id}`)}
+              onClick={() => navigate(`/profile/${user?._id}`)}
               className="text-black text-xl cursor-pointer"
             />
-          ) : user && user.role !== "customer" ? null : (
+          ) : user && user?.role !== "customer" ? null : (
             <button
               onClick={openLoginModal}
               className="flex items-center gap-2 bg-green-500 text-white mx-2 px-2 py-1 rounded hover:bg-green-600"
@@ -209,9 +209,9 @@ const Navbar = () => {
               />
               <Search className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500" />
               {/* Search Results Dropdown */}
-              {searchResults.length > 0 && (
+              {searchResults?.length > 0 && (
                 <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-2 z-10">
-                  {searchResults.map((product) => (
+                  {searchResults?.map((product) => (
                     <div
                       key={product._id}
                       className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-4"
