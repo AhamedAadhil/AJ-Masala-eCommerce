@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
+import compression from "compression";
+import serveStatic from "serve-static";
 
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
@@ -32,6 +34,10 @@ app.use(
   })
 );
 
+// Enable Gzip/Brotli compression
+app.use(compression());
+
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/products", productRotes);
@@ -54,6 +60,31 @@ app.get("/", (req, res) => {
 //     res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 //   });
 // }
+
+// Serve the production build and handle pre-compressed files
+if (process.env.NODE_ENV === "production") {
+  const compressionOptions = {
+    index: false, // Disable serving "index.html" automatically
+    setHeaders(res, path) {
+      if (path.endsWith(".gz")) {
+        res.setHeader("Content-Encoding", "gzip");
+        res.setHeader("Content-Type", "application/javascript");
+      } else if (path.endsWith(".br")) {
+        res.setHeader("Content-Encoding", "br");
+        res.setHeader("Content-Type", "application/javascript");
+      }
+    },
+  };
+
+  app.use(
+    serveStatic(path.join(__dirname, "/frontend/dist"), compressionOptions)
+  );
+
+  // Fallback to index.html for other routes
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/frontend/dist", "index.html"));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server is Up on http://localhost:${PORT}`);
