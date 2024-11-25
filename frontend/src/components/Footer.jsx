@@ -1,12 +1,4 @@
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Facebook,
-  Instagram,
-  Twitter,
-  Youtube,
-} from "lucide-react";
+import { Mail, Phone, MapPin, CreditCard, Landmark, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -54,31 +46,43 @@ const Footer = () => {
             </li>
             <li className="flex items-center gap-2">
               <Phone className="w-4 h-4" />
-              +1-234-567-890
+              +94-777-325-533
             </li>
             <li className="flex items-center gap-2">
               <MapPin className="w-4 h-4" />
-              Main Office Location
+              Bandaranayakepure,Rajagiriya,Colombo
             </li>
           </ul>
         </div>
 
-        {/* Social Media Section */}
+        {/* We Accept Section */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
-          <div className="flex gap-4 mb-4">
-            <Link to="#" className="hover:text-gray-300">
-              <Facebook className="w-5 h-5" />
-            </Link>
-            <Link to="#" className="hover:text-gray-300">
-              <Instagram className="w-5 h-5" />
-            </Link>
-            <Link to="#" className="hover:text-gray-300">
-              <Twitter className="w-5 h-5" />
-            </Link>
-            <Link to="#" className="hover:text-gray-300">
-              <Youtube className="w-5 h-5" />
-            </Link>
+          <h3 className="text-lg font-semibold mb-4">We Accept</h3>
+          <div>
+            <p className="text-sm mb-2">Card Payments or Online Payments</p>
+            <a href="https://www.payhere.lk" target="_blank">
+              <img
+                src="https://www.payhere.lk/downloads/images/payhere_long_banner.png"
+                alt="PayHere"
+                width="400"
+              />
+            </a>
+            <div className="mt-4">
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <CreditCard className="w-4 h-4" />
+                  Credit/Debit Card via PayHere
+                </li>
+                <li className="flex items-center gap-2">
+                  <Landmark className="w-4 h-4" />
+                  Bank Transfer
+                </li>
+                <li className="flex items-center gap-2">
+                  <Truck className="w-4 h-4" />
+                  Cash on Delivery
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

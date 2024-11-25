@@ -304,7 +304,7 @@ const MyOrdersTable = ({ orders }) => {
                         >
                           <img
                             src={product?.product?.images[0]}
-                            alt="Product"
+                            alt={product?.product?.name}
                             className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg mr-4 mb-2 sm:mb-0"
                           />
                           <div className="flex-1 text-sm sm:text-base">

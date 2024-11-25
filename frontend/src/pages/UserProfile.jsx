@@ -26,7 +26,7 @@ const UserProfile = () => {
       <div className="relative z-20 h-35 md:h-65">
         <img
           src={CoverOne}
-          alt="profile cover"
+          alt="A.J Foods cover"
           className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
         />
         <div

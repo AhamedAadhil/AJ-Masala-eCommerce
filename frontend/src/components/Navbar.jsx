@@ -66,7 +66,7 @@ const Navbar = () => {
           onClick={() => navigate("/")}
           className="flex flex-row text-2xl font-bold text-black cursor-pointer"
         >
-          <img className="pt-2" src={AJLogo} alt="aj-logo" width={50} />
+          <img className="pt-2" src={AJLogo} alt="A.J Foods logo" width={50} />
           <h2 className="pt-3 text-2xl font-bold">A. J FOODS</h2>
         </div>
 
