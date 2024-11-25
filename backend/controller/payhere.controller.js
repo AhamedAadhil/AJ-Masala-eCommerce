@@ -79,7 +79,7 @@ export const payherePayment = async (req, res) => {
     country: "Sri Lanka",
   };
 
-  //   console.log(paymentData);
+  // console.log(paymentData);
 
   try {
     // Make a POST request to PayHere to initiate payment

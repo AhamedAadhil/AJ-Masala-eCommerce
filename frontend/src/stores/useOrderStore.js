@@ -92,7 +92,7 @@ export const useOrderStore = create((set) => ({
   },
   getOrderAdmin: async (orderId) => {
     set({ loading: false, order: null });
-    console.log("zustand orderId", orderId);
+    // console.log("zustand orderId", orderId);
     try {
       const res = await axios.get(`/order/admin/${orderId}`);
       if (res && res.data.success === true) {
@@ -153,19 +153,19 @@ export const useOrderStore = create((set) => ({
           custom_2: user?._id,
         };
 
-        console.log("payment data==", payment);
+        // console.log("payment data==", payment);
 
         if (window.payhere) {
           // Handle the PayHere payment events
           window.payhere.onCompleted = function (orderId = res.data.orderId) {
-            console.log("Payment completed. OrderID:", orderId);
+            // console.log("Payment completed. OrderID:", orderId);
 
             set({ loading: false, order: null, orderId: orderId });
             navigate("/payment-success");
           };
 
           window.payhere.onDismissed = function () {
-            console.log("Payment dismissed");
+            // console.log("Payment dismissed");
             toast.error("Payment dismissed");
             set({ loading: false, order: null });
             navigate("/payment-cancel");

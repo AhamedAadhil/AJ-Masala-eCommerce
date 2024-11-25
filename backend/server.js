@@ -42,8 +42,8 @@ app.use("/api/order", orderRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/payhere", payhereRoutes);
 
-// Default "/" route (after APIs)
-app.use("/", (req, res) => {
+// Default "/" route
+app.get("/", (req, res) => {
   res.send("API is working!");
 });
 

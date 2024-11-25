@@ -11,6 +11,13 @@ const transporter = nodemailer.createTransport({
     user: process.env.NODEMAILER_EMAIL,
     pass: process.env.NODEMAILER_PASSWORD,
   },
+  // debug: true,
+  // logger: true,
+  tls: {
+    rejectUnauthorized: false,
+  },
+  requireTLS: true,
+  connectionTimeout: 10000,
 });
 
 export const sendMail = async (to, subject, message) => {
@@ -25,6 +32,7 @@ export const sendMail = async (to, subject, message) => {
     console.log(info);
     return info;
   } catch (error) {
-    throw new Error("Error sending mail", error.message);
+    console.error("Error sending mail", error);
+    throw error;
   }
 };

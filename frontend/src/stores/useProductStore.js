@@ -46,7 +46,7 @@ export const useProductStore = create((set) => ({
     set({ loading: true });
     try {
       const res = await axios.get("/products");
-      console.log("res of fetchAllproducts ==", res);
+      // console.log("res of fetchAllproducts ==", res);
       set({ loading: false, products: res.data.products });
     } catch (error) {
       set({
@@ -59,10 +59,10 @@ export const useProductStore = create((set) => ({
   deleteProduct: async (id) => {
     set({ loading: true });
     try {
-      console.log("product to delete", id);
+      // console.log("product to delete", id);
       const res = await axios.delete(`/products/${id}`);
       if (res && res.data) {
-        console.log("response", res);
+        // console.log("response", res);
         set((prevState) => ({
           products: prevState.products.filter((product) => product._id !== id),
           loading: false,

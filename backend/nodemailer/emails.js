@@ -1,5 +1,6 @@
-import { sendMail } from "./config.js";
+import dotenv from "dotenv";
 
+import { sendMail } from "./config.js";
 import {
   ADMIN_QUERY_NOTIFICATION_MAIL,
   ORDER_DELIVERED_MAIL,
@@ -8,6 +9,8 @@ import {
   ORDER_STATUS_CHANGE_MAIL,
   WELCOME_MAIL,
 } from "./emailTemplates.js";
+
+dotenv.config();
 
 export const sendWelcomeEmail = async (email, name) => {
   try {
@@ -75,7 +78,7 @@ export const sendOrderPlacedEmailAdmin = async (
       .replace("[Payment Method]", paymentMethod)
       .replace("[Order Total]", "LKR" + " " + orderTotal.toFixed(2));
     const response = await sendMail(
-      "ahamedaathil.5@gmail.com",
+      process.env.NODEMAILER_EMAIL,
       "AJ Foods: New Order Placed",
       message
     );
@@ -146,7 +149,7 @@ export const sendAdminQueryNotificationEmail = async (email, content, name) => {
     .replace("{customerName}", name);
   try {
     const response = await sendMail(
-      "ahamedaathil.5@gmail.com",
+      process.env.NODEMAILER_EMAIL,
       "AJ Foods: Query Notification",
       message
     );
