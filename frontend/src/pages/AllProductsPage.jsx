@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
+
 import { useProductStore } from "../stores/useProductStore";
 import ItemPreview from "../components/ItemPreview";
-import { useEffect, useState } from "react";
 
 // const products = [
 //   // another array of product objects
@@ -137,6 +139,28 @@ const AllProductsPage = () => {
 
   return (
     <div className="bg-white p-4 shadow-lg mt-4 lg:mx-64 md:mx-24">
+      {/* SEO metadata for the page */}
+      <Helmet>
+        <title>All Products - AJ Foods</title>
+        <meta
+          name="description"
+          content="Browse a wide range of premium spices, herbs, and grains at AJ Foods. Shop now for the best deals!"
+        />
+        <meta
+          name="keywords"
+          content="AJ Foods, spices, herbs, grains, masalas, all products"
+        />
+        <meta property="og:title" content="All Products - AJ Foods" />
+        <meta
+          property="og:description"
+          content="Discover the finest spices, herbs, and grains at AJ Foods. High-quality products for all your culinary needs."
+        />
+        <meta
+          property="og:image"
+          content="https://ik.imagekit.io/arwxc4kk8/AJLogo.png?updatedAt=1732525455454"
+        />
+        <meta property="og:url" content="https://www.ajfoods.lk/all" />
+      </Helmet>
       {/* Flex container to align heading and category selection */}
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-xl font-bold">ALL PRODUCTS</h2>
@@ -164,7 +188,6 @@ const AllProductsPage = () => {
           </select>
         </div>
       </div>
-
       {/* Products grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         {filteredProducts?.map((product) => (

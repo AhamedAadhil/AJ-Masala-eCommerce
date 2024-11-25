@@ -8,7 +8,7 @@ const TermsConditions = () => {
   return (
     <div className="bg-gray-100 min-h-screen py-10 px-4">
       <div className="container mx-auto bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-yellow-500 mb-6">
+        <h1 className="text-2xl font-bold text-black mb-6">
           Terms and Conditions
         </h1>
         <p className="text-black mb-4">

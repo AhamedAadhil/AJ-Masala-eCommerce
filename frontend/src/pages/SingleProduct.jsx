@@ -8,6 +8,8 @@ import {
   Landmark,
 } from "lucide-react";
 
+import { Helmet } from "react-helmet";
+
 import { useProductStore } from "../stores/useProductStore";
 import { useCartStore } from "../stores/useCartStore";
 import { useUserStore } from "../stores/useUserStore";
@@ -101,6 +103,36 @@ const SingleProduct = () => {
   return (
     <>
       <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-start p-10 bg-slate-50 shadow-sm lg:mx-60 border-l-2 border-r-2 border-b-2 rounded-b-xl">
+        {/* SEO CODE WITH HELMET */}
+        <Helmet>
+          <title>{product?.name} - AJ Foods</title>
+          <meta
+            name="description"
+            content={`Buy ${
+              product?.name
+            } at AJ Foods. ${product?.description?.slice(0, 150)}...`}
+          />
+          <meta
+            name="keywords"
+            content={`AJ Foods, spices, masalas, ${product?.name}, online grocery`}
+          />
+          <meta property="og:title" content={`${product?.name} - AJ Foods`} />
+          <meta
+            property="og:description"
+            content={`Explore premium ${
+              product?.name
+            } at AJ Foods. ${product?.description?.slice(0, 150)}...`}
+          />
+          <meta
+            property="og:image"
+            content={product?.images?.[0] || "URL_to_default_image"}
+          />
+          <meta
+            property="og:url"
+            content={`https://www.ajfoods.lk/product/${product?._id}`}
+          />
+        </Helmet>
+
         <div className="flex flex-col gap-6 lg:w-2/4 content-center">
           <img
             src={activeImg}
@@ -122,7 +154,6 @@ const SingleProduct = () => {
             <ReviewCard reviews={product?.rating} />
           </div>
         </div>
-
         <div className="flex flex-col gap-4 lg:w-2/4 md:w-full">
           <div>
             <span className=" text-orange-400 font-semibold">
@@ -269,12 +300,10 @@ const SingleProduct = () => {
             </div>
           </div>
         </div>
-
         {/* Display ReviewCard after the Bottom Section for mobile */}
         <div className="sm:hidden mt-4">
           <ReviewCard reviews={product?.rating} />
         </div>
-
         {/* Register and Login Modals */}
         <RegisterModal
           isOpen={isRegisterModalOpen}

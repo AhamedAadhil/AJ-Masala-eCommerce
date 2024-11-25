@@ -1,8 +1,32 @@
+import { Helmet } from "react-helmet";
 import { Users, Globe, Target, Flag } from "lucide-react";
 
 const AboutusPage = () => {
   return (
     <div className="bg-gray-50 min-h-screen p-6">
+      {/* React Helmet for SEO */}
+      <Helmet>
+        <title>About Us - AJ Foods</title>
+        <meta
+          name="description"
+          content="Learn about AJ Foods, our vision, mission, objectives, and the team behind our success. We specialize in delivering high-quality food products worldwide."
+        />
+        <meta
+          name="keywords"
+          content="AJ Foods, about us, vision, mission, team, food industry, quality products"
+        />
+        <meta property="og:title" content="About Us - AJ Foods" />
+        <meta
+          property="og:description"
+          content="At AJ Foods, we aim to inspire healthier eating habits through premium food products and sustainability. Meet our dedicated team."
+        />
+        <meta
+          property="og:image"
+          content="https://ik.imagekit.io/arwxc4kk8/AJLogo.png?updatedAt=1732525455454"
+        />
+        <meta property="og:url" content="https://www.ajfoods.lk/about" />
+      </Helmet>
+
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <header className="text-center mb-12">

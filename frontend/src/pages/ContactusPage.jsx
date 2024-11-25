@@ -40,23 +40,23 @@ const ContactusPage = () => {
             <ul className="space-y-4">
               <li className="flex items-center">
                 <MapPin size={24} className="text-blue-500 mr-3" />
-                <span>Main Office: 123 Food Street, Flavor Town</span>
+                <span>Main Office: Bandaranayakepure,Rajagiriya,Colombo</span>
               </li>
               <li className="flex items-center">
                 <MapPin size={24} className="text-green-500 mr-3" />
-                <span>Sub Office: 456 Spice Lane, Culinary City</span>
+                <span>Sub Office: Paddiyadipitty, Ampara Rd, Akkaraipattu</span>
               </li>
               <li className="flex items-center">
                 <Mail size={24} className="text-red-500 mr-3" />
-                <span>Email: support@ajfoods.com</span>
+                <span>Email: support@ajfoodz.com</span>
               </li>
               <li className="flex items-center">
                 <Phone size={24} className="text-purple-500 mr-3" />
-                <span>Hotline: +123 456 7890</span>
+                <span>Hotline: +94 113 401 401</span>
               </li>
               <li className="flex items-center">
                 <MessageCircle size={24} className="text-green-500 mr-3" />
-                <span>WhatsApp: +123 987 6543</span>
+                <span>WhatsApp: +94 777 325 533</span>
               </li>
             </ul>
           </div>
