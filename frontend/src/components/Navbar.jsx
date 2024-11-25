@@ -131,8 +131,8 @@ const Navbar = () => {
             About us
           </Link>
 
-          <Link to="/contact" className="text-black hover:text-gray-800">
-            Contact us
+          <Link to="/support" className="text-black hover:text-gray-800">
+            Support
           </Link>
         </div>
 
@@ -259,10 +259,10 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="/contact"
+              to="/support"
               className="block py-2 text-black hover:text-gray-800"
             >
-              Contact us
+              Support
             </Link>
           </div>
         </div>

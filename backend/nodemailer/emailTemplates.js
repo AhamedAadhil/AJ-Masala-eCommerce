@@ -90,7 +90,7 @@ export const WELCOME_MAIL = `
       <p>
         To get started, check out our latest products and offers by clicking the button below:
       </p>
-      <a href="https://www.ajfoods.com" class="button">Explore Now</a>
+      <a href="https://www.ajfoods.lk" class="button">Explore Now</a>
     </div>
     
     <!-- Footer Section -->
@@ -99,8 +99,8 @@ export const WELCOME_MAIL = `
         Thank you for choosing A.J Foods. We look forward to serving you the best!
       </p>
       <p>
-        <a href="https://www.ajfoods.com">Visit Our Website</a> | 
-        <a href="https://www.ajfoods.com/support">Contact Support</a>
+        <a href="https://www.ajfoods.lk">Visit Our Website</a> | 
+        <a href="https://www.ajfoods.lk/support">Contact Support</a>
       </p>
     </div>
   </div>
@@ -225,7 +225,7 @@ export const ORDER_PLACED_MAIL = `
       <p>
         You can view the status of your order or manage your account by clicking the button below:
       </p>
-      <a href="https://www.ajfoods.com/profile/{userId}" class="button">View My Orders</a>
+      <a href="https://www.ajfoods.lk/profile/{userId}" class="button">View My Orders</a>
     </div>
     
     <!-- Footer Section -->
@@ -234,8 +234,8 @@ export const ORDER_PLACED_MAIL = `
         Thank you for choosing A.J Foods. We look forward to serving you again!
       </p>
       <p>
-        <a href="https://www.ajfoods.com">Visit Our Website</a> | 
-        <a href="https://www.ajfoods.com/support">Contact Support</a>
+        <a href="https://www.ajfoods.lk">Visit Our Website</a> | 
+        <a href="https://www.ajfoods.lk/support">Contact Support</a>
       </p>
     </div>
   </div>
@@ -355,7 +355,7 @@ export const ORDER_PLACED_MAIL_ADMIN = `
       <p>
         You can view this order and its details in the admin panel by clicking the button below:
       </p>
-      <a href="https://www.ajfoods.com/admin/orders/[Order ID]" class="button">View Order</a>
+      <a href="https://www.ajfoods.lk/admin/update-order/[Order ID]" class="button">View Order</a>
     </div>
     
     <!-- Footer Section -->
@@ -525,7 +525,7 @@ export const ORDER_DELIVERED_MAIL = `
       <p>We are happy to inform you that your order <strong>{{orderId}}</strong> has been successfully delivered!</p>
       <p>We’d greatly appreciate it if you could take a moment to share your feedback. Your reviews help us improve our products and services for everyone.</p>
       <div class="btn-container">
-        <a class="review-btn" href="{{profileUrl}}/orders/{{orderId}}" target="_blank">
+        <a class="review-btn" href="https://www.ajfoods.lk/profile/{{userId}}" target="_blank">
           Review Your Order
         </a>
       </div>
@@ -621,7 +621,7 @@ export const ADMIN_QUERY_NOTIFICATION_MAIL = `
     <div class="content">
       <h2>Hello Admin,</h2>
       <p>
-        You have received a new query via the **Contact Us** form on the A.J Foods website. Below are the details of the query:
+        You have received a new query via the **Support Form** form on the A.J Foods website. Below are the details of the query:
       </p>
       <div class="query-details">
         <p><strong>Email:</strong> {customerEmail}</p>
@@ -640,8 +640,8 @@ export const ADMIN_QUERY_NOTIFICATION_MAIL = `
         Thank you for staying on top of customer interactions.
       </p>
       <p>
-        <a href="https://www.ajfoods.com/admin">Go to Admin Portal</a> | 
-        <a href="https://www.ajfoods.com/support">Support</a>
+        <a href="https://www.ajfoods.lk/admin">Go to Admin Portal</a> | 
+        <a href="https://www.ajfoods.lk/support">Support</a>
       </p>
     </div>
   </div>

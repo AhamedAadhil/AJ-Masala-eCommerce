@@ -53,7 +53,7 @@ function App() {
         <Route path="/product/:id" element={<SingleProduct />} />
         <Route path="/all" element={<AllProductsPage />} />
         <Route path="/about" element={<AboutusPage />} />
-        <Route path="/contact" element={<ContactusPage />} />
+        <Route path="/support" element={<ContactusPage />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-conditions" element={<TermsConditions />} />

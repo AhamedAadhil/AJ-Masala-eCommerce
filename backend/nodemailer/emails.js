@@ -72,7 +72,7 @@ export const sendOrderPlacedEmailAdmin = async (
       "[Customer Email]",
       customerEmail
     )
-      .replace("[Order ID]", orderId)
+      .replace(/[Order ID]/g, orderId)
       .replace("[Order Date]", orderDate)
       .replace("[Customer Address]", orderAddress)
       .replace("[Payment Method]", paymentMethod)
@@ -122,11 +122,10 @@ export const sendOrderStatusChangeEmail = async (
   }
 };
 
-export const sendOrderDeliveryEmail = async (email, name, orderId) => {
-  const message = ORDER_DELIVERED_MAIL.replace(
-    "{{customerName}}",
-    name
-  ).replace(/{{orderId}}/g, orderId);
+export const sendOrderDeliveryEmail = async (email, userId, name, orderId) => {
+  const message = ORDER_DELIVERED_MAIL.replace("{{customerName}}", name)
+    .replace(/{{orderId}}/g, orderId)
+    .replace("{{userId}}", userId);
   try {
     const response = await sendMail(
       email,

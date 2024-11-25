@@ -303,6 +303,7 @@ export const updateOrder = async (req, res) => {
     } else {
       await sendOrderDeliveryEmail(
         orderedUser.email,
+        orderedUser._id,
         orderedUser.name,
         order.orderId
       );

@@ -24,7 +24,7 @@ const ContactusPage = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <header className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800">Contact Us</h1>
+          <h1 className="text-4xl font-bold text-gray-800">Support</h1>
           <p className="mt-2 text-lg text-gray-600">
             We’re here to help! Reach out to us through the form below or any of
             our contact channels.
@@ -40,11 +40,15 @@ const ContactusPage = () => {
             <ul className="space-y-4">
               <li className="flex items-center">
                 <MapPin size={24} className="text-blue-500 mr-3" />
-                <span>Main Office: Bandaranayakepure,Rajagiriya,Colombo</span>
+                <span className="break-words">
+                  Main Office: Bandaranayakepure, Rajagiriya, Colombo
+                </span>
               </li>
               <li className="flex items-center">
                 <MapPin size={24} className="text-green-500 mr-3" />
-                <span>Sub Office: Paddiyadipitty, Ampara Rd, Akkaraipattu</span>
+                <span className="break-words">
+                  Sub Office: Paddiyadipitty, Ampara Rd, Akkaraipattu
+                </span>
               </li>
               <li className="flex items-center">
                 <Mail size={24} className="text-red-500 mr-3" />
@@ -81,7 +85,7 @@ const ContactusPage = () => {
         {/* Contact Form Section */}
         <section className="bg-white shadow-md p-6 rounded-lg">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            Get in Touch
+            Any questions or issues? Let us know!
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
