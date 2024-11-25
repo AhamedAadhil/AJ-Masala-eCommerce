@@ -1,6 +1,10 @@
+import { useEffect } from "react";
 import { FileText, ShieldAlert, ShoppingCart, Package } from "lucide-react";
 
 const TermsConditions = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="bg-gray-100 min-h-screen py-10 px-4">
       <div className="container mx-auto bg-white rounded-lg shadow-lg p-8">

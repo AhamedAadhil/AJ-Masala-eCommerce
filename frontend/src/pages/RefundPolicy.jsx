@@ -1,6 +1,10 @@
+import { useEffect } from "react";
 import { RefreshCcw, PackageCheck, Info, Mail } from "lucide-react";
 
 const RefundPolicy = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="bg-gray-100 min-h-screen py-10 px-4">
       <div className="container mx-auto bg-white rounded-lg shadow-lg p-8">
@@ -9,8 +13,8 @@ const RefundPolicy = () => {
           Thank you for shopping at{" "}
           <span className="font-semibold">AJ Masala</span>. We value your
           satisfaction and are committed to providing you with the best online
-          shopping experience. If you're not completely satisfied with your
-          purchase, we're here to help.
+          shopping experience. If you&apos;re not completely satisfied with your
+          purchase, we&apos;re here to help.
         </p>
 
         {/* Returns */}
@@ -34,7 +38,7 @@ const RefundPolicy = () => {
             <h2 className="text-xl font-semibold text-black">Refunds</h2>
           </div>
           <p className="text-gray-700">
-            Once we receive and inspect the returned item, we'll notify you
+            Once we receive and inspect the returned item, we&apos;ll notify you
             about the refund status. If approved, a refund will be processed to
             your original payment method. Shipping charges are non-refundable.
           </p>

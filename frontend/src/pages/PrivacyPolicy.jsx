@@ -1,6 +1,10 @@
 import { ShieldCheck, Info, Cookie } from "lucide-react";
+import { useEffect } from "react";
 
 const PrivacyPolicy = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="bg-gray-100 min-h-screen py-10 px-4">
       <div className="container mx-auto bg-white rounded-lg shadow-lg p-8">
@@ -125,7 +129,7 @@ const PrivacyPolicy = () => {
           </div>
           <p className="text-gray-700">
             We may update this policy periodically. Changes will be posted here
-            with a revised "last updated" date.
+            with a revised &quot;last updated&quot; date.
           </p>
         </section>
 
