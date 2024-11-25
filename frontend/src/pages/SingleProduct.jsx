@@ -105,23 +105,38 @@ const SingleProduct = () => {
       <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-start p-10 bg-slate-50 shadow-sm lg:mx-60 border-l-2 border-r-2 border-b-2 rounded-b-xl">
         {/* SEO CODE WITH HELMET */}
         <Helmet>
-          <title>{product?.name} - AJ Foods</title>
+          <title>
+            {product?.name ? `${product.name} - AJ Foods` : "AJ Foods"}
+          </title>
           <meta
             name="description"
-            content={`Buy ${
+            content={
               product?.name
-            } at AJ Foods. ${product?.description?.slice(0, 150)}...`}
+                ? `Buy ${
+                    product.name
+                  } at AJ Foods. ${product?.description?.slice(0, 150)}...`
+                : "Explore premium spices, masalas, and groceries at AJ Foods."
+            }
           />
           <meta
             name="keywords"
-            content={`AJ Foods, spices, masalas, ${product?.name}, online grocery`}
+            content={`AJ Foods, spices, masalas${
+              product?.name ? `, ${product.name}` : ""
+            }, online grocery`}
           />
-          <meta property="og:title" content={`${product?.name} - AJ Foods`} />
+          <meta
+            property="og:title"
+            content={product?.name ? `${product.name} - AJ Foods` : "AJ Foods"}
+          />
           <meta
             property="og:description"
-            content={`Explore premium ${
+            content={
               product?.name
-            } at AJ Foods. ${product?.description?.slice(0, 150)}...`}
+                ? `Explore premium ${
+                    product.name
+                  } at AJ Foods. ${product?.description?.slice(0, 150)}...`
+                : "Explore premium spices, masalas, and groceries at AJ Foods."
+            }
           />
           <meta
             property="og:image"
@@ -129,7 +144,11 @@ const SingleProduct = () => {
           />
           <meta
             property="og:url"
-            content={`https://www.ajfoods.lk/product/${product?._id}`}
+            content={
+              product?._id
+                ? `https://www.ajfoods.lk/product/${product._id}`
+                : "https://www.ajfoods.lk"
+            }
           />
         </Helmet>
 
