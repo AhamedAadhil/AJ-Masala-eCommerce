@@ -60,7 +60,7 @@ app.get("/", (req, res) => {
 
 app.get("/sitemap.xml", (req, res) => {
   res.header("Content-Type", "application/xml");
-  res.sendFile(path.join(__dirname, "backend", "public", "sitemap.xml"));
+  res.sendFile(path.join(__dirname, "public", "sitemap.xml"));
 });
 
 // if (process.env.NODE_ENV === "production") {
