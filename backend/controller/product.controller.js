@@ -37,17 +37,32 @@ export const getFeaturedProducts = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   const { name, description, ps, images, category, tags } = req.body;
+  if (!name || !description || !ps || !category || images.length === 0) {
+    return res
+      .status(400)
+      .json({ message: "All fields are required", success: false });
+  }
   try {
     let imageUrls = [];
-    let cloudinaryResponse = null;
     if (images && images.length > 0) {
-      for (const image of images) {
-        cloudinaryResponse = await cloudinary.uploader.upload(image, {
+      const uploadPromises = images.map((image) =>
+        cloudinary.uploader.upload(image, {
           folder: "products",
-        });
-        imageUrls.push(cloudinaryResponse?.secure_url);
-      }
+          transformation: [
+            {
+              width: 800,
+              height: 800,
+              crop: "fill",
+              gravity: "auto",
+              quality: "auto",
+            },
+          ],
+        })
+      );
+      const cloudinaryResponses = await Promise.all(uploadPromises);
+      imageUrls = cloudinaryResponses.map((response) => response.secure_url);
     }
+
     const product = await Product.create({
       name,
       description,
