@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
 export const sendMail = async (to, subject, message) => {
   try {
     const mailOptions = {
-      from: process.env.NODEMAILER_EMAIL,
+      from: `"AJ Foods Support" <${process.env.NODEMAILER_EMAIL}>`,
       to,
       subject,
       html: message,

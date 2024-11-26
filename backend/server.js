@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
+import cron from "node-cron";
 import compression from "compression";
 import serveStatic from "serve-static";
 
@@ -15,7 +16,9 @@ import couponRoutes from "./routes/coupon.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
 import payhereRoutes from "./routes/payhere.routes.js";
+
 import { connectDB } from "./lib/db.js";
+import { generateSitemap } from "./utils/generateSitemap.js";
 
 dotenv.config();
 
@@ -23,6 +26,8 @@ const app = express();
 const PORT = process.env.PORT || 5432;
 
 const __dirname = path.resolve();
+
+console.log(__dirname);
 
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" })); //allow parse body of req
@@ -51,6 +56,11 @@ app.use("/api/payhere", payhereRoutes);
 // Default "/" route
 app.get("/", (req, res) => {
   res.send("API is working!");
+});
+
+app.get("/sitemap.xml", (req, res) => {
+  res.header("Content-Type", "application/xml");
+  res.sendFile(path.join(__dirname, "backend", "public", "sitemap.xml"));
 });
 
 // if (process.env.NODE_ENV === "production") {
@@ -86,7 +96,18 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
+// Schedule sitemap generation
+cron.schedule("0 0 * * *", async () => {
+  try {
+    console.log("Running scheduled sitemap generation...");
+    await generateSitemap();
+    console.log("Sitemap successfully updated!");
+  } catch (error) {
+    console.error("Error generating sitemap in cron job:", error);
+  }
+});
+
+app.listen(PORT, async () => {
   console.log(`Server is Up on http://localhost:${PORT}`);
   connectDB();
 });
