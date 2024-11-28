@@ -108,6 +108,7 @@ const SingleProduct = () => {
           <title>
             {product?.name ? `${product.name} - AJ Foods` : "AJ Foods"}
           </title>
+          <link rel="canonical" href={`https://ajfoods.lk/product/${id}`} />
           <meta
             name="description"
             content={
