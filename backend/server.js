@@ -61,14 +61,6 @@ app.get("/sitemap.xml", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "sitemap.xml"));
 });
 
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "/frontend/dist")));
-
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-//   });
-// }
-
 // Serve the production build and handle pre-compressed files
 if (process.env.NODE_ENV === "production") {
   const compressionOptions = {
