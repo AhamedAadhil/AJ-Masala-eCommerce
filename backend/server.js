@@ -27,8 +27,6 @@ const PORT = process.env.PORT || 5432;
 
 const __dirname = path.resolve();
 
-console.log(__dirname);
-
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" })); //allow parse body of req
 app.use(express.urlencoded({ extended: true }));

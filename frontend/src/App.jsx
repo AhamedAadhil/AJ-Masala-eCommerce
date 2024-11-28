@@ -34,6 +34,7 @@ import NoInternet from "./components/NoInternet";
 import RefundPolicy from "./pages/RefundPolicy";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
+import CookieNotice from "./components/CookieNotice";
 
 function App() {
   const { checkAuth, checkingAuth } = useUserStore();
@@ -47,6 +48,7 @@ function App() {
   return (
     <div>
       <NoInternet />
+      <CookieNotice />
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
